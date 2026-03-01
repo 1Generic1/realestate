@@ -51,3 +51,14 @@ logs/
 # Temporary files
 .tmp/
 .temp/
+# Windows shortcut files
+*.lnk
+
+# Node
+node_modules/
+
+# Python
+venv/
+__pycache__/
+
+

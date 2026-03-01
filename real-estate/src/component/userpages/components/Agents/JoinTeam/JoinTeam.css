@@ -1,0 +1,221 @@
+.join-team-section {
+  padding: 100px 0;
+  background: white;
+}
+
+.join-team-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+}
+
+.join-subtitle {
+  color: var(--gold);
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 15px;
+}
+
+.join-title {
+  font-size: 2.8rem;
+  color: var(--primary-dark);
+  margin-bottom: 20px;
+  font-family: "Playfair Display", serif;
+}
+
+.join-text {
+  color: #666;
+  font-size: 1.1rem;
+  line-height: 1.8;
+  margin-bottom: 30px;
+}
+
+.benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+  margin-bottom: 40px;
+}
+
+.benefit-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #555;
+}
+
+.benefit-icon {
+  color: var(--gold);
+  font-size: 1.2rem;
+}
+
+.join-stats {
+  display: flex;
+  gap: 40px;
+  margin-bottom: 40px;
+  padding: 20px 0;
+  border-top: 1px solid rgba(184, 134, 11, 0.2);
+  border-bottom: 1px solid rgba(184, 134, 11, 0.2);
+}
+
+.join-stat {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.stat-icon {
+  font-size: 2rem;
+  color: var(--gold);
+}
+
+.join-stat .stat-number {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--primary-dark);
+  line-height: 1.2;
+}
+
+.join-stat .stat-label {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.join-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: linear-gradient(135deg, var(--gold) 0%, #9c6e0a 100%);
+  color: var(--primary-dark);
+  padding: 15px 35px;
+  border-radius: 50px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.join-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(184, 134, 11, 0.3);
+  gap: 15px;
+}
+
+.join-team-image {
+  position: relative;
+  border-radius: 30px;
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+.join-team-image img {
+  width: 100%;
+  height: auto;
+  display: block;
+  transition: transform 0.5s ease;
+}
+
+.join-team-image:hover img {
+  transform: scale(1.05);
+}
+
+.image-badge {
+  position: absolute;
+  bottom: 30px;
+  right: 30px;
+  background: var(--gold);
+  padding: 20px 30px;
+  border-radius: 15px;
+  text-align: center;
+  animation: float 3s ease infinite;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.image-badge span {
+  display: block;
+  font-size: 1rem;
+  color: var(--primary-dark);
+  font-weight: 600;
+}
+
+.image-badge strong {
+  display: block;
+  font-size: 2rem;
+  color: var(--primary-dark);
+  line-height: 1;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .join-title {
+    font-size: 2.3rem;
+  }
+
+  .join-stats {
+    gap: 30px;
+  }
+}
+
+@media (max-width: 768px) {
+  .join-team-section {
+    padding: 60px 0;
+  }
+
+  .join-team-wrapper {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .join-title {
+    font-size: 2rem;
+  }
+
+  .benefits-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .join-stats {
+    flex-wrap: wrap;
+  }
+
+  .join-team-image {
+    max-width: 500px;
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 576px) {
+  .join-title {
+    font-size: 1.8rem;
+  }
+
+  .join-text {
+    font-size: 1rem;
+  }
+
+  .join-stats {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .image-badge {
+    padding: 15px 20px;
+  }
+
+  .image-badge strong {
+    font-size: 1.5rem;
+  }
+}

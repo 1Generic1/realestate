@@ -1,0 +1,99 @@
+.agents-hero {
+  min-height: 60vh;
+  background:
+    linear-gradient(135deg, rgba(26, 26, 46, 0.95), rgba(75, 0, 130, 0.9)),
+    url("https://images.unsplash.com/photo-1600880292203-757bb62b4baf?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80")
+      center/cover fixed;
+  display: flex;
+  align-items: center;
+  position: relative;
+  color: var(--cream);
+  text-align: center;
+}
+
+.agents-hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.agents-hero-content {
+  max-width: 800px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+  padding: 0 20px;
+}
+
+.agents-hero-badge {
+  display: inline-block;
+  background: rgba(184, 134, 11, 0.2);
+  border: 1px solid var(--gold);
+  padding: 8px 20px;
+  border-radius: 50px;
+  font-size: 0.9rem;
+  margin-bottom: 25px;
+  backdrop-filter: blur(5px);
+}
+
+.agents-hero-title {
+  font-size: 3.5rem;
+  font-weight: 900;
+  margin-bottom: 20px;
+  line-height: 1.2;
+  font-family: "Playfair Display", serif;
+}
+
+.gold-text {
+  color: var(--gold);
+}
+
+.agents-hero-text {
+  font-size: 1.1rem;
+  max-width: 600px;
+  margin: 0 auto;
+  opacity: 0.9;
+  line-height: 1.8;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .agents-hero-title {
+    font-size: 3rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .agents-hero {
+    min-height: 50vh;
+    padding: 80px 0;
+  }
+
+  .agents-hero-title {
+    font-size: 2.5rem;
+  }
+
+  .agents-hero-text {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .agents-hero-title {
+    font-size: 2rem;
+  }
+
+  .agents-hero-badge {
+    font-size: 0.8rem;
+    padding: 6px 15px;
+  }
+}
+
+@media (max-width: 375px) {
+  .agents-hero-title {
+    font-size: 1.8rem;
+  }
+}

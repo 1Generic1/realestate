@@ -1,0 +1,122 @@
+.social-connect-section {
+  padding: 80px 0;
+  background: linear-gradient(135deg, var(--primary-dark) 0%, #2a2a4a 100%);
+  color: var(--cream);
+  text-align: center;
+}
+
+.social-wrapper {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.social-title {
+  font-size: 2.5rem;
+  margin-bottom: 15px;
+  font-family: "Playfair Display", serif;
+}
+
+.social-text {
+  font-size: 1.1rem;
+  margin-bottom: 40px;
+  opacity: 0.9;
+  line-height: 1.8;
+}
+
+.social-links {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.social-link {
+  width: 60px;
+  height: 60px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--cream);
+  font-size: 1.5rem;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.social-link::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: var(--social-color);
+  transform: translate(-50%, -50%);
+  transition:
+    width 0.4s ease,
+    height 0.4s ease;
+  z-index: -1;
+}
+
+.social-link:hover {
+  color: white;
+  transform: translateY(-10px) rotate(360deg);
+}
+
+.social-link:hover::before {
+  width: 100px;
+  height: 100px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .social-connect-section {
+    padding: 60px 0;
+  }
+
+  .social-title {
+    font-size: 2rem;
+  }
+
+  .social-text {
+    font-size: 1rem;
+    padding: 0 20px;
+  }
+
+  .social-links {
+    gap: 15px;
+  }
+
+  .social-link {
+    width: 55px;
+    height: 55px;
+    font-size: 1.3rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .social-title {
+    font-size: 1.8rem;
+  }
+
+  .social-link {
+    width: 50px;
+    height: 50px;
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 375px) {
+  .social-title {
+    font-size: 1.6rem;
+  }
+
+  .social-text {
+    font-size: 0.9rem;
+  }
+}

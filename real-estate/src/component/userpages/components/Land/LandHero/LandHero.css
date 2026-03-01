@@ -1,0 +1,194 @@
+.land-hero {
+  min-height: 80vh;
+  background:
+    linear-gradient(135deg, rgba(26, 26, 46, 0.95), rgba(75, 0, 130, 0.9)),
+    url("https://images.unsplash.com/photo-1500382017468-9049fed747ef?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80")
+      center/cover fixed;
+  display: flex;
+  align-items: center;
+  position: relative;
+  color: var(--cream);
+}
+
+.land-hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.land-hero-content {
+  max-width: 900px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+  padding: 0 20px;
+  text-align: center;
+}
+
+.land-hero-badge {
+  display: inline-block;
+  background: rgba(184, 134, 11, 0.2);
+  border: 1px solid var(--gold);
+  padding: 8px 20px;
+  border-radius: 50px;
+  font-size: 0.9rem;
+  margin-bottom: 25px;
+  backdrop-filter: blur(5px);
+}
+
+.land-hero-title {
+  font-size: 3.5rem;
+  font-weight: 900;
+  margin-bottom: 20px;
+  line-height: 1.2;
+  font-family: "Playfair Display", serif;
+}
+
+.gold-text {
+  color: var(--gold);
+}
+
+.land-hero-text {
+  font-size: 1.1rem;
+  max-width: 700px;
+  margin: 0 auto 40px;
+  opacity: 0.9;
+  line-height: 1.8;
+}
+
+.land-search-wrapper {
+  max-width: 700px;
+  margin: 0 auto 50px;
+}
+
+.land-search-box {
+  display: flex;
+  align-items: center;
+  background: white;
+  border-radius: 60px;
+  padding: 5px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.search-icon {
+  color: var(--gold);
+  margin-left: 20px;
+  font-size: 1.2rem;
+}
+
+.land-search-input {
+  flex: 1;
+  padding: 15px 20px;
+  border: none;
+  font-size: 1rem;
+  outline: none;
+  background: transparent;
+}
+
+.land-search-btn {
+  background: linear-gradient(135deg, var(--gold) 0%, #9c6e0a 100%);
+  color: var(--primary-dark);
+  border: none;
+  padding: 12px 30px;
+  border-radius: 50px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-right: 5px;
+}
+
+.land-search-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(184, 134, 11, 0.4);
+}
+
+.land-quick-stats {
+  display: flex;
+  justify-content: center;
+  gap: 60px;
+  flex-wrap: wrap;
+}
+
+.quick-stat {
+  text-align: center;
+}
+
+.quick-stat .stat-value {
+  display: block;
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--gold);
+  font-family: "Playfair Display", serif;
+}
+
+.quick-stat .stat-label {
+  font-size: 0.9rem;
+  opacity: 0.8;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .land-hero-title {
+    font-size: 3rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .land-hero {
+    min-height: 70vh;
+    padding: 80px 0;
+  }
+
+  .land-hero-title {
+    font-size: 2.5rem;
+  }
+
+  .land-hero-text {
+    font-size: 1rem;
+  }
+
+  .land-search-box {
+    flex-direction: column;
+    background: transparent;
+    box-shadow: none;
+    gap: 15px;
+  }
+
+  .search-icon {
+    display: none;
+  }
+
+  .land-search-input {
+    width: 100%;
+    border-radius: 50px;
+    background: white;
+  }
+
+  .land-search-btn {
+    width: 100%;
+    margin-right: 0;
+  }
+
+  .land-quick-stats {
+    gap: 30px;
+  }
+}
+
+@media (max-width: 576px) {
+  .land-hero-title {
+    font-size: 2rem;
+  }
+
+  .land-hero-badge {
+    font-size: 0.8rem;
+  }
+
+  .quick-stat .stat-value {
+    font-size: 1.5rem;
+  }
+}

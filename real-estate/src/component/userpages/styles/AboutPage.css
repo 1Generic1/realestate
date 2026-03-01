@@ -1,0 +1,45 @@
+:root {
+  --color-primary-dark: #1a1a2e;
+  --color-gold: #b8860b;
+  --color-cream: #faf9f6;
+  --color-purple: #4b0082;
+  --color-rose-gold: #b76e79;
+  --color-silver: #c0c0c0;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Responsive container */
+@media (max-width: 1024px) {
+  .container {
+    padding: 0 30px;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 0 25px;
+  }
+}
+
+@media (max-width: 576px) {
+  .container {
+    padding: 0 20px;
+  }
+}
+
+@media (max-width: 375px) {
+  .container {
+    padding: 0 15px;
+  }
+}

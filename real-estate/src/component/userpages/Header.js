@@ -89,7 +89,7 @@ const Header = () => {
             <Link to="/" className="logo">
               <span className="logo-gold">TAYE'S</span>
               <span className="logo-cream">PROPERTY</span>
-              <div className="logo-tagline"> REALTY & Luxury Properties </div>
+              <div className="logo-tagline"> & REALTY SOLUTIONS </div>
             </Link>
 
             {/* Desktop Navigation */}

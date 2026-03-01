@@ -1,0 +1,99 @@
+.why-buy-section {
+  padding: 80px 0;
+  background: white;
+}
+
+.benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+  margin-top: 50px;
+  margin-bottom: 60px;
+}
+
+.benefit-card {
+  background: var(--cream);
+  padding: 40px 30px;
+  border-radius: 20px;
+  text-align: center;
+  box-shadow: var(--shadow-md);
+  transition: all 0.3s ease;
+  border: 1px solid rgba(184, 134, 11, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.benefit-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 5px;
+  background: var(--gradient-gold);
+  transform: translateX(-100%);
+  transition: transform 0.6s ease;
+}
+
+.benefit-card:hover {
+  transform: translateY(-15px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--gold);
+}
+
+.benefit-card:hover::before {
+  transform: translateX(0);
+}
+
+.benefit-icon-wrapper {
+  width: 80px;
+  height: 80px;
+  background: rgba(184, 134, 11, 0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 25px;
+  transition: all 0.3s ease;
+}
+
+.benefit-card:hover .benefit-icon-wrapper {
+  background: var(--gold);
+}
+
+.benefit-icon {
+  font-size: 2.5rem;
+  color: var(--gold);
+  transition: all 0.3s ease;
+}
+
+.benefit-card:hover .benefit-icon {
+  color: var(--primary-dark);
+}
+
+.benefit-title {
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+  color: var(--primary-dark);
+  font-family: "Playfair Display", serif;
+}
+
+.benefit-description {
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.benefit-stats {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: var(--gold);
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.stats-check {
+  color: var(--gold);
+}

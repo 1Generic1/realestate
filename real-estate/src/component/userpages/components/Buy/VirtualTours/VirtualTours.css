@@ -1,0 +1,261 @@
+.virtual-tours-section {
+  padding: 80px 0;
+  background: linear-gradient(135deg, var(--primary-dark) 0%, #2a2a4a 100%);
+}
+
+.virtual-tours-section .section-subtitle {
+  color: var(--gold);
+}
+
+.virtual-tours-section .section-title {
+  color: var(--cream);
+}
+
+.virtual-tours-section .section-description {
+  color: var(--silver);
+}
+
+.tours-slider {
+  position: relative;
+  max-width: 900px;
+  margin: 50px auto;
+  overflow: hidden;
+  border-radius: 20px;
+}
+
+.slider-container {
+  overflow: hidden;
+  border-radius: 20px;
+}
+
+.slider-track {
+  display: flex;
+  transition: transform 0.5s ease;
+}
+
+.tour-slide {
+  flex: 0 0 100%;
+  position: relative;
+}
+
+.tour-image {
+  position: relative;
+  height: 500px;
+}
+
+.tour-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.tour-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to top, rgba(26, 26, 46, 0.8), transparent);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--cream);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.tour-slide:hover .tour-overlay {
+  opacity: 1;
+}
+
+.play-button {
+  width: 80px;
+  height: 80px;
+  background: var(--gold);
+  border: none;
+  border-radius: 50%;
+  color: var(--primary-dark);
+  font-size: 2rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 20px;
+  animation: pulse 2s infinite;
+}
+
+.play-button:hover {
+  transform: scale(1.1);
+  background: var(--cream);
+}
+
+.tour-info {
+  text-align: center;
+}
+
+.tour-info h3 {
+  font-size: 1.8rem;
+  margin-bottom: 10px;
+  font-family: "Playfair Display", serif;
+}
+
+.tour-info span {
+  color: var(--gold);
+  font-size: 1rem;
+}
+
+.slider-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid var(--gold);
+  border-radius: 50%;
+  color: var(--cream);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 10;
+}
+
+.slider-btn:hover {
+  background: var(--gold);
+  color: var(--primary-dark);
+}
+
+.slider-btn.prev {
+  left: 20px;
+}
+
+.slider-btn.next {
+  right: 20px;
+}
+
+.slider-dots {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.dot.active {
+  background: var(--gold);
+  transform: scale(1.2);
+}
+
+.tours-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 25px;
+  margin-top: 40px;
+}
+
+.tour-card {
+  position: relative;
+  height: 200px;
+  border-radius: 15px;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.tour-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.tour-card:hover img {
+  transform: scale(1.1);
+}
+
+.tour-card-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to top, rgba(26, 26, 46, 0.9), transparent);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--cream);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.tour-card:hover .tour-card-overlay {
+  opacity: 1;
+}
+
+.small-play-btn {
+  width: 40px;
+  height: 40px;
+  background: var(--gold);
+  border: none;
+  border-radius: 50%;
+  color: var(--primary-dark);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 10px;
+}
+
+.small-play-btn:hover {
+  transform: scale(1.1);
+}
+
+.tour-card-overlay h4 {
+  font-size: 1rem;
+  text-align: center;
+  padding: 0 10px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .tour-image {
+    height: 350px;
+  }
+
+  .play-button {
+    width: 60px;
+    height: 60px;
+    font-size: 1.5rem;
+  }
+
+  .tour-info h3 {
+    font-size: 1.4rem;
+  }
+
+  .tours-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 576px) {
+  .tours-grid {
+    grid-template-columns: 1fr;
+    max-width: 350px;
+    margin: 30px auto 0;
+  }
+
+  .tour-image {
+    height: 300px;
+  }
+
+  .slider-btn {
+    width: 35px;
+    height: 35px;
+  }
+}

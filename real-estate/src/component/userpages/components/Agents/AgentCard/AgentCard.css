@@ -1,0 +1,240 @@
+.agent-card {
+  background: white;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  border: 1px solid rgba(184, 134, 11, 0.1);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.agent-card:hover {
+  transform: translateY(-15px);
+  box-shadow: 0 20px 40px rgba(184, 134, 11, 0.2);
+  border-color: var(--gold);
+}
+
+.agent-image {
+  position: relative;
+  height: 300px;
+  overflow: hidden;
+}
+
+.agent-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.agent-card:hover .agent-image img {
+  transform: scale(1.1);
+}
+
+.agent-social {
+  position: absolute;
+  bottom: -50px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  padding: 15px;
+  background: linear-gradient(to top, rgba(26, 26, 46, 0.9), transparent);
+  transition: bottom 0.3s ease;
+}
+
+.agent-card:hover .agent-social {
+  bottom: 0;
+}
+
+.agent-social a {
+  width: 35px;
+  height: 35px;
+  background: var(--gold);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary-dark);
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.agent-card:hover .agent-social a {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.agent-social a:nth-child(1) {
+  transition-delay: 0.1s;
+}
+.agent-social a:nth-child(2) {
+  transition-delay: 0.2s;
+}
+.agent-social a:nth-child(3) {
+  transition-delay: 0.3s;
+}
+.agent-social a:nth-child(4) {
+  transition-delay: 0.4s;
+}
+
+.agent-social a:hover {
+  background: var(--cream);
+  transform: translateY(-3px) scale(1.1);
+}
+
+.agent-info {
+  padding: 25px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.agent-name {
+  font-size: 1.4rem;
+  color: var(--primary-dark);
+  margin-bottom: 5px;
+  font-family: "Playfair Display", serif;
+}
+
+.agent-title {
+  color: var(--gold);
+  font-weight: 600;
+  margin-bottom: 15px;
+  font-size: 0.95rem;
+}
+
+.agent-specialties {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.specialty-tag {
+  background: rgba(184, 134, 11, 0.1);
+  color: var(--primary-dark);
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.agent-card:hover .specialty-tag {
+  background: rgba(184, 134, 11, 0.2);
+}
+
+.agent-stats {
+  display: flex;
+  justify-content: space-around;
+  padding: 15px 0;
+  margin-bottom: 20px;
+  border-top: 1px solid rgba(184, 134, 11, 0.1);
+  border-bottom: 1px solid rgba(184, 134, 11, 0.1);
+}
+
+.agent-stat {
+  text-align: center;
+}
+
+.stat-count {
+  display: block;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--gold);
+  line-height: 1.2;
+}
+
+.stat-label {
+  font-size: 0.8rem;
+  color: #666;
+  text-transform: uppercase;
+}
+
+.agent-contact {
+  display: flex;
+  gap: 10px;
+  margin-top: auto;
+}
+
+.contact-link {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 10px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.contact-link:first-child {
+  background: var(--gold);
+  color: var(--primary-dark);
+}
+
+.contact-link:last-child {
+  background: rgba(184, 134, 11, 0.1);
+  color: var(--primary-dark);
+}
+
+.contact-link:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(184, 134, 11, 0.3);
+}
+
+.contact-link:first-child:hover {
+  background: #9c6e0a;
+}
+
+.contact-link:last-child:hover {
+  background: rgba(184, 134, 11, 0.2);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .agent-image {
+    height: 250px;
+  }
+
+  .agent-name {
+    font-size: 1.3rem;
+  }
+
+  .agent-info {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 576px) {
+  .agent-image {
+    height: 280px;
+  }
+
+  .agent-stats {
+    padding: 12px 0;
+  }
+
+  .stat-count {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 375px) {
+  .agent-contact {
+    flex-direction: column;
+  }
+
+  .agent-image {
+    height: 250px;
+  }
+}

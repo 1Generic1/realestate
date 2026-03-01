@@ -1,0 +1,147 @@
+/* AboutCTA.css - Fully Responsive */
+
+.about-cta {
+  padding: 100px 0;
+  background:
+    linear-gradient(135deg, rgba(26, 26, 46, 0.97), rgba(75, 0, 130, 0.97)),
+    url("https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80")
+      center/cover fixed;
+  color: var(--color-cream);
+  text-align: center;
+}
+
+.about-cta .cta-wrapper {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.about-cta h2 {
+  font-size: 3rem;
+  margin-bottom: 20px;
+  font-family: "Playfair Display", serif;
+}
+
+.about-cta p {
+  font-size: 1.3rem;
+  margin-bottom: 40px;
+  opacity: 0.9;
+  line-height: 1.8;
+  padding: 0 20px;
+}
+
+.cta-buttons {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--color-gold) 0%, #9c6e0a 100%);
+  color: var(--color-primary-dark);
+  padding: 15px 35px;
+  border-radius: 50px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+  display: inline-block;
+  min-width: 200px;
+}
+
+.btn-primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(184, 134, 11, 0.4);
+}
+
+.btn-outline.light {
+  background: transparent;
+  color: var(--color-cream);
+  padding: 15px 35px;
+  border-radius: 50px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  border: 2px solid var(--color-cream);
+  display: inline-block;
+  min-width: 200px;
+}
+
+.btn-outline.light:hover {
+  background: var(--color-cream);
+  color: var(--color-primary-dark);
+}
+
+/* ===== RESPONSIVE BREAKPOINTS ===== */
+
+/* Tablets (768px and below) */
+@media (max-width: 768px) {
+  .about-cta {
+    padding: 70px 0;
+  }
+
+  .about-cta h2 {
+    font-size: 2.2rem;
+  }
+
+  .about-cta p {
+    font-size: 1.1rem;
+    padding: 0 15px;
+  }
+
+  .cta-buttons {
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+  }
+
+  .btn-primary,
+  .btn-outline.light {
+    width: 100%;
+    max-width: 300px;
+    padding: 15px 20px;
+  }
+}
+
+/* Mobile Large (576px and below) */
+@media (max-width: 576px) {
+  .about-cta {
+    padding: 50px 0;
+  }
+
+  .about-cta h2 {
+    font-size: 1.8rem;
+  }
+
+  .about-cta p {
+    font-size: 1rem;
+    margin-bottom: 30px;
+  }
+
+  .btn-primary,
+  .btn-outline.light {
+    padding: 12px 20px;
+    font-size: 0.95rem;
+    max-width: 250px;
+  }
+}
+
+/* Mobile Small (375px and below) */
+@media (max-width: 375px) {
+  .about-cta h2 {
+    font-size: 1.5rem;
+  }
+
+  .about-cta p {
+    font-size: 0.95rem;
+  }
+
+  .btn-primary,
+  .btn-outline.light {
+    padding: 10px 15px;
+    font-size: 0.9rem;
+    min-width: 180px;
+  }
+}

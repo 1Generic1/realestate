@@ -1,0 +1,353 @@
+.invest-benefits-section {
+  padding: 100px 0;
+  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+}
+
+.benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 30px;
+  margin-top: 50px;
+  margin-bottom: 60px;
+}
+
+.benefit-card {
+  background: white;
+  padding: 35px 25px;
+  border-radius: 20px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  transition: all 0.4s ease;
+  border: 1px solid rgba(184, 134, 11, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.benefit-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 5px;
+  background: linear-gradient(135deg, var(--gold) 0%, #9c6e0a 100%);
+  transform: translateX(-100%);
+  transition: transform 0.6s ease;
+}
+
+.benefit-card:hover {
+  transform: translateY(-15px);
+  box-shadow: 0 20px 40px rgba(184, 134, 11, 0.2);
+  border-color: var(--gold);
+}
+
+.benefit-card:hover::before {
+  transform: translateX(0);
+}
+
+.benefit-icon-wrapper {
+  width: 80px;
+  height: 80px;
+  background: rgba(184, 134, 11, 0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 25px;
+  transition: all 0.4s ease;
+}
+
+.benefit-card:hover .benefit-icon-wrapper {
+  background: var(--gold);
+  transform: rotateY(180deg);
+}
+
+.benefit-icon {
+  font-size: 2.5rem;
+  color: var(--gold);
+  transition: all 0.4s ease;
+}
+
+.benefit-card:hover .benefit-icon {
+  color: var(--primary-dark);
+  transform: rotateY(180deg);
+}
+
+.benefit-title {
+  font-size: 1.3rem;
+  color: var(--primary-dark);
+  margin-bottom: 15px;
+  font-family: "Playfair Display", serif;
+}
+
+.benefit-description {
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 20px;
+  font-size: 0.95rem;
+}
+
+.benefit-stats {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: var(--gold);
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding-top: 15px;
+  border-top: 1px solid rgba(184, 134, 11, 0.1);
+}
+
+.stats-arrow {
+  color: var(--gold);
+  animation: bounce 2s ease infinite;
+}
+
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+.market-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 30px;
+  margin-bottom: 60px;
+  padding: 40px;
+  background: linear-gradient(135deg, var(--primary-dark) 0%, #2a2a4a 100%);
+  border-radius: 20px;
+}
+
+.stat-box {
+  text-align: center;
+  color: var(--cream);
+}
+
+.stat-number {
+  display: block;
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--gold);
+  margin-bottom: 5px;
+  font-family: "Playfair Display", serif;
+}
+
+.stat-label {
+  font-size: 0.9rem;
+  opacity: 0.8;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.testimonials-heading {
+  text-align: center;
+  font-size: 1.8rem;
+  color: var(--primary-dark);
+  margin-bottom: 40px;
+  font-family: "Playfair Display", serif;
+}
+
+.testimonials-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 30px;
+}
+
+.testimonial-card {
+  background: white;
+  padding: 30px;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(184, 134, 11, 0.1);
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.testimonial-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--gold);
+}
+
+.quote-mark {
+  font-size: 4rem;
+  color: var(--gold);
+  opacity: 0.2;
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  font-family: serif;
+}
+
+.testimonial-quote {
+  color: #555;
+  line-height: 1.8;
+  margin-bottom: 20px;
+  font-style: italic;
+  position: relative;
+  z-index: 1;
+}
+
+.testimonial-author {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.testimonial-author img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--gold);
+}
+
+.testimonial-author h4 {
+  color: var(--primary-dark);
+  font-size: 1.1rem;
+  margin-bottom: 5px;
+}
+
+.testimonial-author p {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+/* ===== RESPONSIVE BREAKPOINTS ===== */
+
+/* Large Desktop (1200px and below) */
+@media (max-width: 1200px) {
+  .stat-number {
+    font-size: 2rem;
+  }
+}
+
+/* Desktop (1024px and below) */
+@media (max-width: 1024px) {
+  .benefits-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .market-stats {
+    grid-template-columns: repeat(2, 1fr);
+    padding: 30px;
+  }
+
+  .stat-number {
+    font-size: 1.8rem;
+  }
+}
+
+/* Tablets (768px and below) */
+@media (max-width: 768px) {
+  .invest-benefits-section {
+    padding: 60px 0;
+  }
+
+  .benefits-grid {
+    gap: 20px;
+  }
+
+  .benefit-card {
+    padding: 25px 20px;
+  }
+
+  .benefit-icon-wrapper {
+    width: 70px;
+    height: 70px;
+  }
+
+  .benefit-icon {
+    font-size: 2rem;
+  }
+
+  .benefit-title {
+    font-size: 1.2rem;
+  }
+
+  .market-stats {
+    padding: 25px;
+    gap: 20px;
+  }
+
+  .testimonials-grid {
+    grid-template-columns: 1fr;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  .testimonials-heading {
+    font-size: 1.6rem;
+  }
+}
+
+/* Mobile Large (576px and below) */
+@media (max-width: 576px) {
+  .benefits-grid {
+    grid-template-columns: 1fr;
+    max-width: 400px;
+    margin: 30px auto 40px;
+  }
+
+  .market-stats {
+    grid-template-columns: 1fr;
+    max-width: 300px;
+    margin: 0 auto 40px;
+    padding: 20px;
+  }
+
+  .stat-box {
+    padding: 10px 0;
+  }
+
+  .stat-number {
+    font-size: 1.8rem;
+  }
+
+  .testimonial-card {
+    padding: 25px;
+  }
+
+  .quote-mark {
+    font-size: 3rem;
+  }
+}
+
+/* Mobile Small (375px and below) */
+@media (max-width: 375px) {
+  .benefit-card {
+    padding: 20px 15px;
+  }
+
+  .benefit-icon-wrapper {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 15px;
+  }
+
+  .benefit-icon {
+    font-size: 1.8rem;
+  }
+
+  .benefit-title {
+    font-size: 1.1rem;
+  }
+
+  .benefit-description {
+    font-size: 0.9rem;
+  }
+
+  .testimonial-author {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .testimonial-author img {
+    margin: 0 auto;
+  }
+}

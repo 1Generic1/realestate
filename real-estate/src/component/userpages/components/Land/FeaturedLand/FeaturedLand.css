@@ -1,0 +1,42 @@
+.featured-land-section {
+  padding: 80px 0;
+  background: white;
+}
+
+.featured-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 30px;
+  margin-top: 50px;
+}
+
+.view-all-wrapper {
+  text-align: center;
+  margin-top: 50px;
+}
+
+.view-all-btn {
+  background: transparent;
+  border: 2px solid var(--gold);
+  color: var(--primary-dark);
+  padding: 15px 40px;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.view-all-btn:hover {
+  background: var(--gold);
+  color: var(--primary-dark);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(184, 134, 11, 0.3);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .featured-grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,186 @@
+.land-card {
+  background: white;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  transition: all 0.4s ease;
+  border: 1px solid rgba(184, 134, 11, 0.1);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.land-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 40px rgba(184, 134, 11, 0.2);
+  border-color: var(--gold);
+}
+
+.land-card-image {
+  position: relative;
+  height: 240px;
+  overflow: hidden;
+}
+
+.land-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.land-card:hover .land-card-image img {
+  transform: scale(1.1);
+}
+
+.land-type-badge {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: linear-gradient(135deg, var(--gold) 0%, #9c6e0a 100%);
+  color: var(--primary-dark);
+  padding: 5px 15px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.land-card-content {
+  padding: 25px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.land-title {
+  font-size: 1.3rem;
+  color: var(--primary-dark);
+  margin-bottom: 10px;
+  font-family: "Playfair Display", serif;
+}
+
+.land-location {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #666;
+  margin-bottom: 15px;
+  font-size: 0.95rem;
+}
+
+.location-icon {
+  color: var(--gold);
+}
+
+.land-specs {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px 0;
+  margin-bottom: 15px;
+  border-top: 1px solid rgba(184, 134, 11, 0.1);
+  border-bottom: 1px solid rgba(184, 134, 11, 0.1);
+}
+
+.spec {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #555;
+}
+
+.spec-icon {
+  color: var(--gold);
+}
+
+.land-price {
+  font-weight: 700;
+  color: var(--gold);
+  font-size: 1.1rem;
+}
+
+.land-features {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.feature-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(184, 134, 11, 0.1);
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  color: #555;
+}
+
+.feature-icon {
+  color: var(--gold);
+  font-size: 0.8rem;
+}
+
+.land-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  font-size: 0.9rem;
+}
+
+.zoning {
+  background: rgba(184, 134, 11, 0.2);
+  color: var(--gold);
+  padding: 3px 10px;
+  border-radius: 15px;
+  font-weight: 500;
+}
+
+.agent-name {
+  color: #666;
+  font-style: italic;
+}
+
+.view-details-btn {
+  width: 100%;
+  background: transparent;
+  border: 2px solid var(--gold);
+  color: var(--primary-dark);
+  padding: 12px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: auto;
+}
+
+.view-details-btn:hover {
+  background: var(--gold);
+  color: var(--primary-dark);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .land-card-image {
+    height: 200px;
+  }
+
+  .land-title {
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .land-specs {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .land-footer {
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
+  }
+}

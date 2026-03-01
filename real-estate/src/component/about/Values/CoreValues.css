@@ -1,0 +1,189 @@
+/* CoreValues.css - Fully Responsive */
+
+.values-section {
+  padding: 100px 0;
+  background: white;
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 60px;
+  padding: 0 20px;
+}
+
+.section-subtitle {
+  color: var(--color-gold);
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 15px;
+}
+
+.section-title {
+  font-family: "Playfair Display", serif;
+  font-size: 2.8rem;
+  font-weight: 800;
+  color: var(--color-primary-dark);
+  margin-bottom: 20px;
+  line-height: 1.2;
+}
+
+.section-description {
+  color: #666;
+  font-size: 1.1rem;
+  max-width: 700px;
+  margin: 0 auto;
+  line-height: 1.8;
+  padding: 0 15px;
+}
+
+.values-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 30px;
+  margin-top: 50px;
+  padding: 0 20px;
+}
+
+.value-card {
+  text-align: center;
+  padding: 40px 30px;
+  background: var(--color-cream);
+  border-radius: 15px;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(184, 134, 11, 0.1);
+}
+
+.value-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 30px rgba(184, 134, 11, 0.15);
+  border-color: var(--color-gold);
+}
+
+.value-icon {
+  font-size: 3rem;
+  color: var(--color-gold);
+  margin-bottom: 20px;
+}
+
+.value-card h3 {
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+  color: var(--color-primary-dark);
+}
+
+.value-card p {
+  color: #666;
+  line-height: 1.6;
+  font-size: 0.95rem;
+}
+
+/* ===== RESPONSIVE BREAKPOINTS ===== */
+
+/* Desktop (1024px and below) */
+@media (max-width: 1024px) {
+  .values-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+  }
+
+  .section-title {
+    font-size: 2.5rem;
+  }
+}
+
+/* Tablets (768px and below) */
+@media (max-width: 768px) {
+  .values-section {
+    padding: 70px 0;
+  }
+
+  .section-title {
+    font-size: 2rem;
+  }
+
+  .section-description {
+    font-size: 1rem;
+  }
+
+  .values-grid {
+    gap: 20px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .value-card {
+    padding: 30px 20px;
+  }
+
+  .value-card h3 {
+    font-size: 1.3rem;
+  }
+}
+
+/* Mobile Large (576px and below) */
+@media (max-width: 576px) {
+  .values-section {
+    padding: 50px 0;
+  }
+
+  .values-grid {
+    grid-template-columns: 1fr;
+    max-width: 400px;
+  }
+
+  .section-title {
+    font-size: 1.8rem;
+  }
+
+  .section-subtitle {
+    font-size: 0.9rem;
+    letter-spacing: 2px;
+  }
+
+  .section-description {
+    font-size: 0.95rem;
+  }
+
+  .value-card {
+    padding: 30px 25px;
+  }
+
+  .value-icon {
+    font-size: 2.5rem;
+  }
+
+  .value-card h3 {
+    font-size: 1.3rem;
+  }
+
+  .value-card p {
+    font-size: 0.9rem;
+  }
+}
+
+/* Mobile Small (375px and below) */
+@media (max-width: 375px) {
+  .section-title {
+    font-size: 1.6rem;
+  }
+
+  .value-card {
+    padding: 25px 20px;
+  }
+
+  .value-icon {
+    font-size: 2.2rem;
+  }
+
+  .value-card h3 {
+    font-size: 1.2rem;
+  }
+
+  .value-card p {
+    font-size: 0.85rem;
+  }
+}

@@ -1,0 +1,97 @@
+.recently-sold-section {
+  padding: 80px 0;
+  background: white;
+}
+
+.sold-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  margin-top: 40px;
+}
+
+.sold-card {
+  background: var(--cream);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(184, 134, 11, 0.1);
+}
+
+.sold-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--gold);
+}
+
+.sold-image {
+  position: relative;
+  height: 150px;
+  overflow: hidden;
+}
+
+.sold-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.sold-card:hover .sold-image img {
+  transform: scale(1.1);
+}
+
+.sold-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: var(--primary-dark);
+  color: var(--cream);
+  padding: 3px 10px;
+  border-radius: 15px;
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+.sold-details {
+  padding: 15px;
+}
+
+.sold-details h4 {
+  font-size: 1rem;
+  margin-bottom: 5px;
+  color: var(--primary-dark);
+}
+
+.sold-location {
+  color: #666;
+  font-size: 0.85rem;
+  margin-bottom: 8px;
+}
+
+.sold-price {
+  color: var(--gold);
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin-bottom: 5px;
+}
+
+.sold-date {
+  color: #999;
+  font-size: 0.8rem;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .sold-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 576px) {
+  .sold-grid {
+    grid-template-columns: 1fr;
+    max-width: 350px;
+    margin: 30px auto 0;
+  }
+}

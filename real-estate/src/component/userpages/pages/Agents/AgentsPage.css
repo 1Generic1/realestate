@@ -1,0 +1,26 @@
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Montserrat:wght@300;400;500;600;700;800&display=swap");
+
+:root {
+  --primary-dark: #1a1a2e;
+  --gold: #b8860b;
+  --cream: #faf9f6;
+  --purple: #4b0082;
+  --rose-gold: #b76e79;
+  --silver: #c0c0c0;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.agents-page {
+  overflow-x: hidden;
+}
