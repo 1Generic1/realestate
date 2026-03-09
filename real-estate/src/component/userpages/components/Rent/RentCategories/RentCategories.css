@@ -1,0 +1,258 @@
+.rent-categories {
+  padding: 100px 0;
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Section Header */
+.rent-section-header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.rent-section-tag {
+  color: var(--rent-gold);
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  font-weight: 600;
+  display: inline-block;
+  margin-bottom: 15px;
+  padding: 0 20px;
+  position: relative;
+}
+
+.rent-section-tag::before,
+.rent-section-tag::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 30px;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--rent-gold),
+    transparent
+  );
+}
+
+.rent-section-tag::before {
+  left: -30px;
+}
+
+.rent-section-tag::after {
+  right: -30px;
+}
+
+.rent-section-title {
+  font-size: 2.8rem;
+  color: var(--rent-primary-dark);
+  margin-bottom: 20px;
+  font-family: "Playfair Display", serif;
+  line-height: 1.2;
+}
+
+.rent-section-text {
+  color: #666;
+  font-size: 1.1rem;
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* Grid */
+.rent-categories-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 25px;
+}
+
+/* Category Card */
+.rent-category-card {
+  perspective: 1000px;
+}
+
+.rent-category-inner {
+  background: white;
+  padding: 40px 25px;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(184, 134, 11, 0.1);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+}
+
+.rent-category-inner:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 40px rgba(184, 134, 11, 0.15);
+  border-color: var(--rent-gold);
+}
+
+.rent-category-inner::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(184, 134, 11, 0.1),
+    transparent
+  );
+  transition: left 0.5s ease;
+}
+
+.rent-category-inner:hover::before {
+  left: 100%;
+}
+
+/* Icon */
+.rent-category-icon-wrapper {
+  margin-bottom: 25px;
+  display: inline-block;
+}
+
+.rent-category-icon {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(
+    135deg,
+    rgba(184, 134, 11, 0.1) 0%,
+    rgba(184, 134, 11, 0.2) 100%
+  );
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.2rem;
+  color: var(--rent-gold);
+  margin: 0 auto;
+  transition: all 0.4s ease;
+}
+
+.rent-category-inner:hover .rent-category-icon {
+  background: linear-gradient(135deg, var(--rent-gold) 0%, #9c6e0a 100%);
+  color: var(--rent-primary-dark);
+  transform: scale(1.1) rotate(360deg);
+}
+
+/* Title */
+.rent-category-title {
+  font-size: 1.5rem;
+  color: var(--rent-primary-dark);
+  margin-bottom: 10px;
+  font-family: "Playfair Display", serif;
+  transition: color 0.3s ease;
+}
+
+.rent-category-inner:hover .rent-category-title {
+  color: var(--rent-gold);
+}
+
+/* Description */
+.rent-category-description {
+  color: #666;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+/* Footer */
+.rent-category-footer {
+  position: relative;
+  padding-top: 15px;
+}
+
+.rent-category-count {
+  display: inline-block;
+  color: var(--rent-gold);
+  font-weight: 600;
+  font-size: 0.95rem;
+  position: relative;
+  z-index: 2;
+}
+
+.rent-category-line {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--rent-gold),
+    transparent
+  );
+  transition: width 0.4s ease;
+}
+
+.rent-category-inner:hover .rent-category-line {
+  width: 60px;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .rent-section-title {
+    font-size: 2.3rem;
+  }
+
+  .rent-categories-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .rent-categories {
+    padding: 60px 0;
+  }
+
+  .rent-section-title {
+    font-size: 2rem;
+  }
+
+  .rent-section-text {
+    font-size: 1rem;
+    padding: 0 20px;
+  }
+
+  .rent-category-inner {
+    padding: 30px 20px;
+  }
+}
+
+@media (max-width: 576px) {
+  .rent-categories-grid {
+    grid-template-columns: 1fr;
+    max-width: 350px;
+    margin: 0 auto;
+  }
+
+  .rent-section-title {
+    font-size: 1.8rem;
+  }
+
+  .rent-section-tag {
+    font-size: 0.8rem;
+  }
+
+  .rent-section-tag::before,
+  .rent-section-tag::after {
+    width: 20px;
+  }
+
+  .rent-section-tag::before {
+    left: -20px;
+  }
+
+  .rent-section-tag::after {
+    right: -20px;
+  }
+}

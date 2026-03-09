@@ -1,0 +1,40 @@
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Montserrat:wght@300;400;500;600;700;800&display=swap");
+
+:root {
+  --rent-primary-dark: #1a1a2e;
+  --rent-gold: #b8860b;
+  --rent-cream: #faf9f6;
+  --rent-purple: #4b0082;
+  --rent-rose-gold: #b76e79;
+  --rent-silver: #c0c0c0;
+  --rent-gradient-gold: linear-gradient(
+    135deg,
+    var(--rent-gold) 0%,
+    #9c6e0a 100%
+  );
+  --rent-gradient-purple: linear-gradient(
+    135deg,
+    var(--rent-purple) 0%,
+    #3a0066 100%
+  );
+  --rent-shadow-sm: 0 4px 6px rgba(0, 0, 0, 0.05);
+  --rent-shadow-md: 0 10px 20px rgba(0, 0, 0, 0.1);
+  --rent-shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.rent-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.rent-page {
+  overflow-x: hidden;
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+}

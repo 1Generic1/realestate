@@ -1,0 +1,224 @@
+.rent-inquiry {
+  padding: 80px 0;
+  background: white;
+}
+
+.rent-inquiry-wrapper {
+  max-width: 800px;
+  margin: 0 auto;
+  background: var(--rent-cream);
+  border-radius: 30px;
+  padding: 50px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(184, 134, 11, 0.1);
+}
+
+/* Header */
+.rent-inquiry-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.rent-inquiry-tag {
+  color: var(--rent-gold);
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  font-weight: 600;
+  display: inline-block;
+  margin-bottom: 15px;
+}
+
+.rent-inquiry-title {
+  font-size: 2.2rem;
+  color: var(--rent-primary-dark);
+  margin-bottom: 15px;
+  font-family: "Playfair Display", serif;
+  line-height: 1.2;
+}
+
+.rent-inquiry-subtitle {
+  color: #666;
+  font-size: 1rem;
+  line-height: 1.6;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+/* Form */
+.rent-inquiry-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.rent-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.rent-form-group {
+  position: relative;
+  width: 100%;
+}
+
+.rent-form-field-icon {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--rent-gold);
+  font-size: 0.9rem;
+  z-index: 1;
+  transition: all 0.3s ease;
+}
+
+.rent-form-group:focus-within .rent-form-field-icon {
+  transform: translateY(-50%) scale(1.2);
+  color: #9c6e0a;
+}
+
+.rent-form-field,
+.rent-form-textarea {
+  width: 100%;
+  padding: 14px 15px 14px 45px;
+  border: 2px solid #eee;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  font-family: "Montserrat", sans-serif;
+  background: white;
+}
+
+.rent-form-textarea {
+  padding-left: 15px;
+  resize: vertical;
+}
+
+.rent-form-group.rent-form-full {
+  grid-column: span 2;
+}
+
+.rent-form-field:focus,
+.rent-form-textarea:focus {
+  outline: none;
+  border-color: var(--rent-gold);
+  box-shadow: 0 0 0 3px rgba(184, 134, 11, 0.1);
+}
+
+.rent-form-field:hover,
+.rent-form-textarea:hover {
+  border-color: var(--rent-rose-gold);
+}
+
+/* Select styling */
+select.rent-form-field {
+  appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23b8860b' stroke-width='2'><polyline points='6 9 12 15 18 9'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 15px center;
+  cursor: pointer;
+}
+
+/* Submit button */
+.rent-form-submit {
+  background: linear-gradient(135deg, var(--rent-gold) 0%, #9c6e0a 100%);
+  color: var(--rent-primary-dark);
+  border: none;
+  padding: 16px 40px;
+  border-radius: 50px;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 10px;
+  width: 100%;
+  max-width: 300px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.rent-form-submit:hover:not(:disabled) {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(184, 134, 11, 0.3);
+}
+
+.rent-form-submit:hover:not(:disabled) .rent-submit-icon {
+  transform: translateX(5px);
+}
+
+.rent-form-submit:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.rent-submit-icon {
+  transition: transform 0.3s ease;
+}
+
+/* Success message */
+.rent-form-success {
+  margin-top: 20px;
+  padding: 12px;
+  background: rgba(40, 167, 69, 0.1);
+  border: 1px solid #28a745;
+  color: #28a745;
+  border-radius: 10px;
+  text-align: center;
+  animation: rent-success-pop 0.4s ease;
+}
+
+@keyframes rent-success-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .rent-inquiry-wrapper {
+    padding: 30px 20px;
+  }
+
+  .rent-inquiry-title {
+    font-size: 1.8rem;
+  }
+
+  .rent-form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .rent-form-group.rent-form-full {
+    grid-column: span 1;
+  }
+
+  .rent-form-submit {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 576px) {
+  .rent-inquiry-title {
+    font-size: 1.6rem;
+  }
+
+  .rent-form-field,
+  .rent-form-textarea {
+    padding: 12px 12px 12px 40px;
+    font-size: 0.9rem;
+  }
+
+  .rent-form-field-icon {
+    left: 12px;
+  }
+}

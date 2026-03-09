@@ -1,194 +1,751 @@
+/* LandHero.css - Premium animated hero for Land page */
+
+/* Import fonts */
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Montserrat:wght@300;400;500;600;700;800&display=swap");
+
+:root {
+  --land-primary-dark: #1a1a2e;
+  --land-gold: #b8860b;
+  --land-cream: #faf9f6;
+  --land-purple: #4b0082;
+  --land-rose-gold: #b76e79;
+  --land-silver: #c0c0c0;
+  --land-gradient-gold: linear-gradient(
+    135deg,
+    var(--land-gold) 0%,
+    #9c6e0a 100%
+  );
+  --land-gradient-purple: linear-gradient(
+    135deg,
+    var(--land-purple) 0%,
+    #3a0066 100%
+  );
+}
+
+/* ===== MAIN HERO SECTION ===== */
 .land-hero {
-  min-height: 80vh;
+  min-height: 100vh;
   background:
-    linear-gradient(135deg, rgba(26, 26, 46, 0.95), rgba(75, 0, 130, 0.9)),
+    linear-gradient(135deg, rgba(26, 26, 46, 0.97), rgba(75, 0, 130, 0.95)),
     url("https://images.unsplash.com/photo-1500382017468-9049fed747ef?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80")
       center/cover fixed;
   display: flex;
   align-items: center;
   position: relative;
-  color: var(--cream);
+  color: var(--land-cream);
+  overflow: hidden;
 }
 
+/* Overlay with subtle pattern */
 .land-hero-overlay {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(0, 0, 0, 0.2);
+  z-index: 1;
 }
 
+/* ===== ANIMATED BACKGROUND PARTICLES ===== */
+.land-hero-particles {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.land-particle {
+  position: absolute;
+  background: rgba(184, 134, 11, 0.1);
+  border-radius: 50%;
+  filter: blur(40px);
+  animation: land-particle-float 20s infinite ease-in-out;
+}
+
+.land-particle-1 {
+  width: 400px;
+  height: 400px;
+  top: -150px;
+  right: -150px;
+  animation-delay: 0s;
+  background: rgba(184, 134, 11, 0.15);
+}
+
+.land-particle-2 {
+  width: 500px;
+  height: 500px;
+  bottom: -200px;
+  left: -200px;
+  background: rgba(75, 0, 130, 0.15);
+  animation-delay: 5s;
+}
+
+.land-particle-3 {
+  width: 300px;
+  height: 300px;
+  top: 30%;
+  left: 10%;
+  background: rgba(183, 110, 121, 0.1);
+  animation-delay: 10s;
+}
+
+.land-particle-4 {
+  width: 350px;
+  height: 350px;
+  bottom: 20%;
+  right: 15%;
+  background: rgba(184, 134, 11, 0.1);
+  animation-delay: 15s;
+}
+
+@keyframes land-particle-float {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  25% {
+    transform: translate(50px, -30px) scale(1.1);
+  }
+  50% {
+    transform: translate(20px, 50px) scale(0.9);
+  }
+  75% {
+    transform: translate(-40px, 20px) scale(1.05);
+  }
+}
+
+/* ===== HERO CONTENT ===== */
 .land-hero-content {
-  max-width: 900px;
+  max-width: 1000px;
   margin: 0 auto;
   position: relative;
-  z-index: 2;
+  z-index: 10;
   padding: 0 20px;
   text-align: center;
+  animation: land-fade-up 1s ease;
 }
 
+@keyframes land-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===== ANIMATED ICON ===== */
+.land-hero-icon-wrapper {
+  margin-bottom: 30px;
+  display: inline-block;
+  position: relative;
+}
+
+.land-hero-icon-glow {
+  width: 100px;
+  height: 100px;
+  background: var(--land-gradient-gold);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: land-icon-pulse 3s infinite;
+  box-shadow: 0 0 40px rgba(184, 134, 11, 0.5);
+  position: relative;
+  z-index: 2;
+}
+
+.land-hero-icon {
+  font-size: 3rem;
+  color: var(--land-primary-dark);
+  animation: land-icon-rotate 10s linear infinite;
+}
+
+.land-hero-icon-ring {
+  position: absolute;
+  top: -12px;
+  left: -12px;
+  right: -12px;
+  bottom: -12px;
+  border: 2px solid var(--land-gold);
+  border-radius: 50%;
+  animation: land-ring-pulse 2s ease-out infinite;
+  z-index: 1;
+}
+
+.land-hero-icon-ring-2 {
+  position: absolute;
+  top: -22px;
+  left: -22px;
+  right: -22px;
+  bottom: -22px;
+  border: 1px solid rgba(184, 134, 11, 0.3);
+  border-radius: 50%;
+  animation: land-ring-pulse-2 3s ease-out infinite;
+  z-index: 1;
+}
+
+@keyframes land-icon-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 40px rgba(184, 134, 11, 0.5);
+  }
+  50% {
+    transform: scale(1.08);
+    box-shadow: 0 0 70px rgba(184, 134, 11, 0.8);
+  }
+}
+
+@keyframes land-icon-rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes land-ring-pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+@keyframes land-ring-pulse-2 {
+  0% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(1.8);
+    opacity: 0;
+  }
+}
+
+/* ===== BADGE ===== */
 .land-hero-badge {
   display: inline-block;
-  background: rgba(184, 134, 11, 0.2);
-  border: 1px solid var(--gold);
-  padding: 8px 20px;
+  background: rgba(184, 134, 11, 0.15);
+  border: 1px solid var(--land-gold);
+  padding: 8px 25px;
   border-radius: 50px;
   font-size: 0.9rem;
   margin-bottom: 25px;
-  backdrop-filter: blur(5px);
+  backdrop-filter: blur(10px);
+  animation: land-badge-glow 3s infinite;
+  letter-spacing: 1px;
 }
 
+@keyframes land-badge-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 15px rgba(184, 134, 11, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(184, 134, 11, 0.6);
+  }
+}
+
+/* ===== TITLE ===== */
 .land-hero-title {
-  font-size: 3.5rem;
+  font-size: 4rem;
   font-weight: 900;
   margin-bottom: 20px;
   line-height: 1.2;
   font-family: "Playfair Display", serif;
+  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
 }
 
-.gold-text {
-  color: var(--gold);
+.land-gold-text {
+  color: var(--land-gold);
+  position: relative;
+  display: inline-block;
 }
 
+.land-gold-text::after {
+  content: "";
+  position: absolute;
+  bottom: 5px;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--land-gold),
+    transparent
+  );
+  animation: land-underline 2s infinite;
+}
+
+@keyframes land-underline {
+  0%,
+  100% {
+    width: 0;
+    left: 50%;
+    opacity: 0;
+  }
+  50% {
+    width: 100%;
+    left: 0;
+    opacity: 1;
+  }
+}
+
+/* ===== TEXT ===== */
 .land-hero-text {
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   max-width: 700px;
   margin: 0 auto 40px;
   opacity: 0.9;
   line-height: 1.8;
+  animation: land-text-fade 1s ease 0.3s both;
 }
 
+@keyframes land-text-fade {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===== SEARCH WRAPPER ===== */
 .land-search-wrapper {
-  max-width: 700px;
+  max-width: 800px;
   margin: 0 auto 50px;
+  animation: land-search-slide 1s ease 0.4s both;
 }
 
+@keyframes land-search-slide {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===== SEARCH BOX ===== */
 .land-search-box {
   display: flex;
   align-items: center;
-  background: white;
-  border-radius: 60px;
-  padding: 5px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 70px;
+  padding: 6px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(184, 134, 11, 0.2);
+  transition: all 0.3s ease;
 }
 
-.search-icon {
-  color: var(--gold);
-  margin-left: 20px;
+.land-search-box:hover {
+  border-color: var(--land-gold);
+  box-shadow: 0 20px 50px rgba(184, 134, 11, 0.3);
+  transform: translateY(-2px);
+}
+
+.land-search-box:focus-within {
+  border-color: var(--land-gold);
+  box-shadow: 0 0 0 3px rgba(184, 134, 11, 0.3);
+}
+
+.land-search-icon {
+  color: var(--land-gold);
+  margin-left: 25px;
   font-size: 1.2rem;
+  animation: land-search-pulse 2s infinite;
+}
+
+@keyframes land-search-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+    color: #ffd700;
+  }
 }
 
 .land-search-input {
   flex: 1;
-  padding: 15px 20px;
+  padding: 16px 20px;
   border: none;
   font-size: 1rem;
   outline: none;
   background: transparent;
+  color: var(--land-cream);
+}
+
+.land-search-input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+  font-style: italic;
 }
 
 .land-search-btn {
-  background: linear-gradient(135deg, var(--gold) 0%, #9c6e0a 100%);
-  color: var(--primary-dark);
+  background: var(--land-gradient-gold);
+  color: var(--land-primary-dark);
   border: none;
-  padding: 12px 30px;
-  border-radius: 50px;
-  font-weight: 600;
+  padding: 14px 35px;
+  border-radius: 60px;
+  font-weight: 700;
+  font-size: 1rem;
   cursor: pointer;
   transition: all 0.3s ease;
   margin-right: 5px;
+  position: relative;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.land-search-btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  transition: left 0.5s ease;
 }
 
 .land-search-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(184, 134, 11, 0.4);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 10px 30px rgba(184, 134, 11, 0.4);
 }
 
+.land-search-btn:hover::before {
+  left: 100%;
+}
+
+.land-search-btn:active {
+  transform: translateY(-1px) scale(0.98);
+}
+
+/* ===== QUICK STATS ===== */
 .land-quick-stats {
   display: flex;
   justify-content: center;
-  gap: 60px;
+  gap: 70px;
   flex-wrap: wrap;
+  animation: land-stats-fade 1s ease 0.6s both;
 }
 
-.quick-stat {
+@keyframes land-stats-fade {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.land-quick-stat {
   text-align: center;
+  position: relative;
 }
 
-.quick-stat .stat-value {
+.land-quick-stat .land-stat-value {
   display: block;
-  font-size: 2rem;
+  font-size: 2.5rem;
   font-weight: 800;
-  color: var(--gold);
+  color: var(--land-gold);
   font-family: "Playfair Display", serif;
+  line-height: 1.2;
+  animation: land-count-pulse 2s infinite;
 }
 
-.quick-stat .stat-label {
-  font-size: 0.9rem;
+@keyframes land-count-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+    color: #ffd700;
+  }
+}
+
+.land-quick-stat .land-stat-label {
+  font-size: 0.95rem;
   opacity: 0.8;
   text-transform: uppercase;
   letter-spacing: 1px;
+  color: var(--land-cream);
 }
 
-/* Responsive */
+.land-stat-divider {
+  width: 2px;
+  height: 40px;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    var(--land-gold),
+    transparent
+  );
+  margin: 0 10px;
+}
+
+/* ===== SCROLL INDICATOR ===== */
+.land-scroll-indicator {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+  text-align: center;
+  animation: land-bounce 2s infinite;
+}
+
+.land-scroll-text {
+  display: block;
+  color: var(--land-cream);
+  font-size: 0.8rem;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  opacity: 0.7;
+}
+
+.land-scroll-line {
+  width: 2px;
+  height: 50px;
+  background: linear-gradient(to bottom, var(--land-gold), transparent);
+  margin: 0 auto;
+  position: relative;
+}
+
+.land-scroll-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--land-gold);
+  border-radius: 50%;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  animation: land-scroll-dot 2s ease infinite;
+}
+
+@keyframes land-scroll-dot {
+  0% {
+    top: 0;
+    opacity: 1;
+  }
+  100% {
+    top: 100%;
+    opacity: 0;
+  }
+}
+
+@keyframes land-bounce {
+  0%,
+  100% {
+    transform: translateX(-50%) translateY(0);
+  }
+  50% {
+    transform: translateX(-50%) translateY(-10px);
+  }
+}
+
+/* ===== RESPONSIVE BREAKPOINTS ===== */
+
+/* Large Desktop (1200px and below) */
+@media (max-width: 1200px) {
+  .land-hero-title {
+    font-size: 3.8rem;
+  }
+
+  .land-hero-icon-glow {
+    width: 90px;
+    height: 90px;
+  }
+
+  .land-hero-icon {
+    font-size: 2.8rem;
+  }
+}
+
+/* Desktop (1024px and below) */
 @media (max-width: 1024px) {
   .land-hero-title {
-    font-size: 3rem;
+    font-size: 3.2rem;
+  }
+
+  .land-hero-text {
+    font-size: 1.1rem;
+  }
+
+  .land-quick-stats {
+    gap: 50px;
+  }
+
+  .land-quick-stat .land-stat-value {
+    font-size: 2.2rem;
   }
 }
 
+/* Tablets (768px and below) */
 @media (max-width: 768px) {
   .land-hero {
-    min-height: 70vh;
-    padding: 80px 0;
+    min-height: auto;
+    padding: 120px 0 80px;
   }
 
   .land-hero-title {
-    font-size: 2.5rem;
+    font-size: 2.8rem;
   }
 
   .land-hero-text {
     font-size: 1rem;
+    margin-bottom: 30px;
+  }
+
+  .land-hero-icon-glow {
+    width: 80px;
+    height: 80px;
+  }
+
+  .land-hero-icon {
+    font-size: 2.4rem;
+  }
+
+  .land-search-wrapper {
+    margin-bottom: 40px;
   }
 
   .land-search-box {
     flex-direction: column;
-    background: transparent;
-    box-shadow: none;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    padding: 15px;
     gap: 15px;
   }
 
-  .search-icon {
+  .land-search-icon {
     display: none;
   }
 
   .land-search-input {
     width: 100%;
     border-radius: 50px;
-    background: white;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(184, 134, 11, 0.3);
+    color: var(--land-cream);
+    padding: 14px 20px;
+  }
+
+  .land-search-input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
   }
 
   .land-search-btn {
     width: 100%;
     margin-right: 0;
+    padding: 14px;
   }
 
   .land-quick-stats {
-    gap: 30px;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+  }
+
+  .land-stat-divider {
+    width: 100px;
+    height: 2px;
+    margin: 10px 0;
+  }
+
+  .land-scroll-indicator {
+    display: none;
   }
 }
 
+/* Mobile Large (576px and below) */
 @media (max-width: 576px) {
+  .land-hero {
+    padding: 100px 0 60px;
+  }
+
   .land-hero-title {
-    font-size: 2rem;
+    font-size: 2.2rem;
   }
 
   .land-hero-badge {
     font-size: 0.8rem;
+    padding: 6px 20px;
   }
 
-  .quick-stat .stat-value {
-    font-size: 1.5rem;
+  .land-hero-icon-glow {
+    width: 70px;
+    height: 70px;
+  }
+
+  .land-hero-icon {
+    font-size: 2.2rem;
+  }
+
+  .land-quick-stat .land-stat-value {
+    font-size: 2rem;
+  }
+
+  .land-quick-stat .land-stat-label {
+    font-size: 0.85rem;
+  }
+}
+
+/* Mobile Small (375px and below) */
+@media (max-width: 375px) {
+  .land-hero-title {
+    font-size: 2rem;
+  }
+
+  .land-hero-text {
+    font-size: 0.95rem;
+  }
+
+  .land-hero-icon-glow {
+    width: 60px;
+    height: 60px;
+  }
+
+  .land-hero-icon {
+    font-size: 1.8rem;
+  }
+
+  .land-search-input {
+    padding: 12px 15px;
+    font-size: 0.9rem;
+  }
+
+  .land-search-btn {
+    padding: 12px;
+    font-size: 0.95rem;
   }
 }

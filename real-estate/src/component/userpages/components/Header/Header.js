@@ -11,7 +11,7 @@ import {
   FaLinkedinIn,
   FaInstagram,
 } from "react-icons/fa";
-import "./styles/Header.css";
+import "./Header.css";
 
 const Header = () => {
   const location = useLocation();

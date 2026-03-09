@@ -1,0 +1,132 @@
+.rent-cta {
+  padding: 80px 0;
+  background: linear-gradient(
+    135deg,
+    var(--rent-primary-dark) 0%,
+    #2a2a4a 100%
+  );
+  color: var(--rent-cream);
+}
+
+.rent-cta-wrapper {
+  max-width: 700px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.rent-cta-title {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+  font-family: "Playfair Display", serif;
+  line-height: 1.2;
+}
+
+.rent-cta-text {
+  font-size: 1.1rem;
+  margin-bottom: 40px;
+  opacity: 0.9;
+  line-height: 1.8;
+}
+
+.rent-cta-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  align-items: center;
+}
+
+.rent-cta-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 40px;
+  border-radius: 50px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  font-size: 1.1rem;
+}
+
+.rent-cta-primary {
+  background: linear-gradient(135deg, var(--rent-gold) 0%, #9c6e0a 100%);
+  color: var(--rent-primary-dark);
+}
+
+.rent-cta-primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(184, 134, 11, 0.4);
+}
+
+.rent-cta-primary:hover .rent-cta-icon {
+  transform: translateX(5px);
+}
+
+.rent-cta-icon {
+  transition: transform 0.3s ease;
+}
+
+.rent-cta-contact {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.rent-cta-contact-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--rent-cream);
+  text-decoration: none;
+  padding: 10px 20px;
+  border: 1px solid rgba(184, 134, 11, 0.3);
+  border-radius: 50px;
+  transition: all 0.3s ease;
+}
+
+.rent-cta-contact-item:hover {
+  background: var(--rent-gold);
+  color: var(--rent-primary-dark);
+  transform: translateY(-2px);
+  border-color: var(--rent-gold);
+}
+
+.rent-cta-contact-item svg {
+  font-size: 1.1rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .rent-cta {
+    padding: 60px 0;
+  }
+
+  .rent-cta-title {
+    font-size: 2rem;
+  }
+
+  .rent-cta-text {
+    font-size: 1rem;
+  }
+
+  .rent-cta-button {
+    padding: 14px 30px;
+    font-size: 1rem;
+  }
+
+  .rent-cta-contact {
+    flex-direction: column;
+    width: 100%;
+    max-width: 300px;
+  }
+
+  .rent-cta-contact-item {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 576px) {
+  .rent-cta-title {
+    font-size: 1.8rem;
+  }
+}

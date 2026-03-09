@@ -1,0 +1,127 @@
+.about-hero {
+  min-height: 100vh;
+  background:
+    linear-gradient(135deg, rgba(26, 26, 46, 0.95), rgba(75, 0, 130, 0.9)),
+    url("https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80")
+      center/cover fixed;
+  display: flex;
+  align-items: center;
+  position: relative;
+  color: var(--about-cream);
+}
+
+.about-hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.about-hero-content {
+  max-width: 900px;
+  margin: 0 auto;
+  text-align: center;
+  position: relative;
+  z-index: 2;
+  padding: 0 20px;
+}
+
+.about-hero-badge {
+  display: inline-block;
+  background: rgba(184, 134, 11, 0.2);
+  border: 1px solid var(--about-gold);
+  padding: 8px 20px;
+  border-radius: 50px;
+  font-size: 0.9rem;
+  margin-bottom: 25px;
+  backdrop-filter: blur(5px);
+}
+
+.about-hero-title {
+  font-size: 3.8rem;
+  font-weight: 900;
+  margin-bottom: 25px;
+  line-height: 1.2;
+  font-family: "Playfair Display", serif;
+}
+
+.about-gold-text {
+  color: var(--about-gold);
+}
+
+.about-hero-text {
+  font-size: 1.2rem;
+  max-width: 700px;
+  margin: 0 auto 40px;
+  opacity: 0.9;
+  line-height: 1.8;
+}
+
+.about-hero-stats {
+  display: flex;
+  justify-content: center;
+  gap: 60px;
+  flex-wrap: wrap;
+}
+
+.about-stat-item {
+  text-align: center;
+}
+
+.about-stat-number {
+  display: block;
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--about-gold);
+  font-family: "Playfair Display", serif;
+}
+
+.about-stat-label {
+  font-size: 1rem;
+  opacity: 0.8;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .about-hero-title {
+    font-size: 3.2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .about-hero {
+    min-height: auto;
+    padding: 120px 0 60px;
+  }
+
+  .about-hero-title {
+    font-size: 2.5rem;
+  }
+
+  .about-hero-text {
+    font-size: 1rem;
+  }
+
+  .about-hero-stats {
+    gap: 30px;
+  }
+
+  .about-stat-number {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .about-hero-title {
+    font-size: 2rem;
+  }
+
+  .about-hero-stats {
+    flex-direction: column;
+    gap: 20px;
+  }
+}

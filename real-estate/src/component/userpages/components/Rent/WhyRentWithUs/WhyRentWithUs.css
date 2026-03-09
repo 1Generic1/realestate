@@ -1,0 +1,175 @@
+.rent-why {
+  padding: 100px 0;
+  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.rent-why-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  gap: 60px;
+  align-items: center;
+}
+
+/* Left Content */
+.rent-why-tag {
+  color: var(--rent-gold);
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  font-weight: 600;
+  display: inline-block;
+  margin-bottom: 15px;
+  position: relative;
+  padding-left: 20px;
+}
+
+.rent-why-tag::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 10px;
+  height: 2px;
+  background: var(--rent-gold);
+}
+
+.rent-why-title {
+  font-size: 2.8rem;
+  color: var(--rent-primary-dark);
+  margin-bottom: 25px;
+  font-family: "Playfair Display", serif;
+  line-height: 1.2;
+}
+
+.rent-why-text {
+  color: #666;
+  font-size: 1.1rem;
+  line-height: 1.8;
+  max-width: 400px;
+}
+
+/* Benefits Grid */
+.rent-benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 25px;
+}
+
+.rent-benefit-card {
+  background: white;
+  padding: 35px 25px;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(184, 134, 11, 0.1);
+  transition: all 0.4s ease;
+  text-align: center;
+}
+
+.rent-benefit-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 40px rgba(184, 134, 11, 0.15);
+  border-color: var(--rent-gold);
+}
+
+.rent-benefit-icon-wrapper {
+  margin-bottom: 20px;
+  display: inline-block;
+}
+
+.rent-benefit-icon {
+  width: 70px;
+  height: 70px;
+  background: linear-gradient(
+    135deg,
+    rgba(184, 134, 11, 0.1) 0%,
+    rgba(184, 134, 11, 0.2) 100%
+  );
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  color: var(--rent-gold);
+  margin: 0 auto;
+  transition: all 0.4s ease;
+}
+
+.rent-benefit-card:hover .rent-benefit-icon {
+  background: linear-gradient(135deg, var(--rent-gold) 0%, #9c6e0a 100%);
+  color: var(--rent-primary-dark);
+  transform: scale(1.1) rotate(360deg);
+}
+
+.rent-benefit-title {
+  font-size: 1.2rem;
+  color: var(--rent-primary-dark);
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.rent-benefit-description {
+  color: #666;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .rent-why-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .rent-why-content {
+    text-align: center;
+  }
+
+  .rent-why-text {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .rent-why-tag {
+    padding-left: 0;
+  }
+
+  .rent-why-tag::before {
+    display: none;
+  }
+
+  .rent-benefits-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .rent-why {
+    padding: 60px 0;
+  }
+
+  .rent-why-title {
+    font-size: 2rem;
+  }
+
+  .rent-why-text {
+    font-size: 1rem;
+  }
+
+  .rent-benefits-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 576px) {
+  .rent-benefits-grid {
+    grid-template-columns: 1fr;
+    max-width: 350px;
+    margin: 0 auto;
+  }
+
+  .rent-why-title {
+    font-size: 1.8rem;
+  }
+}

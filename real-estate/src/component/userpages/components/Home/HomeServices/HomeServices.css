@@ -1,0 +1,137 @@
+/* HomeServices.css */
+
+.home-services {
+  padding: 100px 0;
+  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+}
+
+.home-services-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+  margin-top: 50px;
+}
+
+.home-service-card {
+  background: white;
+  padding: 35px;
+  border-radius: 20px;
+  box-shadow: var(--home-shadow-sm);
+  transition: all 0.4s ease;
+  border: 1px solid rgba(184, 134, 11, 0.1);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.home-service-card:hover {
+  transform: translateY(-10px);
+  box-shadow: var(--home-shadow-lg);
+  border-color: var(--home-gold);
+}
+
+.home-service-icon-wrapper {
+  width: 70px;
+  height: 70px;
+  background: rgba(184, 134, 11, 0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 25px;
+  transition: all 0.4s ease;
+}
+
+.home-service-card:hover .home-service-icon-wrapper {
+  background: var(--home-gold);
+  transform: rotateY(180deg);
+}
+
+.home-service-icon {
+  font-size: 2rem;
+  color: var(--home-gold);
+  transition: all 0.4s ease;
+}
+
+.home-service-card:hover .home-service-icon {
+  color: var(--home-primary-dark);
+  transform: rotateY(180deg);
+}
+
+.home-service-title {
+  font-size: 1.3rem;
+  margin-bottom: 15px;
+  color: var(--home-primary-dark);
+  font-family: "Playfair Display", serif;
+}
+
+.home-service-description {
+  color: #666;
+  margin-bottom: 20px;
+  line-height: 1.6;
+  font-size: 0.95rem;
+}
+
+.home-service-features {
+  list-style: none;
+  margin-bottom: 25px;
+  flex: 1;
+}
+
+.home-service-features li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  color: #555;
+  font-size: 0.9rem;
+}
+
+.home-feature-icon {
+  color: var(--home-gold);
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+
+.home-service-link {
+  color: var(--home-gold);
+  text-decoration: none;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+  margin-top: auto;
+}
+
+.home-service-link:hover {
+  gap: 12px;
+  color: var(--home-rose-gold);
+}
+
+.home-link-icon {
+  transition: transform 0.3s ease;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .home-services-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .home-services {
+    padding: 60px 0;
+  }
+
+  .home-services-grid {
+    grid-template-columns: 1fr;
+    max-width: 450px;
+    margin: 30px auto 0;
+  }
+
+  .home-service-card {
+    padding: 30px 25px;
+  }
+}
