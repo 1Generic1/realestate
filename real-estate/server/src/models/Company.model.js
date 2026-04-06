@@ -317,6 +317,68 @@ const companySchema = new mongoose.Schema(
         trim: true,
       },
     },
+    signature: {
+      type: String, // URL to signature image
+      default: "",
+    },
+    signaturePublicId: {
+      type: String,
+      default: "",
+    },
+    signatoryName: {
+      type: String,
+      default: "",
+      trim: true,
+    },
+    signatoryTitle: {
+      type: String,
+      default: "",
+      trim: true,
+    },
+
+    // ===== REFERENCE LETTER TEMPLATES =====
+    referenceTemplates: {
+      visa: {
+        recipientTitle: {
+          type: String,
+          default: "TO THE EMBASSY/VISA OFFICER",
+        },
+        letterTitle: { type: String, default: "LETTER OF REFERENCE" },
+        salutation: { type: String, default: "Dear Visa Officer" },
+      },
+      employment: {
+        recipientTitle: {
+          type: String,
+          default: "TO THE HUMAN RESOURCES MANAGER",
+        },
+        letterTitle: {
+          type: String,
+          default: "LETTER OF EMPLOYMENT REFERENCE",
+        },
+        salutation: { type: String, default: "Dear Hiring Manager" },
+      },
+      bank: {
+        recipientTitle: { type: String, default: "TO THE BANK MANAGER" },
+        letterTitle: { type: String, default: "BANK REFERENCE LETTER" },
+        salutation: { type: String, default: "Dear Bank Manager" },
+      },
+      general: {
+        recipientTitle: { type: String, default: "TO WHOM IT MAY CONCERN" },
+        letterTitle: { type: String, default: "CERTIFICATE OF GOOD STANDING" },
+        salutation: { type: String, default: "To Whom It May Concern" },
+      },
+      custom: {
+        type: Map,
+        of: new mongoose.Schema({
+          recipientTitle: { type: String, required: true },
+          letterTitle: { type: String, required: true },
+          salutation: { type: String, required: true },
+          createdAt: { type: Date, default: Date.now },
+          updatedAt: { type: Date, default: Date.now },
+        }),
+        default: {},
+      },
+    },
   },
   {
     timestamps: true,

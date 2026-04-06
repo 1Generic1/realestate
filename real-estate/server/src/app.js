@@ -7,6 +7,9 @@ const cors = require("cors");
 // Import routes
 const companyRoutes = require("./routes/company.routes");
 const adminRoutes = require("./routes/admin/auth.routes");
+const userRoutes = require("./routes/user.routes");
+const adminUserRoutes = require("./routes/admin/user.routes");
+const adminUserRoutess = require("./routes/admin/adminuser.routes");
 const propertyRoutes = require("./routes/propertyRoutes");
 const testimonialRoutes = require("./routes/testimonial.routes");
 const inquiryRoutes = require("./routes/inquiry.routes");
@@ -161,9 +164,12 @@ app.use("/api", companyRoutes);
 
 // Auth routes (login, verify, etc.)
 app.use("/api/auth", adminRoutes);
+app.use("/api/admin/users", adminUserRoutes); // Admin user management routes
+app.use("/api", adminUserRoutess); // Admin user management routes (reference letters, etc.)
+app.use("/api/users", userRoutes); // User routes (profile, avatar upload, etc.)
 
 // Property routes - PUBLIC (for frontend)
-app.use("/api", propertyRoutes); // This handles GET /api/properties, etc.
+app.use("/api", propertyRoutes); // This handles GET /api/poperties, etc.
 app.use("/api", testimonialRoutes);
 app.use("/api", inquiryRoutes);
 app.use("/api", newsletterRoutes);

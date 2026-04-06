@@ -1,0 +1,315 @@
+.editor-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1100;
+  padding: 20px;
+}
+
+@media (max-width: 768px) {
+  .editor-overlay {
+    padding: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .editor-overlay {
+    padding: 12px;
+  }
+}
+
+.editor-container {
+  background: white;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 550px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+/* Responsive container for tablets */
+@media (max-width: 768px) {
+  .editor-container {
+    width: 95%;
+    max-width: none;
+    border-radius: 12px;
+  }
+}
+
+/* Responsive container for mobile */
+@media (max-width: 480px) {
+  .editor-container {
+    width: 100%;
+    border-radius: 12px;
+  }
+}
+
+.editor-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid #eee;
+}
+
+@media (max-width: 480px) {
+  .editor-header {
+    padding: 16px;
+  }
+}
+
+.editor-header h3 {
+  font-size: 20px;
+  color: #1a1a2e;
+}
+
+@media (max-width: 480px) {
+  .editor-header h3 {
+    font-size: 18px;
+  }
+}
+
+.editor-close {
+  background: none;
+  border: none;
+  font-size: 28px;
+  cursor: pointer;
+  color: #999;
+  padding: 0 8px;
+}
+
+@media (max-width: 480px) {
+  .editor-close {
+    font-size: 24px;
+  }
+}
+
+.editor-form {
+  padding: 20px;
+}
+
+@media (max-width: 480px) {
+  .editor-form {
+    padding: 16px;
+  }
+}
+
+.editor-error {
+  background: #ffebee;
+  color: #c62828;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+
+@media (max-width: 480px) {
+  .editor-error {
+    padding: 10px;
+    font-size: 13px;
+    margin-bottom: 16px;
+  }
+}
+
+.editor-field {
+  margin-bottom: 20px;
+}
+
+@media (max-width: 480px) {
+  .editor-field {
+    margin-bottom: 16px;
+  }
+}
+
+.editor-field label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+  color: #333;
+  font-size: 14px;
+}
+
+@media (max-width: 480px) {
+  .editor-field label {
+    font-size: 13px;
+  }
+}
+
+.editor-field input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+@media (max-width: 480px) {
+  .editor-field input {
+    padding: 10px;
+    font-size: 13px;
+  }
+}
+
+.editor-field input:focus {
+  outline: none;
+  border-color: #b8860b;
+}
+
+.editor-field small {
+  display: block;
+  margin-top: 4px;
+  color: #999;
+  font-size: 12px;
+}
+
+@media (max-width: 480px) {
+  .editor-field small {
+    font-size: 11px;
+  }
+}
+
+.editor-preview {
+  margin: 24px 0;
+  padding: 16px;
+  background: #f9f9f9;
+  border-radius: 8px;
+}
+
+@media (max-width: 480px) {
+  .editor-preview {
+    margin: 20px 0;
+    padding: 12px;
+  }
+}
+
+.editor-preview h4 {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 12px;
+}
+
+@media (max-width: 480px) {
+  .editor-preview h4 {
+    font-size: 13px;
+  }
+}
+
+.preview-box {
+  background: white;
+  padding: 16px;
+  border-radius: 8px;
+  border: 1px solid #eee;
+}
+
+@media (max-width: 480px) {
+  .preview-box {
+    padding: 12px;
+  }
+}
+
+.preview-recipient {
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  word-break: break-word;
+}
+
+.preview-title {
+  font-size: 16px;
+  font-weight: bold;
+  color: #b8860b;
+  margin-bottom: 12px;
+  word-break: break-word;
+}
+
+@media (max-width: 480px) {
+  .preview-title {
+    font-size: 14px;
+  }
+}
+
+.preview-salutation {
+  font-size: 14px;
+  color: #333;
+  word-break: break-word;
+}
+
+@media (max-width: 480px) {
+  .preview-salutation {
+    font-size: 13px;
+  }
+}
+
+.editor-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+@media (max-width: 480px) {
+  .editor-actions {
+    flex-direction: column-reverse;
+    gap: 10px;
+    margin-top: 16px;
+  }
+
+  .editor-actions button {
+    width: 100%;
+  }
+}
+
+.btn-cancel {
+  background: #f0f0f0;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.btn-cancel:hover {
+  background: #e0e0e0;
+}
+
+@media (max-width: 480px) {
+  .btn-cancel {
+    padding: 12px;
+  }
+}
+
+.btn-save {
+  background: linear-gradient(135deg, #b8860b 0%, #9c6e0a 100%);
+  color: white;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s;
+}
+
+@media (max-width: 480px) {
+  .btn-save {
+    padding: 12px;
+  }
+}
+
+.btn-save:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(184, 134, 11, 0.3);
+}
+
+.btn-save:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}

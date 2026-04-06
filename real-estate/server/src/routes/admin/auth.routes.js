@@ -22,7 +22,7 @@ router.post("/admin/login", async (req, res, next) => {
       );
     }
 
-    const admin = await Admin.findOne({ username });
+    const admin = await Admin.findOne({ username }).select("+password");
     if (!admin) {
       throw new AppError("Invalid credentials", 401, "AuthenticationError");
     }

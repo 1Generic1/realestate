@@ -1,9 +1,16 @@
 import "./App.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate,
+  useLocation,
+} from "react-router-dom";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { useEffect } from "react";
-//import Header from "./component/userpages/Header";
+
+// User Pages
 import Header from "./component/userpages/components/Header/Header";
 import Footer from "./component/userpages/components/Footer/FooterPage";
 import HomePage from "./component/userpages/pages/Home/HomePage";
@@ -16,26 +23,56 @@ import AgentsPage from "./component/userpages/pages/Agents/AgentsPage";
 import ServicesPage from "./component/userpages/ServicesPage";
 import ConsultationPage from "./component/userpages/ConsultationPage";
 
+// Admin Pages
+import AdminLogin from "./component/adminpages/pages/Login";
+import AdminDashboard from "./component/adminpages/pages/Dashboard";
+import AdminTemplates from "./component/adminpages/pages/Templates";
+import AdminUsers from "./component/adminpages/pages/Users";
+import AdminReferenceLetters from "./component/adminpages/pages/ReferenceLetters";
+
 import { CompanyProvider } from "./context/CompanyContext";
+
+// Component to conditionally show Header and Footer
+const Layout = ({ children }) => {
+  const location = useLocation();
+  const isAdminRoute = location.pathname.startsWith("/admin");
+
+  return (
+    <>
+      {!isAdminRoute && <Header />}
+      {children}
+      {!isAdminRoute && <Footer />}
+    </>
+  );
+};
+
+// Protected route wrapper for admin
+const AdminRoute = ({ children }) => {
+  const token = localStorage.getItem("adminToken");
+  if (!token) {
+    return <Navigate to="/admin/login" replace />;
+  }
+  return children;
+};
 
 function App() {
   // Initialize AOS
   useEffect(() => {
     AOS.init({
-      duration: 1000, // Animation duration in milliseconds
-      once: true, // Whether animation should happen only once
-      offset: 100, // Offset from viewport
-      delay: 0, // Default delay
-      easing: "ease-in-out", // Easing function
+      duration: 1000,
+      once: true,
+      offset: 100,
+      delay: 0,
+      easing: "ease-in-out",
     });
   }, []);
 
   return (
     <BrowserRouter>
-      <div className="App">
-        <CompanyProvider>
-          <Header />
+      <CompanyProvider>
+        <Layout>
           <Routes>
+            {/* User Routes */}
             <Route path="/" element={<HomePage />} />
             <Route path="/buy" element={<BuyPage />} />
             <Route path="/rent" element={<RentPage />} />
@@ -48,10 +85,44 @@ function App() {
             <Route path="/vision" element={<div>Vision & Mission Page</div>} />
             <Route path="/privacy" element={<div>Privacy Policy</div>} />
             <Route path="/terms" element={<div>Terms of Service</div>} />
+
+            {/* Admin Routes */}
+            <Route path="/admin/login" element={<AdminLogin />} />
+            <Route
+              path="/admin"
+              element={
+                <AdminRoute>
+                  <AdminDashboard />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="/admin/templates"
+              element={
+                <AdminRoute>
+                  <AdminTemplates />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="/admin/users"
+              element={
+                <AdminRoute>
+                  <AdminUsers />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="/admin/letters"
+              element={
+                <AdminRoute>
+                  <AdminReferenceLetters />
+                </AdminRoute>
+              }
+            />
           </Routes>
-          <Footer />
-        </CompanyProvider>
-      </div>
+        </Layout>
+      </CompanyProvider>
     </BrowserRouter>
   );
 }

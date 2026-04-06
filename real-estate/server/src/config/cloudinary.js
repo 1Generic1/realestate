@@ -116,6 +116,28 @@ const uploadAgentImage = multer({
   },
 });
 
+// ==================== USER AVATAR STORAGE ====================
+const avatarStorage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: "tayes-property/avatars",
+    allowed_formats: ["jpg", "jpeg", "png", "webp"],
+    transformation: [{ width: 200, height: 200, crop: "fill" }],
+    format: "jpg",
+  },
+});
+
+const uploadAvatar = multer({
+  storage: avatarStorage,
+  limits: { fileSize: 2 * 1024 * 1024 }, // 2MB limit for avatars
+  fileFilter: (req, file, cb) => {
+    if (!file.mimetype.startsWith("image/")) {
+      return cb(new Error("Only image files are allowed"), false);
+    }
+    cb(null, true);
+  },
+});
+
 // Delete image from Cloudinary using either public ID or URL
 const deleteImage = async (identifier) => {
   try {
@@ -193,12 +215,83 @@ const deleteImageByPublicId = async (publicId) => {
   }
 };
 
+// ===== SIGNATURE STORAGE =====
+const signatureStorage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: "tayes-property/signatures",
+    allowed_formats: ["jpg", "jpeg", "png", "webp", "svg"],
+    transformation: [{ width: 300, height: 100, crop: "fit" }],
+    format: "png",
+  },
+});
+
+const uploadSignature = multer({
+  storage: signatureStorage,
+  limits: { fileSize: 1 * 1024 * 1024 }, // 1MB limit
+  fileFilter: (req, file, cb) => {
+    if (!file.mimetype.startsWith("image/")) {
+      return cb(new Error("Only image files are allowed"), false);
+    }
+    cb(null, true);
+  },
+});
+
+// ==================== BUFFER UPLOAD (for PDFs, etc.) ====================
+
+// Upload buffer to Cloudinary (for PDFs, documents, etc.)
+const uploadBuffer = (buffer, options) => {
+  return new Promise((resolve, reject) => {
+    const uploadStream = cloudinary.uploader.upload_stream(
+      options,
+      (error, result) => {
+        if (error) {
+          console.error("❌ Buffer upload failed:", error);
+          reject(error);
+        } else {
+          console.log("✅ Buffer uploaded to Cloudinary:", result.secure_url);
+          resolve(result);
+        }
+      },
+    );
+
+    // Write the buffer to the stream
+    uploadStream.end(buffer);
+  });
+};
+
+// Upload file from path (alternative method)
+const uploadFile = (filePath, options) => {
+  return new Promise((resolve, reject) => {
+    cloudinary.uploader.upload(filePath, options, (error, result) => {
+      if (error) {
+        console.error("❌ File upload failed:", error);
+        reject(error);
+      } else {
+        console.log("✅ File uploaded to Cloudinary:", result.secure_url);
+        resolve(result);
+      }
+    });
+  });
+};
+
 module.exports = {
+  // Multer upload instances
   uploadPropertyImages,
   uploadThumbnail,
-  deleteImage,
-  cloudinary,
   uploadTestimonialImage,
   uploadAgentImage,
+  uploadAvatar,
+  uploadSignature,
+
+  // Cloudinary instance
+  cloudinary,
+
+  //delete functions
+  deleteImage,
   deleteImageByPublicId,
+
+  // Buffer/file upload functions (for PDFs, etc.)
+  uploadBuffer,
+  uploadFile,
 };
