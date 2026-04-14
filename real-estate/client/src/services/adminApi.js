@@ -5,7 +5,7 @@ const API = axios.create({
   timeout: 10000,
 });
 
-// Add token to requests
+//Add token to requests
 API.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("adminToken");
@@ -16,6 +16,66 @@ API.interceptors.request.use(
     return config;
   },
   (error) => {
+    return Promise.reject(error);
+  },
+);
+
+/**  Request interceptor - adds token to every request
+API.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("token"); // For admin authentication
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  },
+); **/
+
+// Response interceptor - handles common errors
+API.interceptors.response.use(
+  (response) => {
+    // Return the full response object - DON'T just return response.data
+    // This preserves the structure for login response
+    return response;
+  },
+  (error) => {
+    // Handle common errors
+    if (error.response) {
+      const { status } = error.response;
+
+      switch (status) {
+        case 401:
+          console.log("Session expired. Please login again.");
+          localStorage.removeItem("adminToken");
+          // Optional: redirect to login
+          if (window.location.pathname !== "/admin/login") {
+            window.location.href = "/admin/login";
+          }
+          break;
+        case 403:
+          console.log("You do not have permission to perform this action.");
+          break;
+        case 404:
+          console.log("Resource not found.");
+          break;
+        case 500:
+          console.log("Server error. Please try again later.");
+          break;
+        default:
+          console.log(
+            `Error ${status}:`,
+            error.response.data?.message || "Unknown error",
+          );
+      }
+    } else if (error.request) {
+      console.log("No response from server. Please check your connection.");
+    } else {
+      console.log("Error:", error.message);
+    }
+
     return Promise.reject(error);
   },
 );
@@ -205,6 +265,388 @@ export const userAPI = {
       console.error("Error downloading reference letter:", error);
       throw error;
     }
+  },
+};
+
+export const inquiryAPI = {
+  getAllInquiries: async (params = {}) => {
+    const response = await API.get("/admin/inquiries", { params });
+    return response.data;
+  },
+  getInquiryById: async (id) => {
+    const response = await API.get(`/admin/inquiries/${id}`);
+    return response.data;
+  },
+  updateStatus: async (id, status) => {
+    const response = await API.patch(`/admin/inquiries/${id}/status`, {
+      status,
+    });
+    return response.data;
+  },
+  deleteInquiry: async (id) => {
+    const response = await API.delete(`/admin/inquiries/${id}`);
+    return response.data;
+  },
+};
+
+// Testimonial API (public)
+export const testimonialAPI = {
+  // Get all approved testimonials (public)
+  getAllTestimonials: async (params = {}) => {
+    const response = await API.get("/testimonials", { params });
+    return response.data;
+  },
+
+  // Get all testimonials (including pending/rejected) - Admin only
+  getAllTestimonialsAdmin: async (params = {}) => {
+    const response = await API.get("/admin/testimonials", { params });
+    return response.data;
+  },
+
+  // Get featured testimonials (public)
+  getFeaturedTestimonials: async (limit = 3) => {
+    const response = await API.get(`/testimonials/featured?limit=${limit}`);
+    return response.data;
+  },
+
+  // Get single testimonial (public)
+  getTestimonialById: async (id) => {
+    const response = await API.get(`/testimonials/${id}`);
+    return response.data;
+  },
+
+  // ==================== ADMIN ROUTES (Requires Authentication) ====================
+
+  // Get all testimonials (including pending/rejected) - Admin only
+  getAllTestimonialsAdmin: async (params = {}) => {
+    const response = await API.get("/admin/testimonials", { params });
+    return response.data;
+  },
+
+  // Get pending testimonials specifically
+  getPendingTestimonials: async () => {
+    const response = await API.get("/admin/testimonials/pending");
+    return response.data;
+  },
+
+  // Get rejected testimonials specifically
+  getRejectedTestimonials: async () => {
+    const response = await API.get("/admin/testimonials/rejected");
+    return response.data;
+  },
+
+  // Get approved testimonials specifically
+  getApprovedTestimonials: async () => {
+    const response = await API.get("/admin/testimonials/approved");
+    return response.data;
+  },
+
+  // Create new testimonial with optional image - Admin only
+  createTestimonial: async (formData) => {
+    const response = await API.post("/admin/testimonials", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    return response.data;
+  },
+
+  // Update testimonial text fields - Admin only
+  updateTestimonial: async (id, data) => {
+    const response = await API.put(`/admin/testimonials/${id}`, data);
+    return response.data;
+  },
+
+  // Upload/replace testimonial image - Admin only
+  uploadTestimonialImage: async (id, imageFile) => {
+    const formData = new FormData();
+    formData.append("image", imageFile);
+    const response = await API.post(
+      `/admin/testimonials/${id}/image`,
+      formData,
+      {
+        headers: { "Content-Type": "multipart/form-data" },
+      },
+    );
+    return response.data;
+  },
+
+  // Delete testimonial image only - Admin only
+  deleteTestimonialImage: async (id) => {
+    const response = await API.delete(`/admin/testimonials/${id}/image`);
+    return response.data;
+  },
+
+  // Delete testimonial completely (with image) - Admin only
+  deleteTestimonial: async (id) => {
+    const response = await API.delete(`/admin/testimonials/${id}`);
+    return response.data;
+  },
+
+  // Approve testimonial - Admin only
+  approveTestimonial: async (id) => {
+    const response = await API.patch(`/admin/testimonials/${id}/approve`);
+    return response.data;
+  },
+
+  // Reject testimonial - Admin only
+  rejectTestimonial: async (id) => {
+    const response = await API.patch(`/admin/testimonials/${id}/reject`);
+    return response.data;
+  },
+
+  // Toggle featured status - Admin only
+  toggleFeatured: async (id) => {
+    const response = await API.patch(`/admin/testimonials/${id}/featured`);
+    return response.data;
+  },
+
+  // Bulk delete testimonials - Admin only
+  bulkDeleteTestimonials: async (ids) => {
+    const response = await API.post("/admin/testimonials/bulk-delete", { ids });
+    return response.data;
+  },
+
+  // Bulk update status - Admin only
+  bulkUpdateStatus: async (ids, status) => {
+    const response = await API.post("/admin/testimonials/bulk-status", {
+      ids,
+      status,
+    });
+    return response.data;
+  },
+};
+
+// Company Management (Admin)
+export const companyAPI = {
+  // Get company information (public)
+  getCompanyInfo: async () => {
+    const response = await API.get("/company");
+    return response.data;
+  },
+
+  // Update entire company (admin)
+  updateCompany: async (data) => {
+    const response = await API.put("/admin/company", data);
+    return response.data;
+  },
+
+  // Update specific section (e.g., basic, contact, social)
+  updateCompanySection: async (section, data) => {
+    const response = await API.patch(`/admin/company/${section}`, data);
+    return response.data;
+  },
+
+  // Update specific field in a section
+  updateCompanyField: async (section, field, data) => {
+    const response = await API.patch(
+      `/admin/company/${section}/${field}`,
+      data,
+    );
+    return response.data;
+  },
+
+  // Update signatory information
+  updateSignatory: async (data) => {
+    const response = await API.patch("/admin/company/signatory", data);
+    return response.data;
+  },
+
+  // Upload signature image
+  uploadSignature: async (imageFile) => {
+    const formData = new FormData();
+    formData.append("signature", imageFile);
+    const response = await API.post("/admin/company/signature", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    return response.data;
+  },
+
+  // Delete signature
+  deleteSignature: async () => {
+    const response = await API.delete("/admin/company/signature");
+    return response.data;
+  },
+
+  // Get signature info
+  getSignatureInfo: async () => {
+    const response = await API.get("/admin/company/signature-info");
+    return response.data;
+  },
+
+  // Reset company to default
+  resetCompany: async () => {
+    const response = await API.post("/admin/company/reset");
+    return response.data;
+  },
+};
+
+// Property Management (Admin)
+export const propertyAPI = {
+  // Get all properties for admin (including sold/rented)
+  getAllPropertiesAdmin: async (params = {}) => {
+    const response = await API.get("/admin/properties", { params });
+    return response.data;
+  },
+
+  // Get single property for admin
+  getPropertyByIdAdmin: async (id) => {
+    const response = await API.get(`/admin/properties/${id}`);
+    return response.data;
+  },
+
+  // Create new property with images
+  createProperty: async (formData) => {
+    const response = await API.post("/admin/properties", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    return response.data;
+  },
+
+  // Update property (text fields only)
+  updateProperty: async (id, data) => {
+    const response = await API.put(`/admin/properties/${id}`, data);
+    return response.data;
+  },
+
+  // Add more images to existing property
+  addImages: async (id, imageFiles) => {
+    const formData = new FormData();
+    imageFiles.forEach((file) => {
+      formData.append("images", file);
+    });
+    const response = await API.post(
+      `/admin/properties/${id}/images`,
+      formData,
+      {
+        headers: { "Content-Type": "multipart/form-data" },
+      },
+    );
+    return response.data;
+  },
+
+  // Delete a single image from property
+  deleteImage: async (propertyId, imageIndex) => {
+    const response = await API.delete(
+      `/admin/properties/${propertyId}/images/${imageIndex}`,
+    );
+    return response.data;
+  },
+
+  // Update thumbnail (set which image is the thumbnail)
+  updateThumbnail: async (propertyId, imageIndex) => {
+    const response = await API.put(
+      `/admin/properties/${propertyId}/thumbnail/${imageIndex}`,
+    );
+    return response.data;
+  },
+
+  // Reorder images
+  reorderImages: async (propertyId, newOrder) => {
+    const response = await API.put(
+      `/admin/properties/${propertyId}/images/reorder`,
+      { newOrder },
+    );
+    return response.data;
+  },
+
+  // Update property status
+  updateStatus: async (id, status) => {
+    const response = await API.patch(`/admin/properties/${id}/status`, {
+      status,
+    });
+    return response.data;
+  },
+
+  // Toggle featured status
+  toggleFeatured: async (id) => {
+    const response = await API.patch(`/admin/properties/${id}/featured`);
+    return response.data;
+  },
+
+  // Delete property (with all images)
+  deleteProperty: async (id) => {
+    const response = await API.delete(`/admin/properties/${id}`);
+    return response.data;
+  },
+
+  // Bulk delete properties
+  bulkDeleteProperties: async (propertyIds) => {
+    const response = await API.post("/admin/properties/bulk-delete", {
+      propertyIds,
+    });
+    return response.data;
+  },
+
+  // Bulk update properties
+  bulkUpdateProperties: async (propertyIds, updateData) => {
+    const response = await API.patch("/admin/properties/bulk-update", {
+      propertyIds,
+      updateData,
+    });
+    return response.data;
+  },
+
+  // Export properties to CSV
+  exportPropertiesCSV: async () => {
+    const response = await API.get("/admin/properties/export/csv", {
+      responseType: "blob",
+    });
+    return response.data;
+  },
+};
+
+// Public Property API (for frontend display)
+export const publicPropertyAPI = {
+  // Get all properties with filters
+  getProperties: async (params = {}) => {
+    const response = await API.get("/properties", { params });
+    return response.data;
+  },
+
+  // Get featured properties
+  getFeaturedProperties: async () => {
+    const response = await API.get("/properties/featured");
+    return response.data;
+  },
+
+  // Get properties by type (buy/rent/land)
+  getPropertiesByType: async (type, params = {}) => {
+    // Build query string
+    const queryParams = new URLSearchParams();
+    Object.keys(params).forEach((key) => {
+      if (
+        params[key] !== undefined &&
+        params[key] !== null &&
+        params[key] !== ""
+      ) {
+        queryParams.append(key, params[key]);
+      }
+    });
+
+    const url = `/properties/type/${type}${queryParams.toString() ? `?${queryParams.toString()}` : ""}`;
+    console.log("📡 API URL:", url);
+
+    const response = await API.get(url);
+    return response.data;
+  },
+
+  // Search properties
+  searchProperties: async (searchParams) => {
+    const response = await API.get("/properties/search", {
+      params: searchParams,
+    });
+    return response.data;
+  },
+
+  // Get single property by ID
+  getPropertyById: async (id) => {
+    const response = await API.get(`/properties/${id}`);
+    return response.data;
+  },
+
+  // Get similar properties
+  getSimilarProperties: async (id) => {
+    const response = await API.get(`/properties/${id}/similar`);
+    return response.data;
   },
 };
 

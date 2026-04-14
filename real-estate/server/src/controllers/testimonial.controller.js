@@ -420,3 +420,61 @@ exports.toggleFeatured = async (req, res, next) => {
     next(error);
   }
 };
+
+// @desc    Get pending testimonials (for admin review)
+// @route   GET /api/admin/testimonials/pending
+// @access  Private
+exports.getPendingTestimonials = async (req, res, next) => {
+  try {
+    const testimonials = await Testimonial.find({ status: "pending" }).sort({
+      createdAt: -1,
+    });
+
+    res.json({
+      success: true,
+      data: testimonials,
+      count: testimonials.length,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Get rejected testimonials
+// @route   GET /api/admin/testimonials/rejected
+// @access  Private
+exports.getRejectedTestimonials = async (req, res, next) => {
+  try {
+    const testimonials = await Testimonial.find({ status: "rejected" }).sort({
+      createdAt: -1,
+    });
+
+    res.json({
+      success: true,
+      data: testimonials,
+      count: testimonials.length,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Get approved testimonials (admin view)
+// @route   GET /api/admin/testimonials/approved
+// @access  Private
+exports.getApprovedTestimonials = async (req, res, next) => {
+  try {
+    const testimonials = await Testimonial.find({ status: "approved" }).sort({
+      displayOrder: 1,
+      createdAt: -1,
+    });
+
+    res.json({
+      success: true,
+      data: testimonials,
+      count: testimonials.length,
+    });
+  } catch (error) {
+    next(error);
+  }
+};

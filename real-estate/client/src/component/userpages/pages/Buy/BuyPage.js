@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import BuyHero from "../../components/Buy/BuyHero/BuyHero";
@@ -15,6 +15,14 @@ import BuyCTA from "../../components/Buy/BuyCTA/BuyCTA";
 import "./BuyPage.css";
 
 const BuyPage = () => {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [propertyType, setPropertyType] = useState("");
+  const [priceRange, setPriceRange] = useState("all");
+  const [shouldScroll, setShouldScroll] = useState(false);
+
+  // Create a ref for the property grid section
+  const propertyGridRef = useRef(null);
+
   useEffect(() => {
     AOS.init({
       duration: 1000,
@@ -24,11 +32,58 @@ const BuyPage = () => {
     });
   }, []);
 
+  // Scroll to property grid when shouldScroll is true
+  useEffect(() => {
+    if (shouldScroll && propertyGridRef.current) {
+      const yOffset = -80; // Offset for header height
+      const element = propertyGridRef.current;
+      const y =
+        element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+
+      window.scrollTo({
+        top: y,
+        behavior: "smooth",
+      });
+      setShouldScroll(false);
+    }
+  }, [shouldScroll]);
+
+  const handleSearch = (term) => {
+    console.log("BuyPage received search:", term);
+    setSearchTerm(term);
+    setShouldScroll(true); // Trigger scroll after search
+  };
+
+  const handlePropertyTypeFilter = (type) => {
+    console.log("BuyPage received property type:", type);
+    setPropertyType(type);
+    setShouldScroll(true); // Trigger scroll after filter
+  };
+
+  const handlePriceFilter = (range) => {
+    console.log("BuyPage received price range:", range);
+    setPriceRange(range);
+    setShouldScroll(true); // Trigger scroll after filter
+  };
+
   return (
     <div className="buy-page">
-      <BuyHero />
+      <BuyHero
+        onSearch={handleSearch}
+        onPropertyTypeFilter={handlePropertyTypeFilter}
+        onPriceFilter={handlePriceFilter}
+      />
       <SearchCategories />
-      <PropertyGrid />
+
+      {/* Property Grid with ref */}
+      <div ref={propertyGridRef}>
+        <PropertyGrid
+          searchTerm={searchTerm}
+          propertyType={propertyType}
+          priceRange={priceRange}
+        />
+      </div>
+
       <PropertyTypes />
       <WhyBuyWithUs />
       <VirtualTours />

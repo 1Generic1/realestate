@@ -8,6 +8,20 @@ const { AppError } = require("../middleware/errorMiddleware");
 // @access  Public
 exports.submitInquiry = async (req, res, next) => {
   try {
+    // Log incoming request for debugging
+    console.log("📥 Incoming request body:", JSON.stringify(req.body, null, 2));
+
+    // Filter out any fields that are empty strings, null, or undefined
+    const filteredBody = {};
+    for (const [key, value] of Object.entries(req.body)) {
+      // Only include fields that have meaningful values
+      if (value !== "" && value !== null && value !== undefined) {
+        filteredBody[key] = value;
+      }
+    }
+
+    console.log("🧹 Filtered body:", JSON.stringify(filteredBody, null, 2));
+
     const {
       name,
       email,
@@ -23,61 +37,100 @@ exports.submitInquiry = async (req, res, next) => {
       source,
       propertyId,
       propertyTitle,
-    } = req.body;
+    } = filteredBody;
 
     // Validate required fields
     if (!name || !email || !message) {
-      throw new AppError(
-        "Name, email, and message are required",
-        400,
-        "ValidationError",
-      );
+      return res.status(400).json({
+        success: false,
+        message: "Name, email, and message are required",
+      });
     }
 
     // Validate email format
     const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
     if (!emailRegex.test(email)) {
-      throw new AppError(
-        "Please provide a valid email address",
-        400,
-        "ValidationError",
-      );
+      return res.status(400).json({
+        success: false,
+        message: "Please provide a valid email address",
+      });
     }
 
-    // Create new inquiry
-    const inquiry = new Inquiry({
+    // Validate message length
+    if (message.length < 10) {
+      return res.status(400).json({
+        success: false,
+        message: "Message must be at least 10 characters long",
+      });
+    }
+
+    // Build inquiry data with only valid fields
+    const inquiryData = {
       name,
       email,
-      phone,
-      serviceType: serviceType || "",
-      preferredLocation,
-      budgetRange,
-      propertyType,
-      landType,
-      timeline,
       message,
       inquiryType: inquiryType || "general",
       source: source || "contact_form",
-      propertyId,
-      propertyTitle,
       ipAddress:
         req.ip || req.connection?.remoteAddress || req.socket?.remoteAddress,
       userAgent: req.headers["user-agent"],
-    });
+    };
 
+    // Add optional fields only if they exist
+    if (phone) inquiryData.phone = phone;
+    if (serviceType) inquiryData.serviceType = serviceType;
+    if (preferredLocation) inquiryData.preferredLocation = preferredLocation;
+    if (budgetRange) inquiryData.budgetRange = budgetRange;
+    if (propertyType) inquiryData.propertyType = propertyType;
+    if (landType) inquiryData.landType = landType;
+    if (propertyId) inquiryData.propertyId = propertyId;
+    if (propertyTitle) inquiryData.propertyTitle = propertyTitle;
+
+    // Handle timeline - ONLY if it's a valid enum value
+    const validTimelines = [
+      "immediate",
+      "1-3months",
+      "3-6months",
+      "6-12months",
+      "researching",
+    ];
+    if (timeline && validTimelines.includes(timeline)) {
+      inquiryData.timeline = timeline;
+    }
+    // If timeline is not valid or doesn't exist, we explicitly do NOT add it
+
+    console.log("📝 Final inquiry data:", JSON.stringify(inquiryData, null, 2));
+
+    const inquiry = new Inquiry(inquiryData);
     await inquiry.save();
 
-    // Here you could send email notifications
-    // await sendInquiryNotificationEmail(inquiry);
-    // await sendAutoReplyEmail(inquiry.email, inquiry.name);
-
-    res.status(201).json({
+    return res.status(201).json({
       success: true,
-      data: inquiry,
-      message: "Inquiry submitted successfully. We'll get back to you soon.",
+      message:
+        "Thank you! Your message has been sent successfully. We'll get back to you soon.",
+      data: {
+        id: inquiry._id,
+        name: inquiry.name,
+        email: inquiry.email,
+        createdAt: inquiry.createdAt,
+      },
     });
   } catch (error) {
-    next(error);
+    console.error("❌ Submit inquiry error:", error);
+
+    if (error.name === "ValidationError") {
+      return res.status(400).json({
+        success: false,
+        message: Object.values(error.errors)
+          .map((err) => err.message)
+          .join(", "),
+      });
+    }
+
+    return res.status(500).json({
+      success: false,
+      message: "Server error. Please try again later.",
+    });
   }
 };
 

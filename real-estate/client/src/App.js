@@ -9,6 +9,8 @@ import {
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { useEffect } from "react";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 // User Pages
 import Header from "./component/userpages/components/Header/Header";
@@ -29,6 +31,10 @@ import AdminDashboard from "./component/adminpages/pages/Dashboard";
 import AdminTemplates from "./component/adminpages/pages/Templates";
 import AdminUsers from "./component/adminpages/pages/Users";
 import AdminReferenceLetters from "./component/adminpages/pages/ReferenceLetters";
+import AdminInquiries from "./component/adminpages/pages/Inquiries";
+import AdminTestimonials from "./component/adminpages/pages/AdminTestimonials";
+import AdminCompany from "./component/adminpages/pages/AdminCompany";
+import AdminProperties from "./component/adminpages/pages/AdminProperties";
 
 import { CompanyProvider } from "./context/CompanyContext";
 
@@ -120,8 +126,52 @@ function App() {
                 </AdminRoute>
               }
             />
+            <Route
+              path="/admin/inquiries"
+              element={
+                <AdminRoute>
+                  <AdminInquiries />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="/admin/testimonials"
+              element={
+                <AdminRoute>
+                  <AdminTestimonials />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="/admin/company"
+              element={
+                <AdminRoute>
+                  <AdminCompany />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="/admin/properties"
+              element={
+                <AdminRoute>
+                  <AdminProperties />
+                </AdminRoute>
+              }
+            />
           </Routes>
         </Layout>
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+        />
       </CompanyProvider>
     </BrowserRouter>
   );

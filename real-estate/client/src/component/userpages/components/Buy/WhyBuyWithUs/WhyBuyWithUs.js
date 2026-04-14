@@ -2,7 +2,7 @@ import React from "react";
 import {
   FaShieldAlt,
   FaHandshake,
-  FaMoneyBillWave,
+  FaChartLine,
   FaCheckCircle,
 } from "react-icons/fa";
 import "./WhyBuyWithUs.css";
@@ -10,72 +10,72 @@ import "./WhyBuyWithUs.css";
 const WhyBuyWithUs = () => {
   const benefits = [
     {
-      icon: <FaShieldAlt />,
-      title: "Verified Listings",
-      description: "All properties are verified for authentic documentation",
-      stats: "5,000+",
-      animation: "glow-animation",
+      icon: <FaShieldAlt className="whybuy-icon" />,
+      title: "Secure Transactions",
+      description:
+        "All transactions are legally vetted and secure with proper documentation.",
+      stats: "100% Secure",
     },
     {
-      icon: <FaHandshake />,
-      title: "Best Price Guarantee",
-      description: "We negotiate the best deals for our clients",
-      stats: "₦2B+ saved",
-      animation: "scale-animation",
+      icon: <FaHandshake className="whybuy-icon" />,
+      title: "Trusted Advisors",
+      description: "15+ years of experience in Nigerian real estate market.",
+      stats: "500+ Happy Clients",
     },
     {
-      icon: <FaMoneyBillWave />,
-      title: "Flexible Payment",
-      description: "Multiple payment options and mortgage assistance",
-      stats: "15+ partners",
-      animation: "swing-animation",
+      icon: <FaChartLine className="whybuy-icon" />,
+      title: "Best Returns",
+      description:
+        "Properties with proven appreciation and high ROI potential.",
+      stats: "25% Avg. ROI",
     },
   ];
 
   return (
-    <section className="why-buy-section">
-      <div className="container">
-        <div className="section-header" data-aos="fade-up">
-          <span className="section-subtitle">Why Choose Us</span>
-          <h2 className="section-title">Buy with Confidence</h2>
-          <p className="section-description">
-            We make your property purchase safe, transparent, and hassle-free
+    <section className="whybuy-section-wrapper">
+      <div className="whybuy-container">
+        <div className="whybuy-header" data-aos="fade-up">
+          <span className="whybuy-badge">Why Choose Us</span>
+          <h2 className="whybuy-title">
+            Why Buy With{" "}
+            <span className="whybuy-title-gold">TAYE'S PROPERTY</span>
+          </h2>
+          <p className="whybuy-description">
+            Experience excellence in real estate with our trusted services
           </p>
         </div>
 
-        <div className="benefits-grid">
+        <div className="whybuy-grid">
           {benefits.map((benefit, index) => (
             <div
               key={index}
-              className={`benefit-card ${benefit.animation}`}
+              className="whybuy-card"
               data-aos="fade-up"
-              data-aos-delay={index * 150}
+              data-aos-delay={index * 100}
             >
-              <div className="benefit-icon-wrapper">
-                <div className="benefit-icon">{benefit.icon}</div>
-              </div>
-              <h3 className="benefit-title">{benefit.title}</h3>
-              <p className="benefit-description">{benefit.description}</p>
-              <div className="benefit-stats">
-                <FaCheckCircle className="stats-check" />
+              <div className="whybuy-icon-wrapper">{benefit.icon}</div>
+              <h3 className="whybuy-card-title">{benefit.title}</h3>
+              <p className="whybuy-card-description">{benefit.description}</p>
+              <div className="whybuy-stats">
+                <FaCheckCircle className="whybuy-stats-check" />
                 <span>{benefit.stats}</span>
               </div>
             </div>
           ))}
         </div>
 
-        <div className="trust-badges" data-aos="fade-up">
-          <div className="badge">
-            <span className="badge-number">15+</span>
-            <span className="badge-text">Years Experience</span>
+        <div className="whybuy-trust">
+          <div className="whybuy-trust-item">
+            <span className="whybuy-trust-number">15+</span>
+            <span className="whybuy-trust-label">Years Experience</span>
           </div>
-          <div className="badge">
-            <span className="badge-number">5,000+</span>
-            <span className="badge-text">Happy Clients</span>
+          <div className="whybuy-trust-item">
+            <span className="whybuy-trust-number">500+</span>
+            <span className="whybuy-trust-label">Properties Sold</span>
           </div>
-          <div className="badge">
-            <span className="badge-number">98%</span>
-            <span className="badge-text">Satisfaction Rate</span>
+          <div className="whybuy-trust-item">
+            <span className="whybuy-trust-number">98%</span>
+            <span className="whybuy-trust-label">Client Satisfaction</span>
           </div>
         </div>
       </div>

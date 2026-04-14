@@ -31,6 +31,27 @@ router.get(
   testimonialController.getAllTestimonialsAdmin,
 );
 
+// Get pending testimonials only
+router.get(
+  "/admin/testimonials/pending",
+  adminAuth,
+  testimonialController.getPendingTestimonials,
+);
+
+// Get rejected testimonials only
+router.get(
+  "/admin/testimonials/rejected",
+  adminAuth,
+  testimonialController.getRejectedTestimonials,
+);
+
+// Get approved testimonials only (admin view)
+router.get(
+  "/admin/testimonials/approved",
+  adminAuth,
+  testimonialController.getApprovedTestimonials,
+);
+
 // @route   POST /api/admin/testimonials (with optional image)
 // @access  Private
 router.post(

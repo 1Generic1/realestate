@@ -1,9 +1,51 @@
-.why-buy-section {
+/* Why Buy Section - Unique Classnames */
+.whybuy-section-wrapper {
   padding: 80px 0;
   background: white;
+  position: relative;
 }
 
-.benefits-grid {
+/* Section Header */
+.whybuy-header {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.whybuy-badge {
+  display: inline-block;
+  padding: 6px 16px;
+  background: rgba(184, 134, 11, 0.1);
+  border-radius: 50px;
+  color: #b8860b;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 15px;
+}
+
+.whybuy-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin-bottom: 15px;
+  font-family: "Playfair Display", serif;
+}
+
+.whybuy-title-gold {
+  color: #b8860b;
+}
+
+.whybuy-description {
+  color: #666;
+  font-size: 1rem;
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* Benefits Grid */
+.whybuy-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 30px;
@@ -11,41 +53,43 @@
   margin-bottom: 60px;
 }
 
-.benefit-card {
-  background: var(--cream);
+/* Benefit Card */
+.whybuy-card {
+  background: #faf9f6;
   padding: 40px 30px;
   border-radius: 20px;
   text-align: center;
-  box-shadow: var(--shadow-md);
-  transition: all 0.3s ease;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   border: 1px solid rgba(184, 134, 11, 0.1);
   position: relative;
   overflow: hidden;
 }
 
-.benefit-card::before {
+.whybuy-card::before {
   content: "";
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 5px;
-  background: var(--gradient-gold);
+  background: linear-gradient(135deg, #b8860b, #9c6e0a);
   transform: translateX(-100%);
   transition: transform 0.6s ease;
 }
 
-.benefit-card:hover {
+.whybuy-card:hover {
   transform: translateY(-15px);
-  box-shadow: var(--shadow-lg);
-  border-color: var(--gold);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+  border-color: #b8860b;
 }
 
-.benefit-card:hover::before {
+.whybuy-card:hover::before {
   transform: translateX(0);
 }
 
-.benefit-icon-wrapper {
+/* Icon Wrapper */
+.whybuy-icon-wrapper {
   width: 80px;
   height: 80px;
   background: rgba(184, 134, 11, 0.1);
@@ -57,43 +101,317 @@
   transition: all 0.3s ease;
 }
 
-.benefit-card:hover .benefit-icon-wrapper {
-  background: var(--gold);
+.whybuy-card:hover .whybuy-icon-wrapper {
+  background: #b8860b;
+  transform: scale(1.05);
 }
 
-.benefit-icon {
+.whybuy-icon {
   font-size: 2.5rem;
-  color: var(--gold);
+  color: #b8860b;
   transition: all 0.3s ease;
 }
 
-.benefit-card:hover .benefit-icon {
-  color: var(--primary-dark);
+.whybuy-card:hover .whybuy-icon {
+  color: #1a1a2e;
+  transform: scale(1.1);
 }
 
-.benefit-title {
+/* Card Content */
+.whybuy-card-title {
   font-size: 1.5rem;
   margin-bottom: 15px;
-  color: var(--primary-dark);
+  color: #1a1a2e;
   font-family: "Playfair Display", serif;
+  transition: color 0.3s ease;
 }
 
-.benefit-description {
+.whybuy-card:hover .whybuy-card-title {
+  color: #b8860b;
+}
+
+.whybuy-card-description {
   color: #666;
   line-height: 1.6;
   margin-bottom: 20px;
+  font-size: 0.95rem;
 }
 
-.benefit-stats {
+/* Stats */
+.whybuy-stats {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  color: var(--gold);
+  color: #b8860b;
   font-weight: 600;
   font-size: 1.1rem;
+  padding-top: 15px;
+  border-top: 1px dashed rgba(184, 134, 11, 0.2);
+  transition: all 0.3s ease;
 }
 
-.stats-check {
-  color: var(--gold);
+.whybuy-card:hover .whybuy-stats {
+  border-top-color: #b8860b;
+}
+
+.whybuy-stats-check {
+  color: #b8860b;
+  font-size: 1rem;
+}
+
+/* Trust Indicators */
+.whybuy-trust {
+  display: flex;
+  justify-content: center;
+  gap: 60px;
+  flex-wrap: wrap;
+  margin-top: 40px;
+  padding: 40px 0 20px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.whybuy-trust-item {
+  text-align: center;
+  animation: whybuyFadeInUp 0.6s ease forwards;
+  opacity: 0;
+}
+
+.whybuy-trust-item:nth-child(1) {
+  animation-delay: 0.1s;
+}
+.whybuy-trust-item:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.whybuy-trust-item:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+.whybuy-trust-number {
+  display: block;
+  font-size: 2rem;
+  font-weight: 800;
+  color: #b8860b;
+  font-family: "Playfair Display", serif;
+  margin-bottom: 5px;
+}
+
+.whybuy-trust-label {
+  font-size: 0.85rem;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Animations */
+@keyframes whybuyFadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===== RESPONSIVE BREAKPOINTS ===== */
+
+/* Large Desktop (1200px and below) */
+@media (max-width: 1200px) {
+  .whybuy-grid {
+    gap: 25px;
+  }
+
+  .whybuy-card {
+    padding: 35px 25px;
+  }
+
+  .whybuy-card-title {
+    font-size: 1.3rem;
+  }
+}
+
+/* Desktop (992px and below) */
+@media (max-width: 992px) {
+  .whybuy-section-wrapper {
+    padding: 70px 0;
+  }
+
+  .whybuy-title {
+    font-size: 2.2rem;
+  }
+
+  .whybuy-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+  }
+
+  .whybuy-trust {
+    gap: 40px;
+  }
+
+  .whybuy-trust-number {
+    font-size: 1.8rem;
+  }
+}
+
+/* Tablets (768px and below) */
+@media (max-width: 768px) {
+  .whybuy-section-wrapper {
+    padding: 60px 0;
+  }
+
+  .whybuy-title {
+    font-size: 2rem;
+  }
+
+  .whybuy-description {
+    font-size: 0.9rem;
+    padding: 0 20px;
+  }
+
+  .whybuy-grid {
+    grid-template-columns: 1fr;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+    gap: 25px;
+  }
+
+  .whybuy-card {
+    padding: 30px 25px;
+  }
+
+  .whybuy-icon-wrapper {
+    width: 70px;
+    height: 70px;
+  }
+
+  .whybuy-icon {
+    font-size: 2rem;
+  }
+
+  .whybuy-card-title {
+    font-size: 1.2rem;
+  }
+
+  .whybuy-card-description {
+    font-size: 0.9rem;
+  }
+
+  .whybuy-trust {
+    gap: 30px;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .whybuy-trust-item {
+    width: 100%;
+    max-width: 200px;
+  }
+
+  .whybuy-trust-number {
+    font-size: 1.6rem;
+  }
+
+  .whybuy-trust-label {
+    font-size: 0.8rem;
+  }
+}
+
+/* Mobile Large (576px and below) */
+@media (max-width: 576px) {
+  .whybuy-section-wrapper {
+    padding: 50px 0;
+  }
+
+  .whybuy-badge {
+    font-size: 0.7rem;
+    padding: 5px 12px;
+  }
+
+  .whybuy-title {
+    font-size: 1.6rem;
+  }
+
+  .whybuy-description {
+    font-size: 0.85rem;
+  }
+
+  .whybuy-grid {
+    margin-top: 35px;
+    margin-bottom: 40px;
+  }
+
+  .whybuy-card {
+    padding: 25px 20px;
+  }
+
+  .whybuy-icon-wrapper {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 20px;
+  }
+
+  .whybuy-icon {
+    font-size: 1.8rem;
+  }
+
+  .whybuy-card-title {
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+  }
+
+  .whybuy-card-description {
+    font-size: 0.85rem;
+    margin-bottom: 15px;
+  }
+
+  .whybuy-stats {
+    font-size: 1rem;
+  }
+
+  .whybuy-trust-number {
+    font-size: 1.4rem;
+  }
+}
+
+/* Mobile Small (375px and below) */
+@media (max-width: 375px) {
+  .whybuy-section-wrapper {
+    padding: 40px 0;
+  }
+
+  .whybuy-title {
+    font-size: 1.4rem;
+  }
+
+  .whybuy-card {
+    padding: 20px 15px;
+  }
+
+  .whybuy-icon-wrapper {
+    width: 55px;
+    height: 55px;
+  }
+
+  .whybuy-icon {
+    font-size: 1.6rem;
+  }
+
+  .whybuy-card-title {
+    font-size: 1rem;
+  }
+
+  .whybuy-card-description {
+    font-size: 0.8rem;
+  }
+}
+
+/* Container class */
+.whybuy-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
 }

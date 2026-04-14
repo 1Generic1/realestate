@@ -1,41 +1,33 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   FaQuoteRight,
   FaStar,
   FaChevronLeft,
   FaChevronRight,
 } from "react-icons/fa";
+import { testimonialAPI } from "../../../../../services/adminApi";
 import "./AgentTestimonials.css";
 
 const AgentTestimonials = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [testimonials, setTestimonials] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const testimonials = [
-    {
-      name: "Chief Obiora Eze",
-      role: "Real Estate Investor",
-      image: "https://randomuser.me/api/portraits/men/32.jpg",
-      text: "Sarah Johnson helped me find the perfect investment property. Her market knowledge and negotiation skills are exceptional. I couldn't be happier with the results.",
-      agent: "Sarah Johnson",
-      rating: 5,
-    },
-    {
-      name: "Mrs. Folake Williams",
-      role: "Land Developer",
-      image: "https://randomuser.me/api/portraits/women/44.jpg",
-      text: "Michael Chen's expertise in commercial real estate is unmatched. He guided us through every step of acquiring our office space. Highly recommended!",
-      agent: "Michael Chen",
-      rating: 5,
-    },
-    {
-      name: "Dr. Ahmed Bello",
-      role: "Home Buyer",
-      image: "https://randomuser.me/api/portraits/men/46.jpg",
-      text: "Working with Chioma was a pleasure. She understood exactly what we were looking for and found us our dream home within our budget.",
-      agent: "Chioma Okafor",
-      rating: 5,
-    },
-  ];
+  useEffect(() => {
+    loadTestimonials();
+  }, []);
+
+  const loadTestimonials = async () => {
+    try {
+      // Fetch all approved testimonials
+      const response = await testimonialAPI.getAllTestimonials({ limit: 10 });
+      setTestimonials(response.data || []);
+    } catch (error) {
+      console.error("Failed to load testimonials:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const nextSlide = () => {
     setCurrentSlide((prev) => (prev + 1) % testimonials.length);
@@ -46,6 +38,24 @@ const AgentTestimonials = () => {
       (prev) => (prev - 1 + testimonials.length) % testimonials.length,
     );
   };
+
+  if (loading) {
+    return (
+      <section className="agent-testimonials-section">
+        <div className="container">
+          <div className="testimonials-loading">
+            <div className="loading-spinner"></div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (testimonials.length === 0) {
+    return null;
+  }
+
+  const currentTestimonial = testimonials[currentSlide];
 
   return (
     <section className="agent-testimonials-section">
@@ -65,49 +75,51 @@ const AgentTestimonials = () => {
           <div className="testimonial-card">
             <FaQuoteRight className="quote-icon" />
             <div className="testimonial-rating">
-              {[...Array(testimonials[currentSlide].rating)].map((_, i) => (
+              {[...Array(currentTestimonial.rating)].map((_, i) => (
                 <FaStar key={i} className="star" />
               ))}
             </div>
-            <p className="testimonial-text">
-              "{testimonials[currentSlide].text}"
-            </p>
+            <p className="testimonial-text">"{currentTestimonial.content}"</p>
             <div className="testimonial-footer">
               <div className="testimonial-author">
-                <img
-                  src={testimonials[currentSlide].image}
-                  alt={testimonials[currentSlide].name}
-                />
+                {currentTestimonial.image ? (
+                  <img
+                    src={currentTestimonial.image}
+                    alt={currentTestimonial.name}
+                  />
+                ) : (
+                  <div className="default-avatar">
+                    {currentTestimonial.name.charAt(0)}
+                  </div>
+                )}
                 <div>
-                  <h4>{testimonials[currentSlide].name}</h4>
-                  <p>{testimonials[currentSlide].role}</p>
+                  <h4>{currentTestimonial.name}</h4>
+                  <p>{currentTestimonial.role || "Client"}</p>
                 </div>
-              </div>
-              <div className="testimonial-agent">
-                <span>
-                  Worked with:{" "}
-                  <strong>{testimonials[currentSlide].agent}</strong>
-                </span>
               </div>
             </div>
           </div>
 
-          <button className="slider-btn prev" onClick={prevSlide}>
-            <FaChevronLeft />
-          </button>
-          <button className="slider-btn next" onClick={nextSlide}>
-            <FaChevronRight />
-          </button>
+          {testimonials.length > 1 && (
+            <>
+              <button className="slider-btn prev" onClick={prevSlide}>
+                <FaChevronLeft />
+              </button>
+              <button className="slider-btn next" onClick={nextSlide}>
+                <FaChevronRight />
+              </button>
 
-          <div className="slide-indicators">
-            {testimonials.map((_, index) => (
-              <button
-                key={index}
-                className={`indicator ${index === currentSlide ? "active" : ""}`}
-                onClick={() => setCurrentSlide(index)}
-              />
-            ))}
-          </div>
+              <div className="slide-indicators">
+                {testimonials.map((_, index) => (
+                  <button
+                    key={index}
+                    className={`indicator ${index === currentSlide ? "active" : ""}`}
+                    onClick={() => setCurrentSlide(index)}
+                  />
+                ))}
+              </div>
+            </>
+          )}
         </div>
       </div>
     </section>

@@ -1,14 +1,12 @@
 import React, { useState } from "react";
-import { FaPaperPlane, FaCheckCircle } from "react-icons/fa";
+import { FaPaperPlane } from "react-icons/fa";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { inquiryAPI } from "../../../../../services/api";
 import "./ContactForm.css";
 
 const ContactForm = () => {
-  const [formStatus, setFormStatus] = useState({
-    submitted: false,
-    success: false,
-    message: "",
-  });
-
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -24,111 +22,182 @@ const ContactForm = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setFormStatus({ submitted: true, success: false, message: "Sending..." });
 
-    // Simulate API call
-    setTimeout(() => {
-      setFormStatus({
-        submitted: true,
-        success: true,
-        message: "Thank you! Your message has been sent successfully.",
-      });
-      setFormData({
-        name: "",
-        email: "",
-        phone: "",
-        service: "",
-        message: "",
-      });
-    }, 1500);
+    // Frontend validation for message length
+    if (formData.message.trim().length < 10) {
+      toast.error(
+        "Message must be at least 10 characters long. Please provide more details.",
+      );
+      return;
+    }
+
+    // Validate other required fields
+    if (!formData.name || !formData.email || !formData.service) {
+      toast.error("Please fill in all required fields.");
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const requestPayload = {
+        name: formData.name,
+        email: formData.email,
+        message: formData.message,
+        serviceType: formData.service,
+        inquiryType: "general",
+        source: "contact_form",
+      };
+
+      if (formData.phone && formData.phone.trim() !== "") {
+        requestPayload.phone = formData.phone;
+      }
+
+      const response = await inquiryAPI.submitInquiry(requestPayload);
+
+      if (response && response.success === true) {
+        toast.success(
+          response.message ||
+            "Thank you! Your message has been sent successfully. We'll get back to you soon.",
+        );
+
+        // Reset form on success
+        setFormData({
+          name: "",
+          email: "",
+          phone: "",
+          service: "",
+          message: "",
+        });
+      } else {
+        toast.error(
+          response?.message || "Something went wrong. Please try again.",
+        );
+      }
+    } catch (error) {
+      let errorMessage =
+        "Network error. Please check your connection and try again.";
+
+      if (error.response && error.response.data) {
+        errorMessage = error.response.data.message || errorMessage;
+      }
+
+      toast.error(errorMessage);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
+  const handleInputChange = (e) => {
+    handleChange(e);
+  };
+
+  // Show character count for message
+  const messageCharCount = formData.message.length;
+  const isMessageValid = messageCharCount >= 10 || messageCharCount === 0;
+
   return (
-    <div className="form-container" data-aos="fade-right">
-      <div className="form-header">
-        <span className="form-subtitle">Send a Message</span>
-        <h2 className="form-title">We'd Love to Hear From You</h2>
-        <p className="form-description">
+    <div className="contact-form-container" data-aos="fade-right">
+      <div className="contact-form-header">
+        <span className="contact-form-subtitle">Send a Message</span>
+        <h2 className="contact-form-title">We'd Love to Hear From You</h2>
+        <p className="contact-form-description">
           Fill out the form below and we'll get back to you within 24 hours.
         </p>
       </div>
 
-      <form onSubmit={handleSubmit} className="contact-form">
-        <div className="form-row">
-          <div className="form-group">
+      <form onSubmit={handleSubmit} className="contact-form-main">
+        <div className="contact-form-row">
+          <div className="contact-form-group">
             <input
               type="text"
               name="name"
               value={formData.name}
-              onChange={handleChange}
-              placeholder="Your Full Name"
+              onChange={handleInputChange}
+              placeholder="Your Full Name *"
               required
+              disabled={isSubmitting}
+              className="contact-form-input"
             />
           </div>
-          <div className="form-group">
+          <div className="contact-form-group">
             <input
               type="email"
               name="email"
               value={formData.email}
-              onChange={handleChange}
-              placeholder="Your Email"
+              onChange={handleInputChange}
+              placeholder="Your Email *"
               required
+              disabled={isSubmitting}
+              className="contact-form-input"
             />
           </div>
         </div>
 
-        <div className="form-row">
-          <div className="form-group">
+        <div className="contact-form-row">
+          <div className="contact-form-group">
             <input
               type="tel"
               name="phone"
               value={formData.phone}
-              onChange={handleChange}
-              placeholder="Your Phone"
-              required
+              onChange={handleInputChange}
+              placeholder="Your Phone (Optional)"
+              disabled={isSubmitting}
+              className="contact-form-input"
             />
           </div>
-          <div className="form-group">
+          <div className="contact-form-group">
             <select
               name="service"
               value={formData.service}
-              onChange={handleChange}
+              onChange={handleInputChange}
               required
+              disabled={isSubmitting}
+              className="contact-form-select"
             >
-              <option value="">Select Service</option>
+              <option value="">Select Service *</option>
               <option value="acquisition">Property Acquisition</option>
               <option value="land">Land Banking</option>
               <option value="advisory">Realty Advisory</option>
               <option value="investment">Investment Solutions</option>
+              <option value="legal">Legal & Compliance</option>
               <option value="other">Other</option>
             </select>
           </div>
         </div>
 
-        <div className="form-group full">
+        <div className="contact-form-group contact-form-group-full">
           <textarea
             name="message"
             value={formData.message}
-            onChange={handleChange}
+            onChange={handleInputChange}
             rows="5"
-            placeholder="Your Message"
+            placeholder="Your Message * (Minimum 10 characters)"
             required
+            disabled={isSubmitting}
+            className={`contact-form-textarea ${formData.message && !isMessageValid ? "contact-form-textarea-error" : ""}`}
           ></textarea>
+          {formData.message && (
+            <div
+              className={`contact-form-char-count ${messageCharCount >= 10 ? "contact-form-char-valid" : "contact-form-char-invalid"}`}
+            >
+              {messageCharCount} / 10+ characters
+              {messageCharCount < 10 && ` (Need ${10 - messageCharCount} more)`}
+            </div>
+          )}
         </div>
 
-        <button type="submit" className="submit-btn">
-          Send Message <FaPaperPlane className="send-icon" />
+        <button
+          type="submit"
+          className="contact-form-submit-btn"
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? "Sending..." : "Send Message"}
+          <FaPaperPlane className="contact-form-send-icon" />
         </button>
       </form>
-
-      {formStatus.submitted && formStatus.success && (
-        <div className="form-success" data-aos="fade-up">
-          <FaCheckCircle className="success-icon" />
-          <p>{formStatus.message}</p>
-        </div>
-      )}
     </div>
   );
 };

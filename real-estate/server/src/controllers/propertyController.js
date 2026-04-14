@@ -63,11 +63,18 @@ exports.getFeaturedProperties = async (req, res, next) => {
   }
 };
 
-// Get properties by type (buy/rent/land)
+// Get properties by type (buy/rent/land) with search and filters
 exports.getPropertiesByType = async (req, res, next) => {
   try {
     const { type } = req.params;
-    const { limit = 10, page = 1, ...filters } = req.query;
+    const {
+      limit = 10,
+      page = 1,
+      search,
+      minPrice,
+      maxPrice,
+      ...filters
+    } = req.query;
 
     // Validate type
     const validTypes = ["buy", "rent", "land"];
@@ -79,12 +86,44 @@ exports.getPropertiesByType = async (req, res, next) => {
       );
     }
 
-    const properties = await Property.findByType(type, filters, limit, page);
-    const total = await Property.countDocuments({
+    // Build the query
+    const query = {
       type,
       status: "available",
       ...filters,
-    });
+    };
+
+    // Add search functionality (title, location, description)
+    if (search && search.trim() !== "") {
+      query.$or = [
+        { title: { $regex: search, $options: "i" } },
+        { location: { $regex: search, $options: "i" } },
+        { description: { $regex: search, $options: "i" } },
+        { "address.city": { $regex: search, $options: "i" } },
+        { "address.state": { $regex: search, $options: "i" } },
+      ];
+    }
+
+    // Add price range filter
+    if (minPrice || maxPrice) {
+      query.price = {};
+      if (minPrice) query.price.$gte = parseInt(minPrice);
+      if (maxPrice) query.price.$lte = parseInt(maxPrice);
+    }
+
+    console.log("📡 Backend query:", JSON.stringify(query, null, 2));
+
+    // Execute query using Mongoose directly (not the static method)
+    const properties = await Property.find(query)
+      .sort({ featured: -1, createdAt: -1 })
+      .limit(parseInt(limit))
+      .skip((parseInt(page) - 1) * parseInt(limit));
+
+    const total = await Property.countDocuments(query);
+
+    console.log(
+      `📡 Found ${properties.length} properties out of ${total} total`,
+    );
 
     res.json({
       success: true,

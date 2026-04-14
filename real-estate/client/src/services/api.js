@@ -175,8 +175,11 @@ export const testimonialAPI = {
 export const inquiryAPI = {
   submitInquiry: async (inquiryData) => {
     try {
+      // The response interceptor already returns response.data
+      // So response here is already the data object
       const response = await API.post("/inquiries", inquiryData);
-      return response.data;
+      console.log("Submit inquiry response:", response);
+      return response;
     } catch (error) {
       console.error("Error submitting inquiry:", error);
       throw error;
