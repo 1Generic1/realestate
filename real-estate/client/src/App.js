@@ -36,6 +36,9 @@ import AdminTestimonials from "./component/adminpages/pages/AdminTestimonials";
 import AdminCompany from "./component/adminpages/pages/AdminCompany";
 import AdminProperties from "./component/adminpages/pages/AdminProperties";
 
+import SignUp from "./component/userpages/pages/Auth/SignUp";
+import Login from "./component/userpages/pages/Auth/Login";
+
 import { CompanyProvider } from "./context/CompanyContext";
 
 // Component to conditionally show Header and Footer
@@ -158,6 +161,8 @@ function App() {
                 </AdminRoute>
               }
             />
+            <Route path="/signup" element={<SignUp />} />
+            <Route path="/login" element={<Login />} />
           </Routes>
         </Layout>
         <ToastContainer

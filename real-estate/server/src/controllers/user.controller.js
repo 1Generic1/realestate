@@ -550,6 +550,28 @@ exports.deactivateAccount = async (req, res, next) => {
   }
 };
 
+exports.getUserReferenceLetters = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      throw new AppError("User not found", 404);
+    }
+
+    // Sort by generatedAt descending (newest first)
+    const referenceLetters = user.referenceLetters.sort(
+      (a, b) => new Date(b.generatedAt) - new Date(a.generatedAt),
+    );
+
+    res.json({
+      success: true,
+      data: referenceLetters,
+      count: referenceLetters.length,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 // @desc    Download reference letter (for users)
 // @route   GET /api/users/reference-letters/:letterId/download
 // @access  Private
@@ -580,6 +602,134 @@ exports.downloadReferenceLetter = async (req, res, next) => {
       },
     });
   } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Download reference letter via server proxy (bypasses Cloudinary auth) - USER VERSION
+// @route   GET /api/users/reference-letters/:letterId/download-proxy
+// @access  Private
+exports.downloadReferenceLetterProxy = async (req, res, next) => {
+  try {
+    const { letterId } = req.params;
+    const decodedLetterId = decodeURIComponent(letterId);
+
+    console.log("📥 User proxy download request:", {
+      userId: req.user.id,
+      letterId: decodedLetterId,
+    });
+
+    // Find the user (from auth middleware)
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      throw new AppError("User not found", 404);
+    }
+
+    // Find the reference letter
+    let letter = user.referenceLetters.find(
+      (l) => l.letterId === decodedLetterId,
+    );
+    if (!letter) {
+      letter = user.referenceLetters.find((l) => l.letterId === letterId);
+    }
+
+    if (!letter) {
+      console.log(
+        "Available letters:",
+        user.referenceLetters.map((l) => l.letterId),
+      );
+      throw new AppError("Reference letter not found", 404);
+    }
+
+    console.log("📄 Found letter:", {
+      letterId: letter.letterId,
+      pdfUrl: letter.pdfUrl,
+    });
+
+    // Track download
+    if (letter.downloadedCount !== undefined) {
+      letter.downloadedCount += 1;
+      letter.lastDownloadedAt = new Date();
+      await user.save();
+    }
+
+    // Fetch PDF from Cloudinary with proper headers
+    const cloudinaryUrl = letter.pdfUrl;
+    console.log("🌐 Fetching from Cloudinary:", cloudinaryUrl);
+
+    // Add a download flag to the URL
+    let fetchUrl = cloudinaryUrl;
+    if (fetchUrl.includes("/image/upload/")) {
+      fetchUrl = fetchUrl.replace(
+        "/image/upload/",
+        "/image/upload/fl_attachment/",
+      );
+    }
+
+    console.log("📡 Fetch URL:", fetchUrl);
+
+    const response = await fetch(fetchUrl, {
+      method: "GET",
+      headers: {
+        "User-Agent":
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+        Accept: "application/pdf, image/*",
+      },
+    });
+
+    if (!response.ok) {
+      console.error(
+        "❌ Cloudinary fetch failed:",
+        response.status,
+        response.statusText,
+      );
+
+      // Try without the fl_attachment flag
+      console.log("🔄 Retrying without attachment flag...");
+      const retryResponse = await fetch(cloudinaryUrl, {
+        headers: {
+          "User-Agent": "Mozilla/5.0",
+          Accept: "application/pdf, */*",
+        },
+      });
+
+      if (!retryResponse.ok) {
+        throw new AppError(
+          `Failed to fetch PDF from storage: ${retryResponse.status}`,
+          500,
+        );
+      }
+
+      const retryBuffer = await retryResponse.arrayBuffer();
+      const pdfBuffer = Buffer.from(retryBuffer);
+
+      // Send the PDF
+      res.setHeader("Content-Type", "application/pdf");
+      res.setHeader(
+        "Content-Disposition",
+        `attachment; filename="reference-letter-${letter.letterId.replace(/\//g, "-")}.pdf"`,
+      );
+      res.setHeader("Content-Length", pdfBuffer.length);
+      return res.send(pdfBuffer);
+    }
+
+    const arrayBuffer = await response.arrayBuffer();
+    const pdfBuffer = Buffer.from(arrayBuffer);
+
+    console.log(`✅ PDF fetched successfully: ${pdfBuffer.length} bytes`);
+
+    // Send the PDF
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader(
+      "Content-Disposition",
+      `attachment; filename="reference-letter-${letter.letterId.replace(/\//g, "-")}.pdf"`,
+    );
+    res.setHeader("Content-Length", pdfBuffer.length);
+    res.setHeader("Cache-Control", "no-cache");
+
+    res.send(pdfBuffer);
+  } catch (error) {
+    console.error("❌ User proxy download error:", error);
     next(error);
   }
 };

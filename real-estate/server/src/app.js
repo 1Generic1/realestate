@@ -9,7 +9,7 @@ const companyRoutes = require("./routes/company.routes");
 const adminRoutes = require("./routes/admin/auth.routes");
 const userRoutes = require("./routes/user.routes");
 const adminUserRoutes = require("./routes/admin/user.routes");
-const adminUserRoutess = require("./routes/admin/adminuser.routes");
+const adminReferenceUserRoutes = require("./routes/admin/adminuser.routes");
 const propertyRoutes = require("./routes/propertyRoutes");
 const testimonialRoutes = require("./routes/testimonial.routes");
 const inquiryRoutes = require("./routes/inquiry.routes");
@@ -108,6 +108,7 @@ async function ensureAdminExists() {
 
       await admin.save();
       console.log("✅ Default admin created successfully!");
+
       console.log("📍 Username:", defaultAdmin.username);
       console.log("📍 Email:", defaultAdmin.email);
       console.log("📍 Password: [from environment variable]");
@@ -165,7 +166,7 @@ app.use("/api", companyRoutes);
 // Auth routes (login, verify, etc.)
 app.use("/api/auth", adminRoutes);
 app.use("/api/admin/users", adminUserRoutes); // Admin user management routes
-app.use("/api", adminUserRoutess); // Admin user management routes (reference letters, etc.)
+app.use("/api/admin", adminReferenceUserRoutes); // Admin user management routes (reference letters, etc.)
 app.use("/api/users", userRoutes); // User routes (profile, avatar upload, etc.)
 
 // Property routes - PUBLIC (for frontend)

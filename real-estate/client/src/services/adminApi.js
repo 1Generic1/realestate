@@ -1,7 +1,9 @@
 import axios from "axios";
 
+const BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:5000/api";
+
 const API = axios.create({
-  baseURL: process.env.REACT_APP_API_URL || "http://localhost:5000/api",
+  baseURL: BASE_URL,
   timeout: 10000,
 });
 
@@ -76,6 +78,55 @@ API.interceptors.response.use(
       console.log("Error:", error.message);
     }
 
+    return Promise.reject(error);
+  },
+);
+
+// ==================== USER API (For regular users) ====================
+const usersAPI = axios.create({
+  baseURL: BASE_URL,
+  timeout: 10000,
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
+// Add token to user requests
+usersAPI.interceptors.request.use(
+  (config) => {
+    // Don't add token for public auth endpoints
+    const isPublicAuth =
+      config.url?.includes("/login") ||
+      config.url?.includes("/register") ||
+      config.url?.includes("/forgot-password") ||
+      config.url?.includes("/reset-password") ||
+      config.url?.includes("/verify-email");
+
+    if (!isPublicAuth) {
+      const token = localStorage.getItem("token");
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+    }
+    return config;
+  },
+  (error) => Promise.reject(error),
+);
+
+// Response interceptor for user API
+usersAPI.interceptors.response.use(
+  (response) => response.data,
+  (error) => {
+    if (error.response?.status === 401) {
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      if (
+        !window.location.pathname.includes("/login") &&
+        !window.location.pathname.includes("/signup")
+      ) {
+        window.location.href = "/login";
+      }
+    }
     return Promise.reject(error);
   },
 );
@@ -647,6 +698,134 @@ export const publicPropertyAPI = {
   getSimilarProperties: async (id) => {
     const response = await API.get(`/properties/${id}/similar`);
     return response.data;
+  },
+};
+
+// AUTH for client login
+
+export const authUserAPI = {
+  register: async (userData) => {
+    try {
+      const response = await usersAPI.post("/users/register", userData);
+      console.log("Register API - Full response:", response);
+      console.log("Register API - Response data:", response.data);
+      return response.data; // Return the data property
+    } catch (error) {
+      console.log("Register API - Error caught");
+      console.log("Register API - Error response:", error.response);
+      console.log("Register API - Error response data:", error.response?.data);
+      console.log("Register API - Error message:", error.message);
+      // Throw the error so it can be caught in the component
+      throw error;
+    }
+  },
+
+  login: async (email, password) => {
+    try {
+      const response = await usersAPI.post("/users/login", { email, password });
+      console.log("Login API - Full response:", response);
+      console.log("Login API - Status:", response.status);
+      console.log("Login API - Data:", response.data);
+
+      // Return the full response object with status
+      return response;
+    } catch (error) {
+      console.log("Login API - Error:", error.response?.data);
+      throw error;
+    }
+  },
+
+  logout: () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    window.location.href = "/login";
+  },
+
+  getCurrentUser: async () => {
+    const response = await usersAPI.get("/users/me");
+    return response.data;
+  },
+
+  forgotPassword: async (email) => {
+    const response = await usersAPI.post("/users/forgot-password", { email });
+    return response.data;
+  },
+
+  resetPassword: async (token, password) => {
+    const response = await usersAPI.post(`/users/reset-password/${token}`, {
+      password,
+    });
+    return response.data;
+  },
+
+  changePassword: async (currentPassword, newPassword) => {
+    const response = await usersAPI.post("/users/change-password", {
+      currentPassword,
+      newPassword,
+    });
+    return response.data;
+  },
+
+  // Get user's reference letters
+  getReferenceLetters: async () => {
+    try {
+      const response = await usersAPI.get("/users/reference-letters");
+      console.log("Get Reference Letters - Response:", response);
+      return response;
+    } catch (error) {
+      console.error("Error fetching reference letters:", error);
+      throw error;
+    }
+  },
+
+  downloadReferenceLetter: async (letterId) => {
+    try {
+      const token = localStorage.getItem("token");
+
+      // Use fetch directly to handle blob response
+      const response = await fetch(
+        `${BASE_URL}/users/reference-letters/${encodeURIComponent(letterId)}/download-proxy`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("Download failed:", response.status, errorText);
+        throw new Error(`Download failed: ${response.status}`);
+      }
+
+      // Get the blob from response
+      const blob = await response.blob();
+
+      // Check if it's a PDF
+      if (blob.type !== "application/pdf") {
+        console.warn("Unexpected content type:", blob.type);
+      }
+
+      // Create download link
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      // Sanitize filename
+      const safeFileName = `reference-letter-${letterId.replace(/\//g, "-")}.pdf`;
+      link.download = safeFileName;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      // Clean up
+      window.URL.revokeObjectURL(url);
+
+      return { success: true };
+    } catch (error) {
+      console.error("Error downloading reference letter:", error);
+      throw error;
+    }
   },
 };
 

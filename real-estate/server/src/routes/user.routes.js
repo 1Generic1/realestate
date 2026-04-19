@@ -115,4 +115,24 @@ router.delete(
   userController.deleteSavedSearch,
 );
 
+// Get all reference letters for the logged-in user
+router.get(
+  "/reference-letters",
+  authMiddleware,
+  userController.getUserReferenceLetters,
+);
+
+router.get(
+  "/reference-letters/:letterId/download-proxy",
+  authMiddleware,
+  userController.downloadReferenceLetterProxy,
+);
+
+// User routes (for clients to download their own letters)
+router.get(
+  "/reference-letters/:letterId/download",
+  authMiddleware,
+  userController.downloadReferenceLetter,
+);
+
 module.exports = router;

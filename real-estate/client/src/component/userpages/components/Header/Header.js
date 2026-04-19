@@ -1,7 +1,6 @@
-import React, { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import React, { useState, useEffect, useRef } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useCompany } from "../../../../context/CompanyContext";
-
 import {
   FaSearch,
   FaPhone,
@@ -11,20 +10,37 @@ import {
   FaFacebookF,
   FaLinkedinIn,
   FaInstagram,
+  FaUserCircle,
+  FaChevronDown,
+  FaFileAlt,
+  FaSignOutAlt,
+  FaSpinner,
 } from "react-icons/fa";
+import { toast } from "react-toastify";
+import { authUserAPI } from "../../../../services/adminApi";
 import "./Header.css";
 
 const Header = () => {
   const location = useLocation();
-  const { company, loading, error } = useCompany();
+  const navigate = useNavigate();
+  const {
+    company,
+    loading: companyLoading,
+    error: companyError,
+  } = useCompany();
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
+  const [user, setUser] = useState(null);
+  const [referenceLetters, setReferenceLetters] = useState([]);
+  const [loadingLetters, setLoadingLetters] = useState(false);
+  const [downloadingLetterId, setDownloadingLetterId] = useState(null); // Track which letter is downloading
+  const dropdownRef = useRef(null);
 
   const navItems = [
     { label: "Home", path: "/" },
     { label: "Buy", path: "/buy" },
-    //{ label: "Sell", path: "/sell" },
     { label: "Rent", path: "/rent" },
     { label: "Land", path: "/land" },
     { label: "Agents", path: "/agents" },
@@ -32,7 +48,97 @@ const Header = () => {
     { label: "Contact", path: "/contact" },
   ];
 
-  // Get dynamic values from backend
+  // Check if user is logged in on component mount
+  useEffect(() => {
+    checkUserLoggedIn();
+  }, []);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsUserDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const checkUserLoggedIn = async () => {
+    const token = localStorage.getItem("token");
+    const storedUser = localStorage.getItem("user");
+
+    if (token && storedUser) {
+      try {
+        const userData = JSON.parse(storedUser);
+        setUser(userData);
+        await fetchReferenceLetters();
+      } catch (error) {
+        console.error("Error parsing user data:", error);
+        logout();
+      }
+    }
+  };
+
+  const fetchReferenceLetters = async () => {
+    setLoadingLetters(true);
+    try {
+      const response = await authUserAPI.getReferenceLetters();
+      if (response && response.success) {
+        setReferenceLetters(response.data || []);
+      }
+    } catch (error) {
+      console.error("Error fetching reference letters:", error);
+    } finally {
+      setLoadingLetters(false);
+    }
+  };
+
+  const logout = () => {
+    authUserAPI.logout();
+    setUser(null);
+    setReferenceLetters([]);
+    setIsUserDropdownOpen(false);
+    toast.success("Logged out successfully");
+    navigate("/");
+  };
+
+  // Updated download function with loading state to prevent multiple clicks
+  const handleDownloadLetter = async (letterId) => {
+    // Prevent multiple downloads of the same letter
+    if (downloadingLetterId === letterId) {
+      console.log("Download already in progress for this letter");
+      return;
+    }
+
+    setDownloadingLetterId(letterId);
+
+    try {
+      console.log("Downloading letter:", letterId);
+      const result = await authUserAPI.downloadReferenceLetter(letterId);
+      if (result && result.success) {
+        toast.success("Download started");
+      }
+    } catch (error) {
+      console.error("Error downloading letter:", error);
+      toast.error("Failed to download reference letter");
+    } finally {
+      setDownloadingLetterId(null);
+    }
+  };
+
+  // Get user display name
+  const getUserDisplayName = () => {
+    if (user?.firstName && user?.lastName) {
+      return `Hi, ${user.firstName}`;
+    }
+    if (user?.email) {
+      return user.email.split("@")[0];
+    }
+    return "User";
+  };
+
+  // Get dynamic values from backend (company context)
   const phoneNumber = company?.phone?.primary || "+234 801 234 5678";
   const emailAddress = company?.email?.general || "info@tayesproperty.com";
   const businessHours = company?.hours?.monday
@@ -47,8 +153,8 @@ const Header = () => {
 
   const mobilePhone = company?.phone?.primary || "(555) 123-4567";
 
-  // Show loading state (optional - you can remove if you don't want it)
-  if (loading) {
+  // Show loading state (optional)
+  if (companyLoading) {
     return (
       <header className="header">
         <div className="header-top">
@@ -80,10 +186,99 @@ const Header = () => {
             </div>
 
             <div className="top-right">
-              <Link to="/login" className="login-btn">
-                <FaUser className="icon" />
-                <span>Client Login</span>
-              </Link>
+              {user ? (
+                // User Dropdown when logged in
+                <div className="user-dropdown" ref={dropdownRef}>
+                  <button
+                    className="user-dropdown-btn"
+                    onClick={() => setIsUserDropdownOpen(!isUserDropdownOpen)}
+                  >
+                    <FaUserCircle className="user-icon" />
+                    <span>{getUserDisplayName()}</span>
+                    <FaChevronDown
+                      className={`dropdown-arrow ${isUserDropdownOpen ? "open" : ""}`}
+                    />
+                  </button>
+
+                  {isUserDropdownOpen && (
+                    <div className="user-dropdown-menu">
+                      <div className="dropdown-header">
+                        <FaUserCircle className="dropdown-user-icon" />
+                        <div>
+                          <div className="dropdown-user-name">
+                            {user?.firstName} {user?.lastName}
+                          </div>
+                          <div className="dropdown-user-email">
+                            {user?.email}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="dropdown-divider"></div>
+
+                      {/* Reference Letters Section */}
+                      <div className="dropdown-section">
+                        <div className="dropdown-section-title">
+                          <FaFileAlt className="section-icon" />
+                          Reference Letters
+                        </div>
+                        {loadingLetters ? (
+                          <div className="dropdown-loading">Loading...</div>
+                        ) : referenceLetters.length > 0 ? (
+                          <div className="reference-letters-list">
+                            {referenceLetters.map((letter) => (
+                              <button
+                                key={letter._id || letter.letterId}
+                                className={`dropdown-item letter-item ${downloadingLetterId === letter.letterId ? "downloading" : ""}`}
+                                onClick={() =>
+                                  handleDownloadLetter(letter.letterId)
+                                }
+                                disabled={
+                                  downloadingLetterId === letter.letterId
+                                }
+                              >
+                                {downloadingLetterId === letter.letterId ? (
+                                  <FaSpinner className="item-icon spinning" />
+                                ) : (
+                                  <FaFileAlt className="item-icon" />
+                                )}
+                                <div className="letter-info">
+                                  <div className="letter-id">
+                                    {letter.letterId}
+                                  </div>
+                                  <div className="letter-date">
+                                    {new Date(
+                                      letter.generatedAt,
+                                    ).toLocaleDateString()}
+                                  </div>
+                                </div>
+                              </button>
+                            ))}
+                          </div>
+                        ) : (
+                          <div className="dropdown-empty">
+                            No reference letters yet
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="dropdown-divider"></div>
+
+                      {/* Logout Button */}
+                      <button className="dropdown-item logout" onClick={logout}>
+                        <FaSignOutAlt className="item-icon" />
+                        Logout
+                      </button>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <Link to="/login" className="login-btn">
+                  <FaUser className="icon" />
+                  <span>Client Login</span>
+                </Link>
+              )}
+
               <div className="social-icons">
                 <a
                   href={socialLinks.facebook}
@@ -183,7 +378,7 @@ const Header = () => {
         </div>
       </div>
 
-      {/* Mobile Menu - Now with Backend Phone Number */}
+      {/* Mobile Menu */}
       {isMenuOpen && (
         <div className="mobile-menu">
           <div className="mobile-nav">

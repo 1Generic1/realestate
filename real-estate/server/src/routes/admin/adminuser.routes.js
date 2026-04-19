@@ -4,25 +4,25 @@ const { adminAuth } = require("../../middleware/auth.middleware"); // For user a
 const adminUserController = require("../../controllers/admin/adminuser.controller");
 
 router.post(
-  "/admin/users/:userId/reference-letter",
+  "/users/:userId/reference-letter",
   adminAuth,
   adminUserController.sendReferenceLetter,
 );
 
 router.get(
-  "/admin/users/:userId/reference-letter/preview",
+  "/users/:userId/reference-letter/preview",
   adminAuth,
   adminUserController.previewReferenceLetter,
 );
 
 router.get(
-  "/admin/users/:userId/reference-letters",
+  "/users/:userId/reference-letters",
   adminAuth,
   adminUserController.getUserReferenceLetters,
 );
 
 router.post(
-  "/admin/users/:userId/reference-letters/:letterId/resend",
+  "/users/:userId/reference-letters/:letterId/resend",
   adminAuth,
   adminUserController.resendReferenceLetter,
 );
@@ -31,14 +31,14 @@ router.post(
 // @route   GET /api/admin/users/:userId/reference-letters/:letterId/download
 // @access  Private/Admin
 router.get(
-  "/admin/users/:userId/reference-letters/:letterId/download",
+  "/users/:userId/reference-letters/:letterId/download",
   adminAuth,
   adminUserController.downloadUserReferenceLetter,
 );
 
 // PROXY DOWNLOAD - Use this one (add this NEW route)
 router.get(
-  "/admin/users/:userId/reference-letters/:letterId/download-proxy",
+  "/users/:userId/reference-letters/:letterId/download-proxy",
   adminAuth,
   adminUserController.downloadReferenceLetterProxy,
 );

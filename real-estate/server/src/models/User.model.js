@@ -153,7 +153,6 @@ const userSchema = new mongoose.Schema(
 
     referralSource: {
       type: String,
-      enum: ["google", "facebook", "instagram", "friend", "other", "direct"],
       default: "direct",
     },
 
@@ -161,9 +160,7 @@ const userSchema = new mongoose.Schema(
     referenceLetters: [
       {
         letterId: {
-          type: String,
-          unique: true,
-          required: true,
+          type: String, // Make it not required
         },
         letterType: {
           type: String,
