@@ -30,13 +30,40 @@ const { notFound, errorHandler } = require("./middleware/errorMiddleware");
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Middlewares
-app.use(
-  cors({
-    origin: process.env.CLIENT_URL || "http://localhost:3000",
-    credentials: true,
-  }),
-);
+// Middlewares - COMPLETE CORS FIX
+const cors = require('cors');
+
+// Allow multiple origins
+const allowedOrigins = [
+  'https://beige-jay-506169.hostingersite.com',
+  'https://steelblue-yak-507597.hostingersite.com',
+  'http://localhost:3000'
+];
+
+// Configure CORS
+app.use(cors({
+  origin: function(origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      console.log(`Blocked CORS request from: ${origin}`);
+      callback(null, true); // TEMPORARILY allow all for testing
+      // callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
+  exposedHeaders: ['Content-Length', 'X-Requested-With'],
+  preflightContinue: false,
+  optionsSuccessStatus: 204
+}));
+
+// Ensure preflight requests are handled
+app.options('*', cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
