@@ -393,6 +393,75 @@ const Header = () => {
               </Link>
             ))}
 
+            {/* Mobile User Section - Shows different UI when logged in */}
+            {user ? (
+              // Logged in user - Show user info and reference letters
+              <div className="mobile-user-section">
+                <div className="mobile-user-header">
+                  <FaUserCircle className="mobile-user-icon" />
+                  <div className="mobile-user-info">
+                    <div className="mobile-user-name">
+                      {user?.firstName} {user?.lastName}
+                    </div>
+                    <div className="mobile-user-email">{user?.email}</div>
+                  </div>
+                </div>
+                
+                <div className="mobile-divider"></div>
+                
+                <div className="mobile-section-title">
+                  <FaFileAlt className="section-icon" />
+                  Reference Letters
+                </div>
+                
+                {loadingLetters ? (
+                  <div className="mobile-loading">Loading...</div>
+                ) : referenceLetters.length > 0 ? (
+                  <div className="mobile-reference-list">
+                    {referenceLetters.map((letter) => (
+                      <button
+                        key={letter._id || letter.letterId}
+                        className="mobile-reference-item"
+                        onClick={() => handleDownloadLetter(letter.letterId)}
+                        disabled={downloadingLetterId === letter.letterId}
+                      >
+                        {downloadingLetterId === letter.letterId ? (
+                          <FaSpinner className="spinning" />
+                        ) : (
+                          <FaFileAlt />
+                        )}
+                        <div className="mobile-reference-info">
+                          <div className="mobile-reference-id">{letter.letterId}</div>
+                          <div className="mobile-reference-date">
+                            {new Date(letter.generatedAt).toLocaleDateString()}
+                          </div>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="mobile-empty">No reference letters yet</div>
+                )}
+                
+                <div className="mobile-divider"></div>
+                
+                <button className="mobile-logout-btn" onClick={logout}>
+                  <FaSignOutAlt className="icon" />
+                  Logout
+                </button>
+              </div>
+            ) : (
+              // Not logged in - Show login button
+              <Link 
+                to="/login" 
+                className="mobile-login-btn"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <FaUser className="icon" />
+                Client Login
+              </Link>
+            )}
+
             <div className="mobile-contact">
               <div className="contact-item">
                 <FaPhone className="icon" />

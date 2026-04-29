@@ -816,3 +816,201 @@
 body.mobile-menu-open {
   overflow: hidden;
 }
+
+/* ===== MOBILE USER SECTION STYLES ===== */
+.mobile-user-section {
+  margin: 10px 0;
+  padding: 15px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+}
+
+.mobile-user-header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.mobile-user-icon {
+  font-size: 3rem;
+  color: var(--color-gold);
+}
+
+.mobile-user-info {
+  flex: 1;
+}
+
+.mobile-user-name {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-cream);
+  margin-bottom: 4px;
+}
+
+.mobile-user-email {
+  font-size: 0.75rem;
+  color: var(--color-silver);
+}
+
+.mobile-divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+  margin: 12px 0;
+}
+
+.mobile-section-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-gold);
+  margin-bottom: 10px;
+  padding: 5px 0;
+}
+
+.mobile-reference-list {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.mobile-reference-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  border: none;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: left;
+}
+
+.mobile-reference-item:hover {
+  background: rgba(184, 134, 11, 0.2);
+}
+
+.mobile-reference-item:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.mobile-reference-item .spinning {
+  animation: spin 1s linear infinite;
+}
+
+.mobile-reference-info {
+  flex: 1;
+}
+
+.mobile-reference-id {
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--color-cream);
+  margin-bottom: 2px;
+}
+
+.mobile-reference-date {
+  font-size: 0.6rem;
+  color: var(--color-silver);
+}
+
+.mobile-loading {
+  text-align: center;
+  padding: 20px;
+  color: var(--color-silver);
+  font-size: 0.8rem;
+}
+
+.mobile-empty {
+  text-align: center;
+  padding: 20px;
+  color: var(--color-silver);
+  font-size: 0.8rem;
+}
+
+.mobile-logout-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 12px;
+  background: rgba(220, 53, 69, 0.2);
+  border: 1px solid rgba(220, 53, 69, 0.5);
+  border-radius: 8px;
+  color: #ff6b6b;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 10px;
+}
+
+.mobile-logout-btn:hover {
+  background: rgba(220, 53, 69, 0.4);
+  transform: scale(1.02);
+}
+
+/* Make sure mobile login button works alongside user section */
+.mobile-login-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background: linear-gradient(135deg, var(--color-gold) 0%, #9c6e0a 100%);
+  color: var(--color-primary-dark);
+  text-decoration: none;
+  padding: 14px 20px;
+  border-radius: 50px;
+  margin: 20px auto;
+  width: 80%;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.mobile-login-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(184, 134, 11, 0.3);
+  color: var(--color-primary-dark);
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 768px) {
+  /* Show top bar on mobile */
+  .header-top {
+    display: flex !important;
+    padding: 6px 0;
+    font-size: 0.7rem;
+  }
+  
+  /* Hide contact info on mobile */
+  .contact-info {
+    display: none !important;
+  }
+  
+  /* Make login button visible in top bar */
+  .top-right {
+    width: 100% !important;
+    justify-content: flex-end !important;
+  }
+  
+  .login-btn span {
+    display: inline !important;
+  }
+  
+  /* Rest of your mobile styles... */
+}
