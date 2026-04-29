@@ -21,7 +21,7 @@ const Header = () => {
 
   const navItems = [
     { label: "Home", path: "/" },
-    { label: "Buy", path: "/buy" },
+    { label: "Buys", path: "/buy" },
     //{ label: "Sell", path: "/sell" },
     { label: "Rent", path: "/rent" },
     { label: "Land", path: "/land" },
@@ -165,16 +165,24 @@ const Header = () => {
             ))}
 
             <div className="mobile-contact">
+              <Link
+                to="/login"
+                className="mobile-login"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <FaUser className="icon" />
+                <span>Clients Login</span>
+              </Link>
               <div className="contact-item">
                 <FaPhone className="icon" />
-                <span>(555) 123-4567</span>
+                <span>(555) 123-45677</span>
               </div>
               <Link
                 to="/consultation"
                 className="mobile-cta"
                 onClick={() => setIsMenuOpen(false)}
               >
-                Schedule Consultation
+                Schedule Consultationsss
               </Link>
             </div>
           </div>

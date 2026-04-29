@@ -22,39 +22,39 @@ const LandHero = ({ onSearch, onPriceFilter, selectedPrice }) => {
   };
 
   return (
-    <section className="land-hero">
-      <div className="land-hero-overlay"></div>
-      <div className="container">
-        <div className="land-hero-content" data-aos="fade-up">
-          <span className="land-hero-badge">Prime Land Investments</span>
-          <h1 className="land-hero-title">
-            Discover <span className="gold-text">Premium Land</span>{" "}
+    <section className="landhero-section">
+      <div className="landhero-overlay"></div>
+      <div className="landhero-container">
+        <div className="landhero-content" data-aos="fade-up">
+          <span className="landhero-badge">Prime Land Investments</span>
+          <h1 className="landhero-title">
+            Discover <span className="landhero-gold-text">Premium Land</span>{" "}
             Opportunities
           </h1>
-          <p className="land-hero-text">
+          <p className="landhero-text">
             Explore residential, commercial, and agricultural land with high
             growth potential. Expert guidance for smart land investments.
           </p>
 
-          <form onSubmit={handleSubmit} className="land-search-wrapper">
-            <div className="land-search-box">
-              <FaSearch className="search-icon" />
+          <form onSubmit={handleSubmit} className="landhero-search-wrapper">
+            <div className="landhero-search-box">
+              <FaSearch className="landhero-search-icon" />
               <input
                 type="text"
                 placeholder="Search by location, size, or purpose..."
-                className="land-search-input"
+                className="landhero-search-input"
                 value={searchValue}
                 onChange={(e) => setSearchValue(e.target.value)}
               />
-              <button type="submit" className="land-search-btn">
+              <button type="submit" className="landhero-search-btn">
                 Search Land
               </button>
             </div>
 
             {/* Price Filter Dropdown */}
-            <div className="land-filter-wrapper">
+            <div className="landhero-filter-wrapper">
               <select
-                className="land-price-filter"
+                className="landhero-price-filter"
                 value={priceValue}
                 onChange={handlePriceChange}
               >
@@ -68,18 +68,18 @@ const LandHero = ({ onSearch, onPriceFilter, selectedPrice }) => {
             </div>
           </form>
 
-          <div className="land-quick-stats">
-            <div className="quick-stat">
-              <span className="stat-value">500+</span>
-              <span className="stat-label">Available Plots</span>
+          <div className="landhero-quick-stats">
+            <div className="landhero-quick-stat">
+              <span className="landhero-stat-value">500+</span>
+              <span className="landhero-stat-label">Available Plots</span>
             </div>
-            <div className="quick-stat">
-              <span className="stat-value">50+</span>
-              <span className="stat-label">Locations</span>
+            <div className="landhero-quick-stat">
+              <span className="landhero-stat-value">50+</span>
+              <span className="landhero-stat-label">Locations</span>
             </div>
-            <div className="quick-stat">
-              <span className="stat-value">15+</span>
-              <span className="stat-label">Years Experience</span>
+            <div className="landhero-quick-stat">
+              <span className="landhero-stat-value">15+</span>
+              <span className="landhero-stat-label">Years Experience</span>
             </div>
           </div>
         </div>

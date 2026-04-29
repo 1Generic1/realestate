@@ -1,43 +1,32 @@
-/* LandHero.css - Premium animated hero for Land page */
+/* LandHero.css - Unique Class Names (prefixed with landhero-) */
 
 /* Import fonts */
 @import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Montserrat:wght@300;400;500;600;700;800&display=swap");
 
 :root {
-  --land-primary-dark: #1a1a2e;
-  --land-gold: #b8860b;
-  --land-cream: #faf9f6;
-  --land-purple: #4b0082;
-  --land-rose-gold: #b76e79;
-  --land-silver: #c0c0c0;
-  --land-gradient-gold: linear-gradient(
-    135deg,
-    var(--land-gold) 0%,
-    #9c6e0a 100%
-  );
-  --land-gradient-purple: linear-gradient(
-    135deg,
-    var(--land-purple) 0%,
-    #3a0066 100%
-  );
+  --landhero-primary-dark: #1a1a2e;
+  --landhero-gold: #b8860b;
+  --landhero-cream: #faf9f6;
+  --landhero-purple: #4b0082;
+  --landhero-rose-gold: #b76e79;
+  --landhero-silver: #c0c0c0;
+  --landhero-gradient-gold: linear-gradient(135deg, var(--landhero-gold) 0%, #9c6e0a 100%);
 }
 
 /* ===== MAIN HERO SECTION ===== */
-.land-hero {
+.landhero-section {
   min-height: 100vh;
-  background:
-    linear-gradient(135deg, rgba(26, 26, 46, 0.97), rgba(75, 0, 130, 0.95)),
+  background: linear-gradient(135deg, rgba(26, 26, 46, 0.97), rgba(75, 0, 130, 0.95)),
     url("https://images.unsplash.com/photo-1500382017468-9049fed747ef?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80")
       center/cover fixed;
   display: flex;
   align-items: center;
   position: relative;
-  color: var(--land-cream);
+  color: var(--landhero-cream);
   overflow: hidden;
 }
 
-/* Overlay with subtle pattern */
-.land-hero-overlay {
+.landhero-overlay {
   position: absolute;
   top: 0;
   left: 0;
@@ -47,89 +36,27 @@
   z-index: 1;
 }
 
-/* ===== ANIMATED BACKGROUND PARTICLES ===== */
-.land-hero-particles {
-  position: absolute;
-  top: 0;
-  left: 0;
+.landhero-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
   width: 100%;
-  height: 100%;
-  z-index: 2;
-  pointer-events: none;
-}
-
-.land-particle {
-  position: absolute;
-  background: rgba(184, 134, 11, 0.1);
-  border-radius: 50%;
-  filter: blur(40px);
-  animation: land-particle-float 20s infinite ease-in-out;
-}
-
-.land-particle-1 {
-  width: 400px;
-  height: 400px;
-  top: -150px;
-  right: -150px;
-  animation-delay: 0s;
-  background: rgba(184, 134, 11, 0.15);
-}
-
-.land-particle-2 {
-  width: 500px;
-  height: 500px;
-  bottom: -200px;
-  left: -200px;
-  background: rgba(75, 0, 130, 0.15);
-  animation-delay: 5s;
-}
-
-.land-particle-3 {
-  width: 300px;
-  height: 300px;
-  top: 30%;
-  left: 10%;
-  background: rgba(183, 110, 121, 0.1);
-  animation-delay: 10s;
-}
-
-.land-particle-4 {
-  width: 350px;
-  height: 350px;
-  bottom: 20%;
-  right: 15%;
-  background: rgba(184, 134, 11, 0.1);
-  animation-delay: 15s;
-}
-
-@keyframes land-particle-float {
-  0%,
-  100% {
-    transform: translate(0, 0) scale(1);
-  }
-  25% {
-    transform: translate(50px, -30px) scale(1.1);
-  }
-  50% {
-    transform: translate(20px, 50px) scale(0.9);
-  }
-  75% {
-    transform: translate(-40px, 20px) scale(1.05);
-  }
+  position: relative;
+  z-index: 10;
 }
 
 /* ===== HERO CONTENT ===== */
-.land-hero-content {
+.landhero-content {
   max-width: 1000px;
   margin: 0 auto;
   position: relative;
   z-index: 10;
   padding: 0 20px;
   text-align: center;
-  animation: land-fade-up 1s ease;
+  animation: landhero-fade-up 1s ease;
 }
 
-@keyframes land-fade-up {
+@keyframes landhero-fade-up {
   from {
     opacity: 0;
     transform: translateY(30px);
@@ -140,117 +67,22 @@
   }
 }
 
-/* ===== ANIMATED ICON ===== */
-.land-hero-icon-wrapper {
-  margin-bottom: 30px;
-  display: inline-block;
-  position: relative;
-}
-
-.land-hero-icon-glow {
-  width: 100px;
-  height: 100px;
-  background: var(--land-gradient-gold);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  animation: land-icon-pulse 3s infinite;
-  box-shadow: 0 0 40px rgba(184, 134, 11, 0.5);
-  position: relative;
-  z-index: 2;
-}
-
-.land-hero-icon {
-  font-size: 3rem;
-  color: var(--land-primary-dark);
-  animation: land-icon-rotate 10s linear infinite;
-}
-
-.land-hero-icon-ring {
-  position: absolute;
-  top: -12px;
-  left: -12px;
-  right: -12px;
-  bottom: -12px;
-  border: 2px solid var(--land-gold);
-  border-radius: 50%;
-  animation: land-ring-pulse 2s ease-out infinite;
-  z-index: 1;
-}
-
-.land-hero-icon-ring-2 {
-  position: absolute;
-  top: -22px;
-  left: -22px;
-  right: -22px;
-  bottom: -22px;
-  border: 1px solid rgba(184, 134, 11, 0.3);
-  border-radius: 50%;
-  animation: land-ring-pulse-2 3s ease-out infinite;
-  z-index: 1;
-}
-
-@keyframes land-icon-pulse {
-  0%,
-  100% {
-    transform: scale(1);
-    box-shadow: 0 0 40px rgba(184, 134, 11, 0.5);
-  }
-  50% {
-    transform: scale(1.08);
-    box-shadow: 0 0 70px rgba(184, 134, 11, 0.8);
-  }
-}
-
-@keyframes land-icon-rotate {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes land-ring-pulse {
-  0% {
-    transform: scale(1);
-    opacity: 0.8;
-  }
-  100% {
-    transform: scale(1.5);
-    opacity: 0;
-  }
-}
-
-@keyframes land-ring-pulse-2 {
-  0% {
-    transform: scale(1);
-    opacity: 0.5;
-  }
-  100% {
-    transform: scale(1.8);
-    opacity: 0;
-  }
-}
-
 /* ===== BADGE ===== */
-.land-hero-badge {
+.landhero-badge {
   display: inline-block;
   background: rgba(184, 134, 11, 0.15);
-  border: 1px solid var(--land-gold);
+  border: 1px solid var(--landhero-gold);
   padding: 8px 25px;
   border-radius: 50px;
   font-size: 0.9rem;
   margin-bottom: 25px;
   backdrop-filter: blur(10px);
-  animation: land-badge-glow 3s infinite;
+  animation: landhero-badge-glow 3s infinite;
   letter-spacing: 1px;
 }
 
-@keyframes land-badge-glow {
-  0%,
-  100% {
+@keyframes landhero-badge-glow {
+  0%, 100% {
     box-shadow: 0 0 15px rgba(184, 134, 11, 0.3);
   }
   50% {
@@ -259,7 +91,7 @@
 }
 
 /* ===== TITLE ===== */
-.land-hero-title {
+.landhero-title {
   font-size: 4rem;
   font-weight: 900;
   margin-bottom: 20px;
@@ -268,31 +100,25 @@
   text-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
 }
 
-.land-gold-text {
-  color: var(--land-gold);
+.landhero-gold-text {
+  color: var(--landhero-gold);
   position: relative;
   display: inline-block;
 }
 
-.land-gold-text::after {
+.landhero-gold-text::after {
   content: "";
   position: absolute;
   bottom: 5px;
   left: 0;
   width: 100%;
   height: 3px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    var(--land-gold),
-    transparent
-  );
-  animation: land-underline 2s infinite;
+  background: linear-gradient(90deg, transparent, var(--landhero-gold), transparent);
+  animation: landhero-underline 2s infinite;
 }
 
-@keyframes land-underline {
-  0%,
-  100% {
+@keyframes landhero-underline {
+  0%, 100% {
     width: 0;
     left: 50%;
     opacity: 0;
@@ -305,16 +131,16 @@
 }
 
 /* ===== TEXT ===== */
-.land-hero-text {
+.landhero-text {
   font-size: 1.2rem;
   max-width: 700px;
   margin: 0 auto 40px;
   opacity: 0.9;
   line-height: 1.8;
-  animation: land-text-fade 1s ease 0.3s both;
+  animation: landhero-text-fade 1s ease 0.3s both;
 }
 
-@keyframes land-text-fade {
+@keyframes landhero-text-fade {
   from {
     opacity: 0;
     transform: translateY(20px);
@@ -326,13 +152,13 @@
 }
 
 /* ===== SEARCH WRAPPER ===== */
-.land-search-wrapper {
+.landhero-search-wrapper {
   max-width: 800px;
   margin: 0 auto 50px;
-  animation: land-search-slide 1s ease 0.4s both;
+  animation: landhero-search-slide 1s ease 0.4s both;
 }
 
-@keyframes land-search-slide {
+@keyframes landhero-search-slide {
   from {
     opacity: 0;
     transform: translateY(20px);
@@ -344,7 +170,7 @@
 }
 
 /* ===== SEARCH BOX ===== */
-.land-search-box {
+.landhero-search-box {
   display: flex;
   align-items: center;
   background: rgba(255, 255, 255, 0.1);
@@ -356,27 +182,26 @@
   transition: all 0.3s ease;
 }
 
-.land-search-box:hover {
-  border-color: var(--land-gold);
+.landhero-search-box:hover {
+  border-color: var(--landhero-gold);
   box-shadow: 0 20px 50px rgba(184, 134, 11, 0.3);
   transform: translateY(-2px);
 }
 
-.land-search-box:focus-within {
-  border-color: var(--land-gold);
+.landhero-search-box:focus-within {
+  border-color: var(--landhero-gold);
   box-shadow: 0 0 0 3px rgba(184, 134, 11, 0.3);
 }
 
-.land-search-icon {
-  color: var(--land-gold);
+.landhero-search-icon {
+  color: var(--landhero-gold);
   margin-left: 25px;
   font-size: 1.2rem;
-  animation: land-search-pulse 2s infinite;
+  animation: landhero-search-pulse 2s infinite;
 }
 
-@keyframes land-search-pulse {
-  0%,
-  100% {
+@keyframes landhero-search-pulse {
+  0%, 100% {
     transform: scale(1);
   }
   50% {
@@ -385,25 +210,24 @@
   }
 }
 
-.land-search-input {
+.landhero-search-input {
   flex: 1;
-  padding-left: 30px !important;
+  padding: 16px 20px;
   border: none;
   font-size: 1rem;
   outline: none;
   background: transparent;
-  color: var(--land-cream);
+  color: var(--landhero-cream);
 }
 
-.land-search-input::placeholder {
+.landhero-search-input::placeholder {
   color: rgba(255, 255, 255, 0.6);
   font-style: italic;
-  padding: 2px;
 }
 
-.land-search-btn {
-  background: var(--land-gradient-gold);
-  color: var(--land-primary-dark);
+.landhero-search-btn {
+  background: var(--landhero-gradient-gold);
+  color: var(--landhero-primary-dark);
   border: none;
   padding: 14px 35px;
   border-radius: 60px;
@@ -417,344 +241,32 @@
   white-space: nowrap;
 }
 
-.land-search-btn::before {
+.landhero-search-btn::before {
   content: "";
   position: absolute;
   top: 0;
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.3),
-    transparent
-  );
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
   transition: left 0.5s ease;
 }
 
-.land-search-btn:hover {
+.landhero-search-btn:hover {
   transform: translateY(-3px) scale(1.02);
   box-shadow: 0 10px 30px rgba(184, 134, 11, 0.4);
 }
 
-.land-search-btn:hover::before {
+.landhero-search-btn:hover::before {
   left: 100%;
 }
 
-.land-search-btn:active {
+.landhero-search-btn:active {
   transform: translateY(-1px) scale(0.98);
 }
 
-/* ===== QUICK STATS ===== */
-.land-quick-stats {
-  display: flex;
-  justify-content: center;
-  gap: 70px;
-  flex-wrap: wrap;
-  animation: land-stats-fade 1s ease 0.6s both;
-}
-
-@keyframes land-stats-fade {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.land-quick-stat {
-  text-align: center;
-  position: relative;
-}
-
-.land-quick-stat .land-stat-value {
-  display: block;
-  font-size: 2.5rem;
-  font-weight: 800;
-  color: var(--land-gold);
-  font-family: "Playfair Display", serif;
-  line-height: 1.2;
-  animation: land-count-pulse 2s infinite;
-}
-
-@keyframes land-count-pulse {
-  0%,
-  100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.1);
-    color: #ffd700;
-  }
-}
-
-.land-quick-stat .land-stat-label {
-  font-size: 0.95rem;
-  opacity: 0.8;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  color: var(--land-cream);
-}
-
-.land-stat-divider {
-  width: 2px;
-  height: 40px;
-  background: linear-gradient(
-    to bottom,
-    transparent,
-    var(--land-gold),
-    transparent
-  );
-  margin: 0 10px;
-}
-
-/* ===== SCROLL INDICATOR ===== */
-.land-scroll-indicator {
-  position: absolute;
-  bottom: 30px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 20;
-  text-align: center;
-  animation: land-bounce 2s infinite;
-}
-
-.land-scroll-text {
-  display: block;
-  color: var(--land-cream);
-  font-size: 0.8rem;
-  margin-bottom: 8px;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  opacity: 0.7;
-}
-
-.land-scroll-line {
-  width: 2px;
-  height: 50px;
-  background: linear-gradient(to bottom, var(--land-gold), transparent);
-  margin: 0 auto;
-  position: relative;
-}
-
-.land-scroll-dot {
-  width: 6px;
-  height: 6px;
-  background: var(--land-gold);
-  border-radius: 50%;
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  animation: land-scroll-dot 2s ease infinite;
-}
-
-@keyframes land-scroll-dot {
-  0% {
-    top: 0;
-    opacity: 1;
-  }
-  100% {
-    top: 100%;
-    opacity: 0;
-  }
-}
-
-@keyframes land-bounce {
-  0%,
-  100% {
-    transform: translateX(-50%) translateY(0);
-  }
-  50% {
-    transform: translateX(-50%) translateY(-10px);
-  }
-}
-
-/* ===== RESPONSIVE BREAKPOINTS ===== */
-
-/* Large Desktop (1200px and below) */
-@media (max-width: 1200px) {
-  .land-hero-title {
-    font-size: 3.8rem;
-  }
-
-  .land-hero-icon-glow {
-    width: 90px;
-    height: 90px;
-  }
-
-  .land-hero-icon {
-    font-size: 2.8rem;
-  }
-}
-
-/* Desktop (1024px and below) */
-@media (max-width: 1024px) {
-  .land-hero-title {
-    font-size: 3.2rem;
-  }
-
-  .land-hero-text {
-    font-size: 1.1rem;
-  }
-
-  .land-quick-stats {
-    gap: 50px;
-  }
-
-  .land-quick-stat .land-stat-value {
-    font-size: 2.2rem;
-  }
-}
-
-/* Tablets (768px and below) */
-@media (max-width: 768px) {
-  .land-hero {
-    min-height: auto;
-    padding: 120px 0 80px;
-  }
-
-  .land-hero-title {
-    font-size: 2.8rem;
-  }
-
-  .land-hero-text {
-    font-size: 1rem;
-    margin-bottom: 30px;
-  }
-
-  .land-hero-icon-glow {
-    width: 80px;
-    height: 80px;
-  }
-
-  .land-hero-icon {
-    font-size: 2.4rem;
-  }
-
-  .land-search-wrapper {
-    margin-bottom: 40px;
-  }
-
-  .land-search-box {
-    flex-direction: column;
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(10px);
-    padding: 15px;
-    gap: 15px;
-  }
-
-  .land-search-icon {
-    display: none;
-  }
-
-  .land-search-input {
-    width: 100%;
-    border-radius: 50px;
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(184, 134, 11, 0.3);
-    color: var(--land-cream);
-    padding: 14px 20px;
-  }
-
-  .land-search-input::placeholder {
-    color: rgba(255, 255, 255, 0.5);
-  }
-
-  .land-search-btn {
-    width: 100%;
-    margin-right: 0;
-    padding: 14px;
-  }
-
-  .land-quick-stats {
-    flex-direction: column;
-    gap: 20px;
-    align-items: center;
-  }
-
-  .land-stat-divider {
-    width: 100px;
-    height: 2px;
-    margin: 10px 0;
-  }
-
-  .land-scroll-indicator {
-    display: none;
-  }
-}
-
-/* Mobile Large (576px and below) */
-@media (max-width: 576px) {
-  .land-hero {
-    padding: 100px 0 60px;
-  }
-
-  .land-hero-title {
-    font-size: 2.2rem;
-  }
-
-  .land-hero-badge {
-    font-size: 0.8rem;
-    padding: 6px 20px;
-  }
-
-  .land-hero-icon-glow {
-    width: 70px;
-    height: 70px;
-  }
-
-  .land-hero-icon {
-    font-size: 2.2rem;
-  }
-
-  .land-quick-stat .land-stat-value {
-    font-size: 2rem;
-  }
-
-  .land-quick-stat .land-stat-label {
-    font-size: 0.85rem;
-  }
-}
-
-/* Mobile Small (375px and below) */
-@media (max-width: 375px) {
-  .land-hero-title {
-    font-size: 2rem;
-  }
-
-  .land-hero-text {
-    font-size: 0.95rem;
-  }
-
-  .land-hero-icon-glow {
-    width: 60px;
-    height: 60px;
-  }
-
-  .land-hero-icon {
-    font-size: 1.8rem;
-  }
-
-  .land-search-input {
-    padding: 12px 15px;
-    font-size: 0.9rem;
-  }
-
-  .land-search-btn {
-    padding: 12px;
-    font-size: 0.95rem;
-  }
-}
-
-/* ===== ADD THESE STYLES FOR SEARCH AND FILTER FUNCTIONALITY ===== */
-
-/* Filter Wrapper */
-.land-filter-wrapper {
+/* ===== FILTER WRAPPER ===== */
+.landhero-filter-wrapper {
   margin-top: 20px;
   display: flex;
   justify-content: center;
@@ -763,13 +275,13 @@
 }
 
 /* Price Filter Dropdown */
-.land-price-filter {
+.landhero-price-filter {
   padding: 12px 25px;
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(184, 134, 11, 0.3);
   border-radius: 50px;
-  color: var(--land-cream);
+  color: var(--landhero-cream);
   font-size: 0.95rem;
   cursor: pointer;
   outline: none;
@@ -777,162 +289,32 @@
   font-family: "Montserrat", sans-serif;
 }
 
-.land-price-filter:hover {
+.landhero-price-filter:hover {
   background: rgba(184, 134, 11, 0.2);
-  border-color: var(--land-gold);
+  border-color: var(--landhero-gold);
 }
 
-.land-price-filter:focus {
-  border-color: var(--land-gold);
+.landhero-price-filter:focus {
+  border-color: var(--landhero-gold);
   box-shadow: 0 0 0 3px rgba(184, 134, 11, 0.3);
 }
 
-/* Dropdown Options Styling */
-.land-price-filter option {
-  background: var(--land-primary-dark);
-  color: var(--land-cream);
+.landhero-price-filter option {
+  background: var(--landhero-primary-dark);
+  color: var(--landhero-cream);
   padding: 10px;
 }
 
-/* Responsive for Filter */
-@media (max-width: 768px) {
-  .land-filter-wrapper {
-    margin-top: 15px;
-  }
-
-  .land-price-filter {
-    width: 100%;
-    text-align: center;
-    padding: 12px 20px;
-  }
-}
-
-/* Search Box Enhancement - Keep existing styles but ensure these */
-.land-search-wrapper {
-  max-width: 800px;
-  margin: 0 auto 30px;
-  animation: land-search-slide 1s ease 0.4s both;
-}
-
-/* Make sure the search box has proper spacing */
-.land-search-box {
+/* ===== QUICK STATS ===== */
+.landhero-quick-stats {
   display: flex;
-  align-items: center;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  border-radius: 70px;
-  padding: 6px;
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(184, 134, 11, 0.2);
-  transition: all 0.3s ease;
+  justify-content: center;
+  gap: 70px;
+  flex-wrap: wrap;
+  animation: landhero-stats-fade 1s ease 0.6s both;
 }
 
-/* Search icon positioning fix */
-.land-search-icon {
-  color: var(--land-gold);
-  margin-left: 25px;
-  font-size: 1.2rem;
-  animation: land-search-pulse 2s infinite;
-}
-
-/* Input field styling */
-.land-search-input {
-  flex: 1;
-  padding: 16px 20px;
-  border: none;
-  font-size: 1rem;
-  outline: none;
-  background: transparent;
-  color: var(--land-cream);
-}
-
-.land-search-input::placeholder {
-  color: rgba(255, 255, 255, 0.6);
-  font-style: italic;
-}
-
-/* Search button styling */
-.land-search-btn {
-  background: var(--land-gradient-gold);
-  color: var(--land-primary-dark);
-  border: none;
-  padding: 14px 35px;
-  border-radius: 60px;
-  font-weight: 700;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  margin-right: 5px;
-  position: relative;
-  overflow: hidden;
-  white-space: nowrap;
-}
-
-.land-search-btn:hover {
-  transform: translateY(-3px) scale(1.02);
-  box-shadow: 0 10px 30px rgba(184, 134, 11, 0.4);
-}
-
-.land-search-btn:active {
-  transform: translateY(-1px) scale(0.98);
-}
-
-/* Responsive adjustments for search box */
-@media (max-width: 768px) {
-  .land-search-box {
-    flex-direction: column;
-    background: rgba(255, 255, 255, 0.15);
-    padding: 15px;
-    gap: 15px;
-    border-radius: 30px;
-  }
-
-  .land-search-icon {
-    display: none;
-  }
-
-  .land-search-input {
-    width: 100%;
-    border-radius: 50px;
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(184, 134, 11, 0.3);
-    padding: 14px 20px;
-  }
-
-  .land-search-btn {
-    width: 100%;
-    margin-right: 0;
-    padding: 14px;
-  }
-}
-
-/* Loading state for search button */
-.land-search-btn.loading {
-  opacity: 0.7;
-  cursor: not-allowed;
-}
-
-.land-search-btn.loading::after {
-  content: "...";
-  animation: loading-dots 1.5s steps(4, end) infinite;
-}
-
-@keyframes loading-dots {
-  0%,
-  20% {
-    content: ".";
-  }
-  40% {
-    content: "..";
-  }
-  60%,
-  100% {
-    content: "...";
-  }
-}
-
-/* Animation for search results fade */
-@keyframes land-results-fade {
+@keyframes landhero-stats-fade {
   from {
     opacity: 0;
     transform: translateY(20px);
@@ -943,8 +325,171 @@
   }
 }
 
-/* Optional: Add a subtle glow effect when search is active */
-.land-search-box:focus-within {
-  border-color: var(--land-gold);
-  box-shadow: 0 0 0 3px rgba(184, 134, 11, 0.3);
+.landhero-quick-stat {
+  text-align: center;
+  position: relative;
+}
+
+.landhero-stat-value {
+  display: block;
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--landhero-gold);
+  font-family: "Playfair Display", serif;
+  line-height: 1.2;
+  animation: landhero-count-pulse 2s infinite;
+}
+
+@keyframes landhero-count-pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+    color: #ffd700;
+  }
+}
+
+.landhero-stat-label {
+  font-size: 0.95rem;
+  opacity: 0.8;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--landhero-cream);
+}
+
+/* ===== RESPONSIVE BREAKPOINTS ===== */
+
+/* Large Desktop (1200px and below) */
+@media (max-width: 1200px) {
+  .landhero-title {
+    font-size: 3.8rem;
+  }
+}
+
+/* Desktop (1024px and below) */
+@media (max-width: 1024px) {
+  .landhero-title {
+    font-size: 3.2rem;
+  }
+  .landhero-text {
+    font-size: 1.1rem;
+  }
+  .landhero-quick-stats {
+    gap: 50px;
+  }
+  .landhero-stat-value {
+    font-size: 2.2rem;
+  }
+}
+
+/* Tablets (768px and below) */
+@media (max-width: 768px) {
+  .landhero-section {
+    min-height: auto;
+    padding: 120px 0 80px;
+  }
+  .landhero-title {
+    font-size: 2.8rem;
+  }
+  .landhero-text {
+    font-size: 1rem;
+    margin-bottom: 30px;
+  }
+  .landhero-search-wrapper {
+    margin-bottom: 40px;
+  }
+  .landhero-search-box {
+    flex-direction: column;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    padding: 15px;
+    gap: 15px;
+  }
+  .landhero-search-icon {
+    display: none;
+  }
+  .landhero-search-input {
+    width: 100%;
+    border-radius: 50px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(184, 134, 11, 0.3);
+    padding: 14px 20px;
+  }
+  .landhero-search-input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+  }
+  .landhero-search-btn {
+    width: 100%;
+    margin-right: 0;
+    padding: 14px;
+  }
+  .landhero-filter-wrapper {
+    margin-top: 15px;
+  }
+  .landhero-price-filter {
+    width: 100%;
+    text-align: center;
+    padding: 12px 20px;
+  }
+  .landhero-quick-stats {
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+  }
+}
+
+/* Mobile Large (576px and below) */
+@media (max-width: 576px) {
+  .landhero-section {
+    padding: 100px 0 60px;
+  }
+  .landhero-title {
+    font-size: 2.2rem;
+  }
+  .landhero-badge {
+    font-size: 0.8rem;
+    padding: 6px 20px;
+  }
+  .landhero-stat-value {
+    font-size: 2rem;
+  }
+  .landhero-stat-label {
+    font-size: 0.85rem;
+  }
+}
+
+/* Mobile Small (375px and below) */
+@media (max-width: 375px) {
+  .landhero-title {
+    font-size: 2rem;
+  }
+  .landhero-text {
+    font-size: 0.95rem;
+  }
+  .landhero-search-input {
+    padding: 12px 15px;
+    font-size: 0.9rem;
+  }
+  .landhero-search-btn {
+    padding: 12px;
+    font-size: 0.95rem;
+  }
+}
+
+/* Loading state for search button */
+.landhero-search-btn.loading {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.landhero-search-btn.loading::after {
+  content: "...";
+  animation: landhero-loading-dots 1.5s steps(4, end) infinite;
+}
+
+@keyframes landhero-loading-dots {
+  0%, 20% { content: "."; }
+  40% { content: ".."; }
+  60%, 100% { content: "..."; }
 }

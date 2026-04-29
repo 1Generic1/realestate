@@ -8,44 +8,44 @@ const SearchCategories = () => {
       icon: <FaHome />,
       title: "Houses",
       count: "2,500+",
-      animation: "spin-on-hover",
+      animation: "searchcat-spin-on-hover",
     },
     {
       icon: <FaBuilding />,
       title: "Flats",
       count: "1,800+",
-      animation: "bounce-on-hover",
+      animation: "searchcat-bounce-on-hover",
     },
     {
       icon: <FaTree />,
       title: "Lands",
       count: "500+",
-      animation: "pulse-on-hover",
+      animation: "searchcat-pulse-on-hover",
     },
     {
       icon: <FaHardHat />,
       title: "New Projects",
       count: "120+",
-      animation: "glow-on-hover",
+      animation: "searchcat-glow-on-hover",
     },
   ];
 
   return (
-    <section className="search-categories-section">
-      <div className="container-search">
-        <div className="categories-grid1">
+    <section className="searchcat-section">
+      <div className="searchcat-container">
+        <div className="searchcat-grid">
           {categories.map((category, index) => (
             <div
               key={index}
-              className={`category-card ${category.animation}`}
+              className={`searchcat-card ${category.animation}`}
               data-aos="fade-up"
               data-aos-delay={index * 100}
             >
-              <div className="category-icon-wrapper">
-                <div className="category-icon">{category.icon}</div>
+              <div className="searchcat-icon-wrapper">
+                <div className="searchcat-icon">{category.icon}</div>
               </div>
-              <h3 className="category-title">{category.title}</h3>
-              <p className="category-count">{category.count} Properties</p>
+              <h3 className="searchcat-title">{category.title}</h3>
+              <p className="searchcat-count">{category.count} Properties</p>
             </div>
           ))}
         </div>

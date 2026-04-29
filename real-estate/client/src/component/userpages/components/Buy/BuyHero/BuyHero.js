@@ -17,17 +17,14 @@ const BuyHero = ({ onSearch, onPropertyTypeFilter, onPriceFilter }) => {
     e.preventDefault();
     console.log("Searching:", { searchTerm, propertyType, priceRange });
 
-    // Pass search term to parent
     if (onSearch) {
       onSearch(searchTerm);
     }
 
-    // Pass property type filter to parent
     if (onPropertyTypeFilter) {
       onPropertyTypeFilter(propertyType);
     }
 
-    // Pass price filter to parent
     if (onPriceFilter) {
       onPriceFilter(priceRange);
     }
@@ -51,7 +48,6 @@ const BuyHero = ({ onSearch, onPropertyTypeFilter, onPriceFilter }) => {
       }
     }
 
-    // Trigger search after quick filter
     setTimeout(() => {
       if (onSearch) onSearch(searchTerm || value);
       if (onPropertyTypeFilter) onPropertyTypeFilter(propertyType || value);
@@ -59,7 +55,6 @@ const BuyHero = ({ onSearch, onPropertyTypeFilter, onPriceFilter }) => {
     }, 100);
   };
 
-  // Convert price range for API
   const getPriceRangeValue = (range) => {
     switch (range) {
       case "0-20m":
@@ -76,41 +71,40 @@ const BuyHero = ({ onSearch, onPropertyTypeFilter, onPriceFilter }) => {
   };
 
   return (
-    <section className="buy-hero">
-      <div className="buy-hero-overlay"></div>
-      <div className="container">
-        <div className="buy-hero-content" data-aos="fade-up">
-          <div className="hero-icon-wrapper">
-            <FaHome className="hero-icon pulse-animation" />
+    <section className="buyhero-section">
+      <div className="buyhero-overlay"></div>
+      <div className="buyhero-container">
+        <div className="buyhero-content" data-aos="fade-up">
+          <div className="buyhero-icon-wrapper">
+            <FaHome className="buyhero-icon pulse-animation" />
           </div>
-          <h1 className="buy-hero-title">
-            Find Your <span className="gold-text">Dream Property</span>
+          <h1 className="buyhero-title">
+            Find Your <span className="buyhero-gold-text">Dream Property</span>
           </h1>
-          <p className="buy-hero-text">
+          <p className="buyhero-text">
             Discover thousands of properties for sale across Nigeria. From
             luxury homes to commercial spaces.
           </p>
 
-          {/* Search Form */}
-          <form onSubmit={handleSearch} className="hero-search-form">
-            <div className="search-main">
-              <div className="search-input-wrapper">
-                <FaSearch className="search-icon" />
+          <form onSubmit={handleSearch} className="buyhero-search-form">
+            <div className="buyhero-search-main">
+              <div className="buyhero-search-input-wrapper">
+                <FaSearch className="buyhero-search-icon" />
                 <input
                   type="text"
                   placeholder="Search by location, property name or keyword..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="search-input"
+                  className="buyhero-search-input"
                 />
               </div>
-              <button type="submit" className="search-btn">
+              <button type="submit" className="buyhero-search-btn">
                 Search
               </button>
             </div>
 
-            <div className="search-filters">
-              <div className="filter-group">
+            <div className="buyhero-search-filters">
+              <div className="buyhero-filter-group">
                 <select
                   value={propertyType}
                   onChange={(e) => {
@@ -119,7 +113,7 @@ const BuyHero = ({ onSearch, onPropertyTypeFilter, onPriceFilter }) => {
                       onPropertyTypeFilter(e.target.value);
                     }
                   }}
-                  className="filter-select"
+                  className="buyhero-filter-select"
                 >
                   <option value="">Property Type</option>
                   <option value="house">Houses</option>
@@ -132,7 +126,7 @@ const BuyHero = ({ onSearch, onPropertyTypeFilter, onPriceFilter }) => {
                 </select>
               </div>
 
-              <div className="filter-group">
+              <div className="buyhero-filter-group">
                 <select
                   value={priceRange}
                   onChange={(e) => {
@@ -141,7 +135,7 @@ const BuyHero = ({ onSearch, onPropertyTypeFilter, onPriceFilter }) => {
                       onPriceFilter(getPriceRangeValue(e.target.value));
                     }
                   }}
-                  className="filter-select"
+                  className="buyhero-filter-select"
                 >
                   <option value="">Price Range</option>
                   <option value="0-20m">₦0 - ₦20M</option>
@@ -153,29 +147,28 @@ const BuyHero = ({ onSearch, onPropertyTypeFilter, onPriceFilter }) => {
             </div>
           </form>
 
-          {/* Quick Filters */}
-          <div className="quick-filters">
-            <span className="quick-filters-label">Popular:</span>
+          <div className="buyhero-quick-filters">
+            <span className="buyhero-quick-filters-label">Popular:</span>
             <button
-              className="quick-filter-btn"
+              className="buyhero-quick-filter-btn"
               onClick={() => handleQuickFilter("propertyType", "house")}
             >
               <FaHome /> Houses
             </button>
             <button
-              className="quick-filter-btn"
+              className="buyhero-quick-filter-btn"
               onClick={() => handleQuickFilter("propertyType", "apartment")}
             >
               <FaBuilding /> Apartments
             </button>
             <button
-              className="quick-filter-btn"
+              className="buyhero-quick-filter-btn"
               onClick={() => handleQuickFilter("propertyType", "land")}
             >
               <FaTree /> Lands
             </button>
             <button
-              className="quick-filter-btn"
+              className="buyhero-quick-filter-btn"
               onClick={() => handleQuickFilter("search", "Lekki")}
             >
               <FaMapMarkerAlt /> Lekki

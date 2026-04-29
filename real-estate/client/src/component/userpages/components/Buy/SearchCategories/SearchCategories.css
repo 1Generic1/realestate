@@ -1,19 +1,25 @@
-.search-categories-section {
+/* SearchCategories.css - Unique Class Names (prefixed with searchcat-) */
+
+.searchcat-section {
   padding: 60px 0;
   background: white;
   width: 100% !important;
 }
 
-.categories-grid1 {
+.searchcat-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  width: 100%;
+}
+
+.searchcat-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 50px;
 }
 
-.container-search {
-  width: 100%;
-}
-.category-card {
+.searchcat-card {
   background: var(--cream);
   padding: 30px 20px;
   border-radius: 20px;
@@ -24,13 +30,13 @@
   cursor: pointer;
 }
 
-.category-card:hover {
+.searchcat-card:hover {
   transform: translateY(-10px);
   box-shadow: var(--shadow-lg);
   border-color: var(--gold);
 }
 
-.category-icon-wrapper {
+.searchcat-icon-wrapper {
   width: 70px;
   height: 70px;
   background: rgba(184, 134, 11, 0.1);
@@ -42,38 +48,38 @@
   transition: all 0.3s ease;
 }
 
-.category-card:hover .category-icon-wrapper {
+.searchcat-card:hover .searchcat-icon-wrapper {
   background: var(--gold);
 }
 
-.category-icon {
+.searchcat-icon {
   font-size: 2rem;
   color: var(--gold);
   transition: all 0.3s ease;
 }
 
-.category-card:hover .category-icon {
+.searchcat-card:hover .searchcat-icon {
   color: var(--primary-dark);
 }
 
 /* Animations */
-.spin-on-hover:hover .category-icon {
-  animation: spin 0.6s ease-in-out;
+.searchcat-spin-on-hover:hover .searchcat-icon {
+  animation: searchcat-spin 0.6s ease-in-out;
 }
 
-.bounce-on-hover:hover .category-icon {
-  animation: bounce 0.6s ease-in-out;
+.searchcat-bounce-on-hover:hover .searchcat-icon {
+  animation: searchcat-bounce 0.6s ease-in-out;
 }
 
-.pulse-on-hover:hover .category-icon-wrapper {
-  animation: pulse-glow 1s ease-in-out infinite;
+.searchcat-pulse-on-hover:hover .searchcat-icon-wrapper {
+  animation: searchcat-pulse-glow 1s ease-in-out infinite;
 }
 
-.glow-on-hover:hover {
+.searchcat-glow-on-hover:hover {
   box-shadow: 0 0 30px rgba(184, 134, 11, 0.4);
 }
 
-@keyframes spin {
+@keyframes searchcat-spin {
   from {
     transform: rotate(0deg);
   }
@@ -82,7 +88,7 @@
   }
 }
 
-@keyframes bounce {
+@keyframes searchcat-bounce {
   0%,
   100% {
     transform: translateY(0);
@@ -92,7 +98,7 @@
   }
 }
 
-@keyframes pulse-glow {
+@keyframes searchcat-pulse-glow {
   0%,
   100% {
     background: rgba(184, 134, 11, 0.1);
@@ -104,14 +110,14 @@
   }
 }
 
-.category-title {
+.searchcat-title {
   font-size: 1.3rem;
   margin-bottom: 10px;
   color: var(--primary-dark);
   font-family: "Playfair Display", serif;
 }
 
-.category-count {
+.searchcat-count {
   color: var(--gold);
   font-weight: 600;
   font-size: 1.1rem;
@@ -121,45 +127,90 @@
 
 /* Desktop (1024px and below) */
 @media (max-width: 1024px) {
-  .categories-grid {
+  .searchcat-grid {
     grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
+    gap: 30px;
+  }
+  
+  .searchcat-card {
+    padding: 25px 20px;
   }
 }
 
 /* Tablets (768px and below) */
 @media (max-width: 768px) {
-  .search-categories-section {
-    padding: 40px 0;
+  .searchcat-section {
+    padding: 50px 0;
   }
 
-  .category-card {
+  .searchcat-grid {
+    gap: 25px;
+  }
+
+  .searchcat-card {
     padding: 25px 15px;
   }
 
-  .category-icon-wrapper {
+  .searchcat-icon-wrapper {
     width: 60px;
     height: 60px;
   }
 
-  .category-icon {
+  .searchcat-icon {
     font-size: 1.8rem;
   }
 
-  .category-title {
+  .searchcat-title {
     font-size: 1.2rem;
+  }
+  
+  .searchcat-count {
+    font-size: 1rem;
   }
 }
 
 /* Mobile Large (576px and below) */
 @media (max-width: 576px) {
-  .categories-grid {
+  .searchcat-section {
+    padding: 40px 0;
+  }
+  
+  .searchcat-grid {
     grid-template-columns: 1fr;
     max-width: 300px;
     margin: 0 auto;
+    gap: 20px;
   }
 
-  .category-card {
-    padding: 20px;
+  .searchcat-card {
+    padding: 25px 20px;
+  }
+}
+
+/* Mobile Small (375px and below) */
+@media (max-width: 375px) {
+  .searchcat-section {
+    padding: 30px 0;
+  }
+  
+  .searchcat-card {
+    padding: 20px 15px;
+  }
+  
+  .searchcat-icon-wrapper {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .searchcat-icon {
+    font-size: 1.5rem;
+  }
+  
+  .searchcat-title {
+    font-size: 1.1rem;
+  }
+  
+  .searchcat-count {
+    font-size: 0.9rem;
   }
 }
