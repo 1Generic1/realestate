@@ -183,6 +183,20 @@ app.get("/health", (req, res) => {
   });
 });
 
+// TEMPORARY TEST ENDPOINT - Add this before your routes
+app.get('/test', (req, res) => {
+  res.json({ 
+    message: 'Server is running!',
+    env: {
+      NODE_ENV: process.env.NODE_ENV,
+      PORT: process.env.PORT,
+      hasMongoURI: !!process.env.MONGODB_URI,
+      hasJWT: !!process.env.JWT_SECRET,
+      hasAdminPass: !!process.env.ADMIN_PASSWORD
+    }
+  });
+});
+
 // ==================== ROUTES ====================
 
 app.use("/api", companyRoutes);
