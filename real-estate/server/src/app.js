@@ -2,7 +2,6 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const dotenv = require("dotenv");
 const express = require("express");
-const cors = require("cors");
 
 // Import routes
 const companyRoutes = require("./routes/company.routes");
@@ -58,12 +57,10 @@ app.use(cors({
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
   exposedHeaders: ['Content-Length', 'X-Requested-With'],
-  preflightContinue: false,
   optionsSuccessStatus: 204
 }));
 
 // Ensure preflight requests are handled
-app.options('*', cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
