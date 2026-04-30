@@ -214,6 +214,14 @@ app.use(notFound);
 
 // Global error handler
 app.use(errorHandler);
+// Catch unhandled errors
+process.on('uncaughtException', (err) => {
+  console.error('❌ Uncaught Exception:', err);
+});
+
+process.on('unhandledRejection', (err) => {
+  console.error('❌ Unhandled Rejection:', err);
+});
 
 // Start server
 app.listen(PORT, () => {
