@@ -7,6 +7,7 @@ const {
 const { AppError } = require("../middleware/errorMiddleware");
 const crypto = require("crypto");
 const { generateReferenceLetter } = require("../services/pdf.service");
+const { sendVerificationEmail } = require("../services/emailService");
 
 // ==================== PUBLIC FUNCTIONS ====================
 
@@ -45,8 +46,14 @@ exports.register = async (req, res, next) => {
     // Generate verification token
     const verificationToken = await user.generateVerificationToken();
 
-    // TODO: Send verification email
-    // await sendVerificationEmail(user.email, verificationToken, user.firstName);
+    // Send verification email
+    try {
+      await sendVerificationEmail(user.email, verificationToken, user.firstName);
+      console.log(`✅ Verification email sent to ${user.email}`);
+    } catch (emailError) {
+      console.error(`❌ Failed to send verification email to ${user.email}:`, emailError.message);
+      // Don't fail registration - user can request new verification link later
+    }
 
     // Remove password from response
     const userResponse = user.toObject();

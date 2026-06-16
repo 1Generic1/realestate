@@ -90,12 +90,17 @@ const SignUp = () => {
         referralSource: formData.referralSource,
       });
 
+      console.log("📦 Raw response:", response);
+      console.log("📦 Response success:", response?.success);
       console.log("✅ Success Response:", response);
+      console.log("✅ Full Response:", response);
 
-      if (response && response.success === true) {
+      const isSuccess = response && (response.success === true || response._id);
+
+      if (isSuccess) {
         toast.success(
           response.message ||
-            "Account created successfully! Please check your email to verify your account.",
+            "Account created successfully! Please check your email to verify your account."
         );
 
         setUserEmail(formData.email);
@@ -103,6 +108,7 @@ const SignUp = () => {
           setShowVerificationMessage(true);
         }, 2000);
       } else {
+        console.log("Response success is not true:", response);
         toast.error(response?.message || "Registration failed");
       }
     } catch (err) {

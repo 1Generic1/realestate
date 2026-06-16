@@ -1,7 +1,8 @@
+import "./Users.css";
 import React, { useState, useEffect } from "react";
 import AdminLayout from "../components/AdminLayout";
 import { userAPI, templateAPI } from "../../../services/adminApi";
-import "./Users.css";
+
 
 const Users = () => {
   const [users, setUsers] = useState([]);
@@ -484,7 +485,7 @@ const Users = () => {
 
   return (
     <AdminLayout>
-      <div className="users-container">
+      <div className="users-container1">
         {/* Header */}
         <div className="users-header">
           <div>
@@ -580,7 +581,7 @@ const Users = () => {
         </div>
 
         {/* Users Table */}
-        <div className="users-table-container">
+        <div className="users-table-container" style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
           <table className="users-table">
             <thead>
               <tr>
