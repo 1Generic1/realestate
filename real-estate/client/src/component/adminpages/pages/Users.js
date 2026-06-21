@@ -1,7 +1,9 @@
 import "./Users.css";
 import React, { useState, useEffect } from "react";
 import AdminLayout from "../components/AdminLayout";
-import { userAPI, templateAPI } from "../../../services/adminApi";
+import { userAPI, templateAPI, companyAPI } from "../../../services/adminApi";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 const Users = () => {
@@ -223,37 +225,33 @@ const Users = () => {
   const handlePreviewLetter = async () => {
     if (!letterData.purpose || letterData.purpose.trim() === "") {
       setPurposeError(true);
-      setMessage({
-        type: "error",
-        text: "⚠️ Please enter a purpose for this letter before previewing",
-      });
-      setTimeout(() => setMessage({ type: "", text: "" }), 3000);
+      toast.error("⚠️ Please enter a purpose for this letter before sending");
       return;
     }
     setPurposeError(false);
     setPreviewLoading(true);
+
     try {
+      // ✅ FETCH REAL COMPANY DATA
+      const companyResponse = await companyAPI.getCompanyInfo();
+      const companyData = companyResponse.data;
+
       const template = templates.find((t) => t.key === letterData.templateType);
-      const companyData = {
-        name: "TAYE'S PROPERTY & REALTY SOLUTIONS",
-        address: {
-          street: "123 Business District",
-          city: "Lagos",
-          state: "Lagos State",
-          country: "Nigeria",
-        },
-        phone: "+234 801 234 5678",
-        email: "info@tayesproperty.com",
-        signatoryName: "Taye Adebayo",
-        signatoryTitle: "Managing Director",
-      };
 
       setPreviewData({
         user: selectedUser,
         template: template,
         purpose: letterData.purpose,
         notes: letterData.notes,
-        company: companyData,
+        company: {
+          name: companyData.name || "TAYE'S PROPERTY & REALTY SOLUTIONS",
+          address: companyData.address || {},
+          phone: companyData.phone || {},
+          email: companyData.email || {},
+          signatoryName: companyData.signatoryName || "Taye Adebayo",
+          signatoryTitle: companyData.signatoryTitle || "Managing Director",
+          signature: companyData.signature || "",  // ← THIS IS THE KEY
+        },
         date: new Date().toLocaleDateString("en-US", {
           year: "numeric",
           month: "long",
@@ -264,7 +262,7 @@ const Users = () => {
 
       setShowPreviewModal(true);
     } catch (error) {
-      setMessage({ type: "error", text: "Failed to generate preview" });
+      toast.error("Failed to generate preview");
     } finally {
       setPreviewLoading(false);
     }
@@ -273,11 +271,7 @@ const Users = () => {
   const handleSubmitLetter = async () => {
     if (!letterData.purpose || letterData.purpose.trim() === "") {
       setPurposeError(true);
-      setMessage({
-        type: "error",
-        text: "⚠️ Please enter a purpose for this letter before sending",
-      });
-      setTimeout(() => setMessage({ type: "", text: "" }), 3000);
+      toast.error("⚠️ Please enter a purpose for this letter before sending");
       return;
     }
 
@@ -285,21 +279,32 @@ const Users = () => {
 
     try {
       setSendingLetter(true);
-      await userAPI.sendReferenceLetter(selectedUser._id, {
-        templateType: letterData.templateType,
+      // ✅ Check if the selected template is custom
+      const selectedTemplate = templates.find(t => t.key === letterData.templateType);
+      const isCustom = selectedTemplate?.isCustom || false;
+      
+      // ✅ Build request data
+      const requestData = {
         purpose: letterData.purpose,
         notes: letterData.notes,
-      });
+      };
+      
+      if (isCustom) {
+        // For custom templates
+        requestData.templateType = "custom";
+        requestData.customTemplateName = letterData.templateType;  // ← ADD THIS
+      } else {
+        // For predefined templates
+        requestData.templateType = letterData.templateType;
+      }
+      
+      await userAPI.sendReferenceLetterNew(selectedUser._id, requestData);
 
-      setMessage({
-        type: "success",
-        text: `✅ Reference letter sent to ${selectedUser.firstName} ${selectedUser.lastName}`,
-      });
+      toast.success(`✅ Reference letter sent to ${selectedUser.firstName} ${selectedUser.lastName}`);
       setShowSendLetterModal(false);
       setShowPreviewModal(false);
-      setTimeout(() => setMessage({ type: "", text: "" }), 3000);
     } catch (error) {
-      setMessage({ type: "error", text: "Failed to send reference letter" });
+      toast.error(error.response?.data?.error || "Failed to send reference letter");
     } finally {
       setSendingLetter(false);
     }
@@ -308,13 +313,9 @@ const Users = () => {
   const handleSendFromPreview = async () => {
     if (!letterData.purpose || letterData.purpose.trim() === "") {
       setPurposeError(true);
-      setMessage({
-        type: "error",
-        text: "⚠️ Please enter a purpose for this letter before sending",
-      });
+      toast.error("⚠️ Please enter a purpose for this letter before sending");
       setShowPreviewModal(false);
       setShowSendLetterModal(true);
-      setTimeout(() => setMessage({ type: "", text: "" }), 3000);
       return;
     }
 
@@ -322,21 +323,17 @@ const Users = () => {
 
     try {
       setSubmittingPreview(true);
-      await userAPI.sendReferenceLetter(selectedUser._id, {
+      await userAPI.sendReferenceLetterNew(selectedUser._id, {
         templateType: letterData.templateType,
         purpose: letterData.purpose,
         notes: letterData.notes,
       });
 
-      setMessage({
-        type: "success",
-        text: `✅ Reference letter sent to ${selectedUser.firstName} ${selectedUser.lastName}`,
-      });
+      toast.success(`✅ Reference letter sent to ${selectedUser.firstName} ${selectedUser.lastName}`);
       setShowSendLetterModal(false);
       setShowPreviewModal(false);
-      setTimeout(() => setMessage({ type: "", text: "" }), 3000);
     } catch (error) {
-      setMessage({ type: "error", text: "Failed to send reference letter" });
+      toast.error("Failed to send reference letter");
     } finally {
       setSubmittingPreview(false);
     }
@@ -1101,19 +1098,22 @@ const Users = () => {
             </div>
             <div className="modal-body preview-body">
               <div className="letter-preview">
+                <div className="stamp1">
+                    <div className="stamp-text1">OFFICIAL<br />DOCUMENT</div>
+                </div>
                 <div className="letter-header">
                   <h1>
                     TAYE'S <span>PROPERTY</span>
                   </h1>
                   <p>& REALTY SOLUTIONS</p>
                   <div className="letter-address">
-                    {previewData.company.address.street},{" "}
-                    {previewData.company.address.city},{" "}
-                    {previewData.company.address.state},{" "}
-                    {previewData.company.address.country}
+                    {previewData.company.address?.street},{" "}
+                    {previewData.company.address?.city},{" "}
+                    {previewData.company.address?.state},{" "}
+                    {previewData.company.address?.country}
                     <br />
-                    Tel: {previewData.company.phone} | Email:{" "}
-                    {previewData.company.email}
+                    Tel: {previewData.company.phone?.primary || "N/A"} | 
+                    Email: {previewData.company.email?.general || "N/A"}
                   </div>
                 </div>
                 <div className="letter-ref">
@@ -1159,17 +1159,31 @@ const Users = () => {
                       <strong>Notes:</strong> {previewData.notes}
                     </p>
                   )}
-                  <p>
-                    We confirm that to the best of our knowledge, the client is
-                    a legitimate business partner and there are no negative
-                    records associated with their dealings with our company.
-                  </p>
+                  <div class="confirmation">
+                    <p>
+                      ✓ We confirm that to the best of our knowledge, the client is a
+                      legitimate business partner
+                    </p>
+                    <p>
+                      ✓ There are no negative records associated with their dealings
+                      with our company
+                    </p>
+                    <p>
+                      ✓ The client has completed all documentation requirements in a
+                      timely manner
+                    </p>
+                  </div>
                   <p>
                     Should you require any additional information, please do not
                     hesitate to contact our office directly.
                   </p>
                 </div>
                 <div className="letter-signature">
+                  {previewData.company.signature && (
+                    <div className="signature-image">
+                      <img src={previewData.company.signature} alt="Signature" />
+                    </div>
+                  )}
                   <div className="signature-line"></div>
                   <div className="signature-name">
                     {previewData.company.signatoryName}
@@ -1177,12 +1191,15 @@ const Users = () => {
                   <div className="signature-title">
                     {previewData.company.signatoryTitle}
                   </div>
+                  {/* ✅ STAMP on the right side */}
+                  
                 </div>
                 <div className="letter-footer">
                   <p>
                     This is an official company document. Verification can be
                     made by contacting our office.
                   </p>
+                  
                 </div>
               </div>
             </div>

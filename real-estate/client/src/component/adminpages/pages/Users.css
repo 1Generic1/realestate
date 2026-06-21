@@ -932,6 +932,12 @@
   background: white;
   cursor: pointer;
   transition: all 0.3s;
+  overflow: hidden;
+  word-wrap: break-word;
+  white-space: normal;
+  max-width: 100%;
+  min-width: 0;              /* ← Allows flex items to shrink */
+  box-sizing: border-box;
 }
 
 .template-option:hover {
@@ -946,12 +952,18 @@
 
 .template-icon {
   font-size: 24px;
+  flex-shrink: 0;
 }
 
 .template-name {
+  flex: 1;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
   font-size: 14px;
   font-weight: 500;
   color: #333;
+  min-width: 0; 
 }
 
 /* Form Elements */
@@ -1179,6 +1191,35 @@
 .client-info p {
   margin: 3px 0;
   font-size: 12px;
+}
+
+/* Stamp at top right */
+.letter-preview .stamp1 {
+  position: absolute;
+  bottom: 120px;
+  right: 70px;
+  width: 120px;
+  height: 120px;
+  border: 3px solid #b8860b;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  opacity: 0.6;
+  transform: rotate(-15deg);
+  pointer-events: none;
+  background: transparent;
+}
+
+.letter-preview .stamp-text1 {
+  font-size: 14px;
+  font-weight: bold;
+  color: #b8860b;
+  text-transform: uppercase;
+  text-align: center;
+  line-height: 1.4;
+  padding: 8px;
 }
 
 .letter-signature {

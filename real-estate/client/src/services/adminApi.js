@@ -172,6 +172,23 @@ export const userAPI = {
     );
     return response.data;
   },
+
+   // ========== NEW VERSION (No Puppeteer) ==========
+  sendReferenceLetterNew: async (userId, data) => {
+    const response = await API.post(
+      `/admin/users/${userId}/reference-letter-new`,
+      data,
+    );
+    return response.data;
+  },
+
+  previewReferenceLetterNew: async (userId) => {
+    const response = await API.get(
+      `/admin/users/${userId}/reference-letter-preview-new`,
+    );
+    return response.data;
+  },
+  
   getUserReferenceLetters: async (userId) => {
     const response = await API.get(`/admin/users/${userId}/reference-letters`);
     return response.data;
@@ -733,6 +750,11 @@ export const authUserAPI = {
       console.log("Login API - Error:", error.response?.data);
       throw error;
     }
+  },
+
+  verifyEmail: async (token) => {
+    const response = await API.get(`/users/verify-email/${token}`);
+    return response.data;
   },
 
   logout: () => {

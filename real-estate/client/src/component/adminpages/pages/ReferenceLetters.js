@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import AdminLayout from "../components/AdminLayout";
-import { userAPI } from "../../../services/adminApi";
+import { userAPI, companyAPI } from "../../../services/adminApi";
 import "./ReferenceLetters.css";
 
 const ReferenceLetters = () => {
@@ -15,9 +15,12 @@ const ReferenceLetters = () => {
   const [showViewModal, setShowViewModal] = useState(false);
   const [downloading, setDownloading] = useState(false);
   const [message, setMessage] = useState({ type: "", text: "" });
+  // ✅ ADD THIS - companyData state
+  const [companyData, setCompanyData] = useState(null);
 
   useEffect(() => {
     loadUsers();
+    loadCompanyData(); // ✅ Load company data
   }, []);
 
   const loadUsers = async () => {
@@ -30,6 +33,16 @@ const ReferenceLetters = () => {
       console.error(error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  // ✅ ADD loadCompanyData function
+  const loadCompanyData = async () => {
+    try {
+      const response = await companyAPI.getCompanyInfo();
+      setCompanyData(response.data);
+    } catch (error) {
+      console.error("Failed to load company data:", error);
     }
   };
 
@@ -52,7 +65,6 @@ const ReferenceLetters = () => {
     setShowViewModal(true);
   };
 
-  // ✅ ADD THIS FUNCTION HERE - Admin download handler
   const handleDownloadPDF = async (letterId) => {
     if (!selectedUser) return;
 
@@ -92,6 +104,16 @@ const ReferenceLetters = () => {
     });
   };
 
+  // ✅ ADD formatDateShort function
+  const formatDateShort = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  };
+
   const getInitials = (firstName, lastName) => {
     return `${firstName?.charAt(0) || ""}${lastName?.charAt(0) || ""}`.toUpperCase();
   };
@@ -110,6 +132,36 @@ const ReferenceLetters = () => {
       hash = str.charCodeAt(i) + ((hash << 5) - hash);
     }
     return colors[Math.abs(hash) % colors.length];
+  };
+
+  // Get company display data
+  const getCompanyDisplay = () => {
+    if (!companyData) {
+      return {
+        name: "TAYE'S PROPERTY & REALTY SOLUTIONS",
+        street: "123 Business District",
+        city: "Lagos",
+        state: "Lagos State",
+        country: "Nigeria",
+        phone: "+234 801 234 5678",
+        email: "info@tayesproperty.com",
+        signatoryName: "Taye Adebayo",
+        signatoryTitle: "Managing Director",
+        signature: "",
+      };
+    }
+    return {
+      name: companyData.name || "TAYE'S PROPERTY & REALTY SOLUTIONS",
+      street: companyData.address?.street || "123 Business District",
+      city: companyData.address?.city || "Lagos",
+      state: companyData.address?.state || "Lagos State",
+      country: companyData.address?.country || "Nigeria",
+      phone: companyData.phone?.primary || "+234 801 234 5678",
+      email: companyData.email?.general || "info@tayesproperty.com",
+      signatoryName: companyData.signatoryName || "Taye Adebayo",
+      signatoryTitle: companyData.signatoryTitle || "Managing Director",
+      signature: companyData.signature || "",
+    };
   };
 
   if (loading) {
@@ -310,40 +362,46 @@ const ReferenceLetters = () => {
 
               <div className="modal-body preview-body">
                 <div className="letter-preview">
+                  {/* Header */}
                   <div className="letter-header">
                     <h1>
                       TAYE'S <span>PROPERTY</span>
                     </h1>
                     <p>& REALTY SOLUTIONS</p>
                     <div className="letter-address">
-                      123 Business District, Lagos, Lagos State, Nigeria
+                      {getCompanyDisplay().street}, {getCompanyDisplay().city},{" "}
+                      {getCompanyDisplay().state}, {getCompanyDisplay().country}
                       <br />
-                      Tel: +234 801 234 5678 | Email: info@tayesproperty.com
+                      Tel: {getCompanyDisplay().phone} | Email:{" "}
+                      {getCompanyDisplay().email}
                     </div>
                   </div>
 
+                  {/* Reference Info */}
                   <div className="letter-ref">
-                    <div>Date: {formatDate(selectedLetter.generatedAt)}</div>
+                    <div>Date: {formatDateShort(selectedLetter.generatedAt)}</div>
                     <div>Ref: {selectedLetter.letterId}</div>
                   </div>
 
+                  {/* Subject */}
                   <div className="letter-subject">
-                    <h3>TO WHOM IT MAY CONCERN</h3>
-                    <h2>LETTER OF REFERENCE</h2>
+                    <h3>{selectedLetter.recipientTitle || "TO WHOM IT MAY CONCERN"}</h3>
+                    <h2>{selectedLetter.letterTitle || "LETTER OF REFERENCE"}</h2>
                   </div>
 
+                  {/* Content */}
                   <div className="letter-content">
-                    <p>Dear Sir/Madam,</p>
+                    <p>{selectedLetter.salutation || "Dear Sir/Madam"},</p>
 
                     <p>
                       This letter is to confirm that{" "}
                       <strong>
                         {selectedUser?.firstName} {selectedUser?.lastName}
                       </strong>{" "}
-                      has been a valued client of TAYE'S PROPERTY & REALTY
-                      SOLUTIONS.
+                      has been a valued client of TAYE'S PROPERTY & REALTY SOLUTIONS.
                     </p>
 
+                    {/* Client Info Box */}
                     <div className="client-info">
                       <h4>CLIENT INFORMATION</h4>
                       <p>
@@ -359,23 +417,44 @@ const ReferenceLetters = () => {
                       </p>
                     </div>
 
-                    {selectedLetter.purpose && (
-                      <p>
-                        <strong>Purpose:</strong> {selectedLetter.purpose}
-                      </p>
-                    )}
-
-                    {selectedLetter.notes && (
-                      <p>
-                        <strong>Notes:</strong> {selectedLetter.notes}
-                      </p>
-                    )}
-
                     <p>
-                      We confirm that to the best of our knowledge, the client
-                      is a legitimate business partner and there are no negative
-                      records associated with their dealings with our company.
+                      {selectedUser?.firstName} {selectedUser?.lastName} has
+                      engaged with our company for professional real estate advisory
+                      and property consultation services. Throughout our professional
+                      relationship, the client has demonstrated genuine interest in
+                      legitimate real estate investments and has maintained professional
+                      conduct in all interactions.
                     </p>
+
+                    {/* Purpose Section */}
+                    <div className="purpose-section">
+                      <h4>PURPOSE OF THIS LETTER</h4>
+                      <p>{selectedLetter.purpose || "Not specified"}</p>
+                    </div>
+
+                    {/* Notes Section */}
+                    {selectedLetter.notes && (
+                      <div className="notes-section">
+                        <h4>ADDITIONAL NOTES</h4>
+                        <p>{selectedLetter.notes}</p>
+                      </div>
+                    )}
+
+                    {/* Confirmation Statement */}
+                    <div className="confirmation">
+                      <p>
+                        ✓ We confirm that to the best of our knowledge, the
+                        client is a legitimate business partner
+                      </p>
+                      <p>
+                        ✓ There are no negative records associated with their
+                        dealings with our company
+                      </p>
+                      <p>
+                        ✓ The client has completed all documentation
+                        requirements in a timely manner
+                      </p>
+                    </div>
 
                     <p>
                       Should you require any additional information, please do
@@ -383,16 +462,37 @@ const ReferenceLetters = () => {
                     </p>
                   </div>
 
-                  <div className="letter-signature">
-                    <div className="signature-line"></div>
-                    <div className="signature-name">Taye Adebayo</div>
-                    <div className="signature-title">Managing Director</div>
+                  {/* Signature Section */}
+                  <div className="signature-section">
+                    <div className="signature-box">
+                      {getCompanyDisplay().signature && (
+                        <div className="signature-image">
+                          <img
+                            src={getCompanyDisplay().signature}
+                            alt="Signature"
+                          />
+                        </div>
+                      )}
+                      <div className="signature-line"></div>
+                      <div className="signature-name">
+                        {getCompanyDisplay().signatoryName}
+                      </div>
+                      <div className="signature-title">
+                        {getCompanyDisplay().signatoryTitle}
+                      </div>
+                    </div>
+
+                    {/* Stamp on the right side */}
+                    <div className="stamp">
+                      <div className="stamp-text">OFFICIAL<br />DOCUMENT</div>
+                    </div>
                   </div>
 
+                  {/* Footer */}
                   <div className="letter-footer">
                     <p>
-                      This is an official company document. Verification can be
-                      made by contacting our office.
+                      This is an official company document. Verification can be made by
+                      contacting our office.
                     </p>
                   </div>
                 </div>

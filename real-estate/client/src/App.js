@@ -38,6 +38,7 @@ import AdminProperties from "./component/adminpages/pages/AdminProperties";
 
 import SignUp from "./component/userpages/pages/Auth/SignUp";
 import Login from "./component/userpages/pages/Auth/Login";
+import VerifyEmail from "./component/userpages/pages/Auth/VerifyEmail";
 
 import { CompanyProvider } from "./context/CompanyContext";
 
@@ -163,6 +164,7 @@ function App() {
             />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/verify-email/:token" element={<VerifyEmail />} />
           </Routes>
         </Layout>
         <ToastContainer
