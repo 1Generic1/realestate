@@ -298,7 +298,7 @@ const Users = () => {
         requestData.templateType = letterData.templateType;
       }
       
-      await userAPI.sendReferenceLetterNew(selectedUser._id, requestData);
+      await userAPI.sendReferenceLetterPDF3(selectedUser._id, requestData);
 
       toast.success(`✅ Reference letter sent to ${selectedUser.firstName} ${selectedUser.lastName}`);
       setShowSendLetterModal(false);
@@ -323,7 +323,7 @@ const Users = () => {
 
     try {
       setSubmittingPreview(true);
-      await userAPI.sendReferenceLetterNew(selectedUser._id, {
+      await userAPI.sendReferenceLetterPDF3(selectedUser._id, {
         templateType: letterData.templateType,
         purpose: letterData.purpose,
         notes: letterData.notes,

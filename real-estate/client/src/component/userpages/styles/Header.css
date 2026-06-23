@@ -98,9 +98,7 @@
 .header-main {
   background: var(--primary-dark);
   padding: 20px 0;
-  position: sticky;
-  top: 0;
-  z-index: 1000;
+  position: static;
 }
 
 .header-main-content {
@@ -313,6 +311,12 @@
   .nav-desktop {
     display: none !important;
   }
+
+  .header-main {
+  background: var(--primary-dark);
+  padding: 20px 0;
+  position: static !important;
+}
   
   /* Show menu toggle button */
   .menu-toggle {

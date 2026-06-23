@@ -182,6 +182,15 @@ export const userAPI = {
     return response.data;
   },
 
+    // ========== NEW VERSION (React-PDF) - ADD THIS ==========
+  sendReferenceLetterPDF3: async (userId, data) => {
+    const response = await API.post(
+      `/admin/users/${userId}/reference-letter-pdf3`,
+      data,
+    );
+    return response.data;
+  },
+
   previewReferenceLetterNew: async (userId) => {
     const response = await API.get(
       `/admin/users/${userId}/reference-letter-preview-new`,
