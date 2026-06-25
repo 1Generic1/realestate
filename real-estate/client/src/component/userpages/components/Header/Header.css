@@ -640,7 +640,6 @@
 
 .mobile-nav-link:active {
   color: var(--color-gold);
-  background: rgba(184, 134, 11, 0.15);
   transform: scale(0.96); /* Slight press effect */
   transition: all 0.05s ease; /* Instant feedback */
 }
@@ -649,7 +648,6 @@
 @media (hover: none) {
   .mobile-nav-link:active {
     color: var(--color-gold);
-    background: rgba(184, 134, 11, 0.2);
     transform: scale(0.95);
   }
 }
