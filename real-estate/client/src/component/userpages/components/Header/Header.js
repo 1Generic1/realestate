@@ -35,7 +35,7 @@ const Header = () => {
   const [user, setUser] = useState(null);
   const [referenceLetters, setReferenceLetters] = useState([]);
   const [loadingLetters, setLoadingLetters] = useState(false);
-  const [downloadingLetterId, setDownloadingLetterId] = useState(null); // Track which letter is downloading
+  const [downloadingLetterId, setDownloadingLetterId] = useState(null);
   const dropdownRef = useRef(null);
 
   const navItems = [
@@ -52,6 +52,31 @@ const Header = () => {
   useEffect(() => {
     checkUserLoggedIn();
   }, []);
+
+  // ✅ Prevent body scroll when mobile menu is open
+  useEffect(() => {
+    if (isMenuOpen) {
+      document.body.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+      document.body.style.width = '100%';
+      document.body.style.height = '100%';
+      document.body.classList.add('mobile-menu-open');
+    } else {
+      document.body.style.overflow = 'unset';
+      document.body.style.position = 'unset';
+      document.body.style.width = 'unset';
+      document.body.style.height = 'unset';
+      document.body.classList.remove('mobile-menu-open');
+    }
+    
+    return () => {
+      document.body.style.overflow = 'unset';
+      document.body.style.position = 'unset';
+      document.body.style.width = 'unset';
+      document.body.style.height = 'unset';
+      document.body.classList.remove('mobile-menu-open');
+    };
+  }, [isMenuOpen]);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -99,15 +124,13 @@ const Header = () => {
     setUser(null);
     setReferenceLetters([]);
     setIsUserDropdownOpen(false);
+    setIsMenuOpen(false);
     toast.success("Logged out successfully");
     navigate("/");
   };
 
-  // Updated download function with loading state to prevent multiple clicks
   const handleDownloadLetter = async (letterId) => {
-    // Prevent multiple downloads of the same letter
     if (downloadingLetterId === letterId) {
-      console.log("Download already in progress for this letter");
       return;
     }
 
@@ -127,7 +150,6 @@ const Header = () => {
     }
   };
 
-  // Get user display name
   const getUserDisplayName = () => {
     if (user?.firstName && user?.lastName) {
       return `Hi, ${user.firstName}`;
@@ -138,7 +160,6 @@ const Header = () => {
     return "User";
   };
 
-  // Get dynamic values from backend (company context)
   const phoneNumber = company?.phone?.primary || "+234 801 234 5678";
   const emailAddress = company?.email?.general || "info@tayesproperty.com";
   const businessHours = company?.hours?.monday
@@ -153,7 +174,6 @@ const Header = () => {
 
   const mobilePhone = company?.phone?.primary || "(555) 123-4567";
 
-  // Show loading state (optional)
   if (companyLoading) {
     return (
       <header className="header">
@@ -172,7 +192,7 @@ const Header = () => {
 
   return (
     <header className="header">
-      {/* Top Bar - Now with Backend Data */}
+      {/* Top Bar */}
       <div className="header-top">
         <div className="container">
           <div className="header-top-content">
@@ -187,7 +207,6 @@ const Header = () => {
 
             <div className="top-right">
               {user ? (
-                // User Dropdown when logged in
                 <div className="user-dropdown" ref={dropdownRef}>
                   <button
                     className="user-dropdown-btn"
@@ -216,7 +235,6 @@ const Header = () => {
 
                       <div className="dropdown-divider"></div>
 
-                      {/* Reference Letters Section */}
                       <div className="dropdown-section">
                         <div className="dropdown-section-title">
                           <FaFileAlt className="section-icon" />
@@ -264,7 +282,6 @@ const Header = () => {
 
                       <div className="dropdown-divider"></div>
 
-                      {/* Logout Button */}
                       <button className="dropdown-item logout" onClick={logout}>
                         <FaSignOutAlt className="item-icon" />
                         Logout
@@ -378,105 +395,121 @@ const Header = () => {
         </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* ========== UPDATED MOBILE MENU WITH FULL HEIGHT ========== */}
       {isMenuOpen && (
-        <div className="mobile-menu">
-          <div className="mobile-nav">
-            {navItems.map((item) => (
-              <Link
-                key={item.label}
-                to={item.path}
-                className={`mobile-nav-link ${location.pathname === item.path ? "active" : ""}`}
+        <>
+          {/* Backdrop Overlay - click to close */}
+          <div 
+            className="mobile-overlay" 
+            onClick={() => setIsMenuOpen(false)}
+          />
+          
+          {/* Mobile Menu - Full height */}
+          <div className={`mobile-menu ${isMenuOpen ? 'open' : ''}`}>
+            <div className="mobile-nav">
+              {/* Close button inside menu */}
+              <button 
+                className="mobile-close"
                 onClick={() => setIsMenuOpen(false)}
+                aria-label="Close menu"
               >
-                {item.label}
-              </Link>
-            ))}
+                <FaTimes />
+              </button>
+              
+              {navItems.map((item) => (
+                <Link
+                  key={item.label}
+                  to={item.path}
+                  className={`mobile-nav-link ${location.pathname === item.path ? "active" : ""}`}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  {item.label}
+                </Link>
+              ))}
 
-            {/* Mobile User Section - Shows different UI when logged in */}
-            {user ? (
-              // Logged in user - Show user info and reference letters
-              <div className="mobile-user-section">
-                <div className="mobile-user-header">
-                  <FaUserCircle className="mobile-user-icon" />
-                  <div className="mobile-user-info">
-                    <div className="mobile-user-name">
-                      {user?.firstName} {user?.lastName}
+              {/* Mobile User Section */}
+              {user ? (
+                <div className="mobile-user-section">
+                  <div className="mobile-user-header">
+                    <FaUserCircle className="mobile-user-icon" />
+                    <div className="mobile-user-info">
+                      <div className="mobile-user-name">
+                        {user?.firstName} {user?.lastName}
+                      </div>
+                      <div className="mobile-user-email">{user?.email}</div>
                     </div>
-                    <div className="mobile-user-email">{user?.email}</div>
                   </div>
-                </div>
-                
-                <div className="mobile-divider"></div>
-                
-                <div className="mobile-section-title">
-                  <FaFileAlt className="section-icon" />
-                  Reference Letters
-                </div>
-                
-                {loadingLetters ? (
-                  <div className="mobile-loading">Loading...</div>
-                ) : referenceLetters.length > 0 ? (
-                  <div className="mobile-reference-list">
-                    {referenceLetters.map((letter) => (
-                      <button
-                        key={letter._id || letter.letterId}
-                        className="mobile-reference-item"
-                        onClick={() => handleDownloadLetter(letter.letterId)}
-                        disabled={downloadingLetterId === letter.letterId}
-                      >
-                        {downloadingLetterId === letter.letterId ? (
-                          <FaSpinner className="spinning" />
-                        ) : (
-                          <FaFileAlt />
-                        )}
-                        <div className="mobile-reference-info">
-                          <div className="mobile-reference-id">{letter.letterId}</div>
-                          <div className="mobile-reference-date">
-                            {new Date(letter.generatedAt).toLocaleDateString()}
+                  
+                  <div className="mobile-divider"></div>
+                  
+                  <div className="mobile-section-title">
+                    <FaFileAlt className="section-icon" />
+                    Reference Letters
+                  </div>
+                  
+                  {loadingLetters ? (
+                    <div className="mobile-loading">Loading...</div>
+                  ) : referenceLetters.length > 0 ? (
+                    <div className="mobile-reference-list">
+                      {referenceLetters.map((letter) => (
+                        <button
+                          key={letter._id || letter.letterId}
+                          className="mobile-reference-item"
+                          onClick={() => handleDownloadLetter(letter.letterId)}
+                          disabled={downloadingLetterId === letter.letterId}
+                        >
+                          {downloadingLetterId === letter.letterId ? (
+                            <FaSpinner className="spinning" />
+                          ) : (
+                            <FaFileAlt />
+                          )}
+                          <div className="mobile-reference-info">
+                            <div className="mobile-reference-id">{letter.letterId}</div>
+                            <div className="mobile-reference-date">
+                              {new Date(letter.generatedAt).toLocaleDateString()}
+                            </div>
                           </div>
-                        </div>
-                      </button>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="mobile-empty">No reference letters yet</div>
-                )}
-                
-                <div className="mobile-divider"></div>
-                
-                <button className="mobile-logout-btn" onClick={logout}>
-                  <FaSignOutAlt className="icon" />
-                  Logout
-                </button>
-              </div>
-            ) : (
-              // Not logged in - Show login button
-              <Link 
-                to="/login" 
-                className="mobile-login-btn"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                <FaUser className="icon" />
-                Client Login
-              </Link>
-            )}
+                        </button>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="mobile-empty">No reference letters yet</div>
+                  )}
+                  
+                  <div className="mobile-divider"></div>
+                  
+                  <button className="mobile-logout-btn" onClick={logout}>
+                    <FaSignOutAlt className="icon" />
+                    Logout
+                  </button>
+                </div>
+              ) : (
+                <Link 
+                  to="/login" 
+                  className="mobile-login-btn"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  <FaUser className="icon" />
+                  Client Login
+                </Link>
+              )}
 
-            <div className="mobile-contact">
-              <div className="contact-item">
-                <FaPhone className="icon" />
-                <span>{mobilePhone}</span>
+              <div className="mobile-contact">
+                <div className="contact-item">
+                  <FaPhone className="icon" />
+                  <span>{mobilePhone}</span>
+                </div>
+                <Link
+                  to="/consultation"
+                  className="mobile-cta"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Schedule Consultation
+                </Link>
               </div>
-              <Link
-                to="/consultation"
-                className="mobile-cta"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Schedule Consultation
-              </Link>
             </div>
           </div>
-        </div>
+        </>
       )}
     </header>
   );

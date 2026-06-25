@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+//this is not the header used navigate to component/userpages/components/Header/Header.js for the header used in the website  
+import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 
 import {
@@ -20,7 +21,7 @@ const Header = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   const navItems = [
-    { label: "Home", path: "/" },
+    { label: "Homess", path: "/" },
     { label: "Buys", path: "/buy" },
     //{ label: "Sell", path: "/sell" },
     { label: "Rent", path: "/rent" },
@@ -29,6 +30,20 @@ const Header = () => {
     { label: "About", path: "/about" },
     { label: "Contact", path: "/contact" },
   ];
+
+  // ✅ Prevent body scroll when mobile menu is open
+  useEffect(() => {
+    if (isMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    
+    // Cleanup when component unmounts
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isMenuOpen]);
 
   return (
     <header className="header">
@@ -149,44 +164,62 @@ const Header = () => {
         </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Mobile Menu with Backdrop */}
       {isMenuOpen && (
-        <div className="mobile-menu">
-          <div className="mobile-nav">
-            {navItems.map((item) => (
-              <Link
-                key={item.label}
-                to={item.path}
-                className={`mobile-nav-link ${location.pathname === item.path ? "active" : ""}`}
+        <>
+          {/* Backdrop Overlay - click to close */}
+          <div 
+            className="mobile-overlay" 
+            onClick={() => setIsMenuOpen(false)}
+          />
+          
+          {/* Mobile Menu */}
+          <div className={`mobile-menu ${isMenuOpen ? 'open' : ''}`}>
+            <div className="mobile-nav">
+              {/* Close button inside menu */}
+              <button 
+                className="mobile-close"
                 onClick={() => setIsMenuOpen(false)}
+                aria-label="Close menu"
               >
-                {item.label}
-              </Link>
-            ))}
+                <FaTimes />
+              </button>
+              
+              {navItems.map((item) => (
+                <Link
+                  key={item.label}
+                  to={item.path}
+                  className={`mobile-nav-link ${location.pathname === item.path ? "active" : ""}`}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  {item.label}
+                </Link>
+              ))}
 
-            <div className="mobile-contact">
-              <Link
-                to="/login"
-                className="mobile-login"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                <FaUser className="icon" />
-                <span>Clients Login</span>
-              </Link>
-              <div className="contact-item">
-                <FaPhone className="icon" />
-                <span>(555) 123-45677</span>
+              <div className="mobile-contact">
+                <Link
+                  to="/login"
+                  className="mobile-login"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  <FaUser className="icon" />
+                  <span>Clients Login</span>
+                </Link>
+                <div className="contact-item">
+                  <FaPhone className="icon" />
+                  <span>(555) 123-45677</span>
+                </div>
+                <Link
+                  to="/consultation"
+                  className="mobile-cta"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Schedule Consultation
+                </Link>
               </div>
-              <Link
-                to="/consultation"
-                className="mobile-cta"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Schedule Consultationsss
-              </Link>
             </div>
           </div>
-        </div>
+        </>
       )}
     </header>
   );
