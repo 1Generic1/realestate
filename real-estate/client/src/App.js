@@ -39,6 +39,8 @@ import AdminProperties from "./component/adminpages/pages/AdminProperties";
 import SignUp from "./component/userpages/pages/Auth/SignUp";
 import Login from "./component/userpages/pages/Auth/Login";
 import VerifyEmail from "./component/userpages/pages/Auth/VerifyEmail";
+import ForgotPassword from "./component/userpages/pages/Auth/ForgotPassword";
+import ResetPassword from "./component/userpages/pages/Auth/ResetPassword";
 
 import { CompanyProvider } from "./context/CompanyContext";
 
@@ -165,6 +167,8 @@ function App() {
             <Route path="/signup" element={<SignUp />} />
             <Route path="/login" element={<Login />} />
             <Route path="/verify-email/:token" element={<VerifyEmail />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password/:token" element={<ResetPassword />} />
           </Routes>
         </Layout>
         <ToastContainer

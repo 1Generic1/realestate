@@ -777,15 +777,15 @@ export const authUserAPI = {
     return response.data;
   },
 
-  forgotPassword: async (email) => {
-    const response = await usersAPI.post("/users/forgot-password", { email });
+  forgotPassword: async (data) => {
+    // ✅ Accept data object with email property
+    const response = await usersAPI.post("/users/forgot-password", data);
     return response.data;
   },
 
-  resetPassword: async (token, password) => {
-    const response = await usersAPI.post(`/users/reset-password/${token}`, {
-      password,
-    });
+  resetPassword: async (token, data) => {
+    // ✅ data should be { password: 'newpassword' }
+    const response = await usersAPI.post(`/users/reset-password/${token}`, data);
     return response.data;
   },
 
