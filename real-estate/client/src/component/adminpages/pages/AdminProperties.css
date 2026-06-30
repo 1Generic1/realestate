@@ -425,6 +425,13 @@
   display: flex;
   flex-direction: column;
   animation: modalSlideIn 0.3s ease-out;
+  overflow: hidden;
+}
+
+.property-modal {
+  width: 90%;
+  max-width: 1000px;
+  max-height: 95vh; /* ← ADD THIS */
 }
 
 @keyframes modalSlideIn {
@@ -664,6 +671,7 @@
   overflow-y: auto;
   flex: 1;
   max-height: calc(90vh - 140px);
+  -webkit-overflow-scrolling: touch;
 }
 
 /* Form Rows */
@@ -937,8 +945,11 @@ small {
   }
 
   .property-form-scroll {
+    max-height: calc(80vh - 140px);
     padding: 1rem;
   }
+
+  
 }
 
 @media (max-width: 576px) {
@@ -994,3 +1005,5 @@ small {
     padding: 0.6rem 1rem;
   }
 }
+
+
