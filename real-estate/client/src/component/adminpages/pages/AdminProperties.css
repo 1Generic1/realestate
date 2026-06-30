@@ -422,7 +422,6 @@
   background: white;
   border-radius: 20px;
   max-height: 90vh;
-  overflow: hidden;
   display: flex;
   flex-direction: column;
   animation: modalSlideIn 0.3s ease-out;
