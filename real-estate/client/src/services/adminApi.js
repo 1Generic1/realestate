@@ -1,10 +1,12 @@
 import axios from "axios";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:5000/api";
 
 const API = axios.create({
   baseURL: BASE_URL,
-  timeout: 10000,
+  timeout: 30000,
 });
 
 //Add token to requests
@@ -39,42 +41,59 @@ API.interceptors.request.use(
 // Response interceptor - handles common errors
 API.interceptors.response.use(
   (response) => {
-    // Return the full response object - DON'T just return response.data
-    // This preserves the structure for login response
+    console.log("🔄 Interceptor - Response:", response);
+    console.log("🔄 Interceptor - Response.data:", response.data);
     return response;
   },
   (error) => {
-    // Handle common errors
+    console.log("🔄 Interceptor - Error:", error);
     if (error.response) {
       const { status } = error.response;
+      const errorMessage = error.response.data?.error || error.response.data?.message || '';
 
       switch (status) {
         case 401:
+          // ✅ Show session expired toast
+          if (errorMessage.toLowerCase().includes('expired') || 
+              errorMessage.toLowerCase().includes('token expired')) {
+            toast.warning('⏰ Session expired. Please login again.');
+          } else {
+            toast.error(errorMessage || 'Session expired. Please login again.');
+          }
+          
           console.log("Session expired. Please login again.");
           localStorage.removeItem("adminToken");
-          // Optional: redirect to login
+          localStorage.removeItem("token");
+          localStorage.removeItem("user");
+          localStorage.removeItem("rememberedEmail");
+          localStorage.removeItem("rememberMe");
+          
+          // Redirect to admin login
           if (window.location.pathname !== "/admin/login") {
-            window.location.href = "/admin/login";
+            setTimeout(() => {
+              window.location.href = "/admin/login";
+            }, 500);
           }
           break;
         case 403:
-          console.log("You do not have permission to perform this action.");
+          toast.error('You do not have permission to perform this action.');
           break;
         case 404:
-          console.log("Resource not found.");
+          toast.error('Resource not found.');
           break;
         case 500:
-          console.log("Server error. Please try again later.");
+          toast.error('Server error. Please try again later.');
           break;
         default:
-          console.log(
-            `Error ${status}:`,
-            error.response.data?.message || "Unknown error",
-          );
+          const msg = error.response.data?.message || error.response.data?.error || 'Unknown error';
+          toast.error(msg);
+          console.log(`Error ${status}:`, msg);
       }
     } else if (error.request) {
+      toast.error('No response from server. Please check your connection.');
       console.log("No response from server. Please check your connection.");
     } else {
+      toast.error('Error: ' + error.message);
       console.log("Error:", error.message);
     }
 
@@ -118,13 +137,32 @@ usersAPI.interceptors.response.use(
   (response) => response.data,
   (error) => {
     if (error.response?.status === 401) {
+      const errorMessage = error.response?.data?.error || error.response?.data?.message || '';
+
+      // ✅ Show session expired toast
+      if (errorMessage.toLowerCase().includes('expired') || 
+          errorMessage.toLowerCase().includes('token expired')) {
+        toast.warning('⏰ Session expired. Please login again.');
+      } else {
+        toast.error(errorMessage || 'Session expired. Please login again.');
+      }
+
+      // Clear user data
       localStorage.removeItem("token");
       localStorage.removeItem("user");
+      localStorage.removeItem("rememberedEmail");
+      localStorage.removeItem("rememberMe");
+      localStorage.removeItem("tokenData");
+
+      // Redirect to login
       if (
         !window.location.pathname.includes("/login") &&
-        !window.location.pathname.includes("/signup")
+        !window.location.pathname.includes("/signup") &&
+        !window.location.pathname.includes("/verify-email")
       ) {
-        window.location.href = "/login";
+        setTimeout(() => {
+          window.location.href = "/login";
+        }, 500);
       }
     }
     return Promise.reject(error);
@@ -746,14 +784,16 @@ export const authUserAPI = {
     }
   },
 
-  login: async (email, password) => {
+  login: async (email, password, rememberMe) => {
     try {
-      const response = await usersAPI.post("/users/login", { email, password });
+      const response = await usersAPI.post("/users/login", { 
+        email, 
+        password,
+        rememberMe // ← Pass to backend
+      });
       console.log("Login API - Full response:", response);
       console.log("Login API - Status:", response.status);
       console.log("Login API - Data:", response.data);
-
-      // Return the full response object with status
       return response;
     } catch (error) {
       console.log("Login API - Error:", error.response?.data);
@@ -764,6 +804,24 @@ export const authUserAPI = {
   verifyEmail: async (token) => {
     const response = await API.get(`/users/verify-email/${token}`);
     return response.data;
+  },
+
+    // ✅ NEW: Verify email with token (Advanced)
+  verifyEmailAdvanced: async (token) => {
+    const response = await usersAPI.get(`/users/verify-email-advanced/${token}`);
+    return response;
+  },
+
+  // ✅ NEW: Resend verification email (Advanced)
+  resendVerificationEmail: async (data) => {
+    const response = await usersAPI.post("/users/resend-verification-email", data);
+    return response;
+  },
+
+  // ✅ NEW: Change verification email (Advanced)
+  changeVerificationEmail: async (data) => {
+    const response = await usersAPI.post("/users/change-verification-email", data);
+    return response;
   },
 
   logout: () => {

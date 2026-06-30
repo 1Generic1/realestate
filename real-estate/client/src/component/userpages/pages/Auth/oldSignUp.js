@@ -1,3 +1,4 @@
+// client/src/component/userpages/pages/Auth/SignUp.js
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
@@ -10,6 +11,9 @@ import {
   FaArrowRight,
   FaGoogle,
   FaFacebook,
+  FaCheckCircle,
+  FaTimesCircle,
+  FaEnvelopeOpen,
 } from "react-icons/fa";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -21,12 +25,13 @@ const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [showVerificationMessage, setShowVerificationMessage] = useState(false);
+  const [userEmail, setUserEmail] = useState("");
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
     email: "",
     phone: "",
-    phoneCountryCode: "+234", // Default to Nigeria
     password: "",
     confirmPassword: "",
     referralSource: "",
@@ -54,12 +59,6 @@ const SignUp = () => {
       toast.error("Please enter your phone number");
       return false;
     }
-    // Remove country code from phone for validation (if user includes it)
-    const phoneWithoutCode = formData.phone.replace(/^\+?\d{1,3}/, "");
-    if (phoneWithoutCode.length < 7) {
-      toast.error("Please enter a valid phone number (at least 7 digits)");
-      return false;
-    }
     if (!formData.password) {
       toast.error("Please create a password");
       return false;
@@ -82,25 +81,19 @@ const SignUp = () => {
     setLoading(true);
 
     try {
-      // Combine country code with phone number if not already included
-      let fullPhone = formData.phone;
-      // If phone doesn't start with +, add the country code
-      if (!fullPhone.startsWith("+")) {
-        // Remove any leading zeros before adding country code
-        const cleanPhone = fullPhone.replace(/^0+/, "");
-        fullPhone = formData.phoneCountryCode + cleanPhone;
-      }
-
       const response = await authUserAPI.register({
         firstName: formData.firstName,
         lastName: formData.lastName,
         email: formData.email,
-        phone: fullPhone,
+        phone: formData.phone,
         password: formData.password,
         referralSource: formData.referralSource,
       });
 
       console.log("📦 Raw response:", response);
+      console.log("📦 Response success:", response?.success);
+      console.log("✅ Success Response:", response);
+      console.log("✅ Full Response:", response);
 
       const isSuccess = response && (response.success === true || response._id);
 
@@ -110,11 +103,10 @@ const SignUp = () => {
             "Account created successfully! Please check your email to verify your account."
         );
 
-        localStorage.setItem("pendingVerificationEmail", formData.email);
-        
+        setUserEmail(formData.email);
         setTimeout(() => {
-          navigate("/verify-email");
-        }, 1500);
+          setShowVerificationMessage(true);
+        }, 2000);
       } else {
         console.log("Response success is not true:", response);
         toast.error(response?.message || "Registration failed");
@@ -122,6 +114,7 @@ const SignUp = () => {
     } catch (err) {
       console.error("❌ Signup error:", err);
 
+      // Check the status code and display appropriate message
       const statusCode = err.response?.status;
       const errorData = err.response?.data;
 
@@ -130,20 +123,20 @@ const SignUp = () => {
 
       let errorMessage = "Registration failed. Please try again.";
 
-      if (errorData) {
-        if (errorData.error) {
-          errorMessage = errorData.error;
-        } else if (errorData.message) {
-          errorMessage = errorData.message;
-        }
-      }
-
+      // Handle different status codes
       if (statusCode === 400) {
+        // Bad Request - Check for specific error types
         if (errorData?.errorType === "DuplicateError") {
           errorMessage =
             "User with this email already exists. Please use a different email or login.";
         } else if (errorData?.errorType === "ValidationError") {
-          errorMessage = errorData.error || errorData.message || "Please check your input and try again.";
+          errorMessage =
+            errorData.message || "Please check your input and try again.";
+        } else {
+          errorMessage =
+            errorData?.error ||
+            errorData?.message ||
+            "Invalid information provided.";
         }
       } else if (statusCode === 401) {
         errorMessage = "Unauthorized. Please check your credentials.";
@@ -163,6 +156,40 @@ const SignUp = () => {
       setLoading(false);
     }
   };
+
+  // If verification message is shown, display the verification screen
+  if (showVerificationMessage) {
+    return (
+      <div className="auth-container">
+        <div className="auth-bg-decoration">
+          <div className="auth-bg-circle auth-bg-circle-1"></div>
+          <div className="auth-bg-circle auth-bg-circle-2"></div>
+          <div className="auth-bg-circle auth-bg-circle-3"></div>
+        </div>
+
+        <div className="auth-card verification-card" data-aos="fade-up">
+          <div className="verification-icon">
+            <FaEnvelopeOpen />
+          </div>
+          <h2 className="verification-title">Verify Your Email</h2>
+          <p className="verification-text">
+            We've sent a verification link to:
+          </p>
+          <p className="verification-email">{userEmail}</p>
+          <p className="verification-instruction">
+            Please check your email and click the verification link to activate
+            your account. If you don't see the email, check your spam folder.
+          </p>
+          <button
+            onClick={() => navigate("/login")}
+            className="verification-btn"
+          >
+            Go to Login
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="auth-container">
@@ -227,73 +254,18 @@ const SignUp = () => {
             />
           </div>
 
-          {/* Phone Input with Country Code Selector */}
-<div className="phone-input-wrapper">
-  <select
-    name="phoneCountryCode"
-    value={formData.phoneCountryCode}
-    onChange={handleChange}
-    className="country-code-select"
-    disabled={loading}
-  >
-    <option value="+234">🇳🇬 +234</option>
-    <option value="+1">🇺🇸 +1</option>
-    <option value="+44">🇬🇧 +44</option>
-    <option value="+91">🇮🇳 +91</option>
-    <option value="+86">🇨🇳 +86</option>
-    <option value="+81">🇯🇵 +81</option>
-    <option value="+49">🇩🇪 +49</option>
-    <option value="+33">🇫🇷 +33</option>
-    <option value="+61">🇦🇺 +61</option>
-    <option value="+55">🇧🇷 +55</option>
-    <option value="+27">🇿🇦 +27</option>
-    <option value="+254">🇰🇪 +254</option>
-    <option value="+233">🇬🇭 +233</option>
-    <option value="+20">🇪🇬 +20</option>
-    <option value="+971">🇦🇪 +971</option>
-    <option value="+966">🇸🇦 +966</option>
-    <option value="+65">🇸🇬 +65</option>
-    <option value="+60">🇲🇾 +60</option>
-    <option value="+63">🇵🇭 +63</option>
-    <option value="+62">🇮🇩 +62</option>
-    <option value="+34">🇪🇸 +34</option>
-    <option value="+39">🇮🇹 +39</option>
-    <option value="+31">🇳🇱 +31</option>
-    <option value="+46">🇸🇪 +46</option>
-    <option value="+47">🇳🇴 +47</option>
-    <option value="+45">🇩🇰 +45</option>
-    <option value="+358">🇫🇮 +358</option>
-    <option value="+41">🇨🇭 +41</option>
-    <option value="+43">🇦🇹 +43</option>
-    <option value="+32">🇧🇪 +32</option>
-    <option value="+351">🇵🇹 +351</option>
-    <option value="+30">🇬🇷 +30</option>
-    <option value="+90">🇹🇷 +90</option>
-    <option value="+52">🇲🇽 +52</option>
-    <option value="+54">🇦🇷 +54</option>
-    <option value="+56">🇨🇱 +56</option>
-    <option value="+57">🇨🇴 +57</option>
-    <option value="+58">🇻🇪 +58</option>
-    <option value="+64">🇳🇿 +64</option>
-    <option value="+82">🇰🇷 +82</option>
-    <option value="+66">🇹🇭 +66</option>
-    <option value="+84">🇻🇳 +84</option>
-  </select>
-  
-  <div className="auth-input-group" style={{ flex: 1, margin: 0 }}>
-    <FaPhone className="auth-input-icon" style={{ left: '12px' }} />
-    <input
-      type="tel"
-      name="phone"
-      placeholder="Phone Number"
-      value={formData.phone}
-      onChange={handleChange}
-      className="auth-input phone-input"
-      style={{ paddingLeft: '45px' }}
-      disabled={loading}
-    />
-  </div>
-</div>
+          <div className="auth-input-group">
+            <FaPhone className="auth-input-icon" />
+            <input
+              type="tel"
+              name="phone"
+              placeholder="Phone Number"
+              value={formData.phone}
+              onChange={handleChange}
+              className="auth-input"
+              disabled={loading}
+            />
+          </div>
 
           <div className="auth-input-group">
             <FaLock className="auth-input-icon" />

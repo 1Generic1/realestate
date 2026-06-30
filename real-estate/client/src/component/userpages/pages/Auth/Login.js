@@ -1,5 +1,5 @@
 // client/src/component/userpages/pages/Auth/Login.js
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   FaEnvelope,
@@ -24,12 +24,31 @@ const Login = () => {
     rememberMe: false,
   });
 
+  // ✅ LOAD SAVED EMAIL ON MOUNT
+  useEffect(() => {
+    const savedEmail = localStorage.getItem("rememberedEmail");
+    const rememberMe = localStorage.getItem("rememberMe") === "true";
+
+    if (rememberMe && savedEmail) {
+      setFormData({
+        email: savedEmail,
+        password: "",
+        rememberMe: true,
+      });
+    }
+  }, []);
+
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData((prev) => ({
       ...prev,
       [name]: type === "checkbox" ? checked : value,
     }));
+
+    if (name === "rememberMe" && !checked) {
+      localStorage.removeItem("rememberedEmail");
+      localStorage.removeItem("rememberMe");
+    }
   };
 
   const validateForm = () => {
@@ -53,24 +72,28 @@ const Login = () => {
       const response = await authUserAPI.login(
         formData.email,
         formData.password,
+        formData.rememberMe
       );
 
       console.log("Login response:", response);
-      console.log("Response success:", response?.success);
-      console.log("Response data:", response?.data);
 
-      // Check if login was successful
       if (response && response.success === true) {
-        toast.success(response.message || "Login successful! Redirecting...");
+        toast.success("Login successful! Redirecting...");
 
-        // Store token
+        if (formData.rememberMe) {
+          localStorage.setItem("rememberedEmail", formData.email);
+          localStorage.setItem("rememberMe", "true");
+        } else {
+          localStorage.removeItem("rememberedEmail");
+          localStorage.removeItem("rememberMe");
+        }
+
         if (response.data?.token) {
           localStorage.setItem("token", response.data.token);
           localStorage.setItem("user", JSON.stringify(response.data.user));
           console.log("Token stored successfully");
         }
 
-        // Redirect to home page
         setTimeout(() => {
           window.location.href = "/";
         }, 1500);
@@ -79,11 +102,12 @@ const Login = () => {
       }
     } catch (error) {
       console.error("Login error:", error);
-      console.error("Error response:", error.response);
-      console.error("Error data:", error.response?.data);
 
-      // Check if we have error data
-      if (error.response?.data?.message) {
+      if (error.response?.data?.errorType === "EmailNotVerified") {
+        toast.error(
+          "Please verify your email before logging in. Check your inbox for the verification link."
+        );
+      } else if (error.response?.data?.message) {
         toast.error(error.response.data.message);
       } else if (error.response?.data?.error) {
         toast.error(error.response.data.error);

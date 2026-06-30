@@ -297,13 +297,36 @@ const Users = () => {
         // For predefined templates
         requestData.templateType = letterData.templateType;
       }
+      console.log("📤 Sending request:", requestData);
+      console.log("👤 User ID:", selectedUser._id);
       
-      await userAPI.sendReferenceLetter(selectedUser._id, requestData);
+      const response = await userAPI.sendReferenceLetter(selectedUser._id, requestData);
+      console.log("📥 Full response:", response);
+      console.log("📥 Response success:", response.success);
+      console.log("📥 Response emailSent:", response.emailSent);
 
-      toast.success(`✅ Reference letter sent to ${selectedUser.firstName} ${selectedUser.lastName}`);
-      setShowSendLetterModal(false);
-      setShowPreviewModal(false);
+      // ✅ CHECK THE RESPONSE PROPERLY
+      if (response.success) {
+        if (response.emailSent === false) {
+          toast.warning(
+            `⚠️ Letter generated for ${selectedUser.firstName} ${selectedUser.lastName}, but email delivery failed. The PDF is saved in their records.`
+          );
+        } else {
+          toast.success(
+            `✅ Reference letter sent to ${selectedUser.firstName} ${selectedUser.lastName}. An email has also been sent.`
+          );
+        }
+        setShowSendLetterModal(false);
+        setShowPreviewModal(false);
+        console.log("❌ Response success is false:", response);
+      } else {
+        toast.error(response.message || "Failed to send reference letter");
+      }
     } catch (error) {
+      console.log("❌ ERROR CAUGHT:", error);
+      console.log("❌ Error response:", error.response);
+      console.log("❌ Error data:", error.response?.data);
+      console.log("❌ Error message:", error.message);
       toast.error(error.response?.data?.error || "Failed to send reference letter");
     } finally {
       setSendingLetter(false);
