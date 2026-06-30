@@ -97,7 +97,8 @@
   align-items: center;
   gap: 12px;
   padding: 12px 24px;
-  margin: 20px;
+  margin: auto;
+  margin-bottom: 100px;
   background: #fee;
   border: none;
   border-radius: 8px;
