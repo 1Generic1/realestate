@@ -11,6 +11,7 @@ const Dashboard = () => {
     totalTemplates: 0,
     customTemplates: 0,
     totalLetters: 0,
+    totalCertificates: 0,
   });
   const [recentUsers, setRecentUsers] = useState([]);
   const [recentLetters, setRecentLetters] = useState([]);
@@ -51,7 +52,8 @@ const Dashboard = () => {
         inactiveUsers: inactiveUsers,
         totalTemplates: 4 + customCount,
         customTemplates: customCount,
-        totalLetters: 0, // You can implement this when you add letters
+        totalLetters: 0, 
+        totalCertificates: 0,
       });
 
       setRecentUsers(recent);
@@ -116,6 +118,15 @@ const Dashboard = () => {
       icon: "📄",
       color: "#9c27b0",
       bgColor: "rgba(156, 39, 176, 0.1)",
+      trend: "+0",
+      trendUp: false,
+    },
+    {
+      title: "Investment Certificates",
+      value: stats.totalCertificates,
+      icon: "📜",
+      color: "#e91e63",
+      bgColor: "rgba(233, 30, 99, 0.1)",
       trend: "+0",
       trendUp: false,
     },
@@ -289,6 +300,14 @@ const Dashboard = () => {
                 <span className="action-icon">📄</span>
                 <h4>Reference Letters</h4>
                 <p>Send and manage reference letters</p>
+              </button>
+               <button
+                className="action-card"
+                onClick={() => (window.location.href = "/admin/certificates")}
+              >
+                <span className="action-icon">📜</span>
+                <h4>Investment Certificates</h4>
+                <p>Generate and manage investment certificates</p>
               </button>
             </div>
           </div>

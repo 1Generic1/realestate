@@ -1683,3 +1683,36 @@
   overflow-wrap: break-word !important;
   white-space: normal !important;
 }
+
+/* ============================================================
+   EDIT USER - LOCATION SECTION
+   ============================================================ */
+
+.edit-form-section {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #e9ecef;
+}
+
+.edit-form-section-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a1a2e;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.edit-form-section-title::before {
+  content: "📍";
+  font-size: 16px;
+}
+
+/* Responsive */
+@media (max-width: 576px) {
+  .edit-form-row {
+    flex-direction: column;
+    gap: 12px;
+  }
+}

@@ -381,6 +381,81 @@ export const userAPI = {
       throw error;
     }
   },
+   // Preview certificate as HTML
+  previewCertificate: async (userId, data) => {
+    const response = await API.post(
+      `/admin/users/${userId}/certificate/preview`,
+      data
+    );
+    return response.data;
+  },
+
+  // Generate and send certificate
+  sendCertificate: async (userId, data) => {
+    const response = await API.post(
+      `/admin/users/${userId}/certificate`,
+      data
+    );
+    return response.data;
+  },
+
+  // Get all certificates (admin)
+  getAllCertificates: async (params = {}) => {
+    const response = await API.get("/admin/certificates", { params });
+    return response.data;
+  },
+
+  // Get certificate by ID
+  getCertificateById: async (userId, certificateId) => {
+    const response = await API.get(
+      `/admin/users/${userId}/investments/${certificateId}`
+    );
+    return response.data;
+  },
+
+  // Download certificate via proxy
+  downloadCertificate: async (userId, certificateId) => {
+    try {
+      const token = localStorage.getItem("adminToken");
+      const response = await fetch(
+        `${API.defaults.baseURL}/admin/users/${userId}/certificates/${encodeURIComponent(certificateId)}/download`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("Download failed:", response.status, errorText);
+        throw new Error(`Download failed: ${response.status}`);
+      }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      const safeFileName = `certificate-${certificateId.replace(/\//g, "-")}.pdf`;
+      link.download = safeFileName;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+
+      return { success: true };
+    } catch (error) {
+      console.error("Error downloading certificate:", error);
+      throw error;
+    }
+  },
+
+  getAllCertificates: async (params = {}) => {
+    const response = await API.get("/admin/certificates", { params });
+    return response.data;
+  },
+
 };
 
 export const inquiryAPI = {

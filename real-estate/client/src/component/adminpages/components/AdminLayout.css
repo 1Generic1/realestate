@@ -33,12 +33,15 @@
   top: 0;
   z-index: 90;
   transition: transform 0.3s ease;
+  overflow-y: auto; /* ← ADD THIS */
+  overflow-x: hidden; /* ← ADD THIS */
 }
 
 .admin-sidebar-header {
   padding: 24px;
   border-bottom: 1px solid #eee;
   text-align: center;
+  position: sticky;
 }
 
 .admin-sidebar-header h2 {
@@ -108,7 +111,7 @@
   transition: all 0.3s;
 }
 
-.admin-logout-btn:hover {
+.admin-sidebar:hover {
   background: #fdd;
 }
 
@@ -147,6 +150,24 @@
   background: rgba(0, 0, 0, 0.5);
   z-index: 85;
   display: none;
+}
+
+/* Custom scrollbar for sidebar */
+.admin-sidebar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.admin-sidebar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.admin-sidebar::-webkit-scrollbar-thumb {
+  background: #b8860b;
+  border-radius: 4px;
+}
+
+.admin-sidebar::-webkit-scrollbar-thumb:hover {
+  background: #9a7209;
 }
 
 @media (max-width: 768px) {

@@ -31,6 +31,7 @@ import AdminDashboard from "./component/adminpages/pages/Dashboard";
 import AdminTemplates from "./component/adminpages/pages/Templates";
 import AdminUsers from "./component/adminpages/pages/Users";
 import AdminReferenceLetters from "./component/adminpages/pages/ReferenceLetters";
+import AdminCertificates from "./component/adminpages/pages/AdminCertificates";
 import AdminInquiries from "./component/adminpages/pages/Inquiries";
 import AdminTestimonials from "./component/adminpages/pages/AdminTestimonials";
 import AdminCompany from "./component/adminpages/pages/AdminCompany";
@@ -129,6 +130,14 @@ function App() {
               element={
                 <AdminRoute>
                   <AdminReferenceLetters />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="/admin/certificates"
+              element={
+                <AdminRoute>
+                  <AdminCertificates />
                 </AdminRoute>
               }
             />

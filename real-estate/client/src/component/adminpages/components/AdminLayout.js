@@ -7,6 +7,7 @@ const navigation = [
   { name: "Users", path: "/admin/users", icon: "👥" },
   { name: "Templates", path: "/admin/templates", icon: "📝" },
   { name: "Reference Letters", path: "/admin/letters", icon: "📄" },
+  { name: "Investment Certificates", path: "/admin/certificates", icon: "📜" },
   { name: "Properties", path: "/admin/properties", icon: "🏠" },
   { name: "Inquiries", path: "/admin/inquiries", icon: "📧" },
   { name: "Testimonials", path: "/admin/testimonials", icon: "⭐" },

@@ -4,6 +4,8 @@ import AdminLayout from "../components/AdminLayout";
 import { userAPI, templateAPI, companyAPI } from "../../../services/adminApi";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import SendCertificateModal from "../components/SendCertificateModal";
+import CertificatePreviewModal from "../components/CertificatePreviewModal";
 
 
 const Users = () => {
@@ -24,6 +26,13 @@ const Users = () => {
     lastName: "",
     email: "",
     phone: "",
+    location: {
+      flat: "",
+      street: "",
+      city: "",
+      state: "",
+      country: "",
+    },
     isActive: true,
   });
   const [templates, setTemplates] = useState([]);
@@ -38,6 +47,24 @@ const Users = () => {
   const [sendingLetter, setSendingLetter] = useState(false);
   const [submittingPreview, setSubmittingPreview] = useState(false);
   const [purposeError, setPurposeError] = useState(false); // Add this for visual feedback
+
+  const [showSendCertificateModal, setShowSendCertificateModal] = useState(false);
+  const [showCertPreviewModal, setShowCertPreviewModal] = useState(false);
+  const [certPreviewLoading, setCertPreviewLoading] = useState(false);
+  const [sendingCertificate, setSendingCertificate] = useState(false);
+  const [certPreviewHtml, setCertPreviewHtml] = useState("");
+  const [certificateData, setCertificateData] = useState({
+    principal: "",
+    currency: "NGN",
+    investmentDate: "",
+    investmentPlan: "",
+    annualReturn: "",
+    grossMonthlyReturn: "",
+    withholdingTax: "",
+    netMonthlyReturn: "",
+    paymentDate: "",
+    status: "ACTIVE",
+  });
 
   useEffect(() => {
     loadUsers();
@@ -138,6 +165,13 @@ const Users = () => {
       lastName: user.lastName || "",
       email: user.email || "",
       phone: user.phone || "",
+      location: {
+        flat: user.location?.flat || "",
+        street: user.location?.street || "",
+        city: user.location?.city || "",
+        state: user.location?.state || "",
+        country: user.location?.country || "Nigeria",
+      },
       isActive: user.isActive || false,
     });
     setShowEditModal(true);
@@ -150,6 +184,13 @@ const Users = () => {
         lastName: editFormData.lastName,
         email: editFormData.email,
         phone: editFormData.phone,
+        location: {
+          flat: editFormData.location.flat,
+          street: editFormData.location.street,
+          city: editFormData.location.city,
+          state: editFormData.location.state,
+          country: editFormData.location.country,
+        },
         isActive: editFormData.isActive,
       });
 
@@ -359,6 +400,91 @@ const Users = () => {
       toast.error("Failed to send reference letter");
     } finally {
       setSubmittingPreview(false);
+    }
+  };
+
+  const handleSendCertificate = (user) => {
+    setSelectedUser(user);
+    setShowSendCertificateModal(true);
+    setCertificateData({
+      principal: "",
+      currency: "NGN",
+      investmentDate: "",
+      investmentPlan: "",
+      annualReturn: "",
+      grossMonthlyReturn: "",
+      withholdingTax: "",
+      netMonthlyReturn: "",
+      paymentDate: "",
+      status: "ACTIVE",
+    });
+  };
+
+  // Preview certificate
+  const handleCertPreview = async () => {
+    if (!certificateData.principal || !certificateData.investmentDate || !certificateData.investmentPlan) {
+      toast.error("Please fill in all required fields");
+      return;
+    }
+
+    setCertPreviewLoading(true);
+    try {
+      const response = await userAPI.previewCertificate(selectedUser._id, certificateData);
+      console.log("📥 Preview response:", response);
+      
+      if (response.success) {
+        setCertPreviewHtml(response.data.html);
+        setShowCertPreviewModal(true);
+      } else {
+        toast.error(response.message || "Failed to generate preview");
+      }
+    } catch (error) {
+      console.log("❌ Preview error:", error);
+      toast.error(error.response?.data?.error || "Failed to generate preview");
+    } finally {
+      setCertPreviewLoading(false);
+    }
+  };
+
+  // Send certificate
+  const handleSendCertificateSubmit = async () => {
+    if (!certificateData.principal || !certificateData.investmentDate || !certificateData.investmentPlan) {
+      toast.error("Please fill in all required fields");
+      return;
+    }
+
+    setSendingCertificate(true);
+    try {
+      const response = await userAPI.sendCertificate(selectedUser._id, certificateData);
+      console.log("📥 Certificate response:", response);
+      console.log("📥 Response success:", response.success);
+      console.log("📥 Response emailSent:", response.emailSent);
+
+      if (response.success) {
+        // ✅ CHECK emailSent flag just like reference letter
+        if (response.emailSent === false) {
+          toast.warning(
+            `⚠️ Certificate generated for ${selectedUser.firstName} ${selectedUser.lastName}, but email delivery failed. The PDF is saved in their records.`
+          );
+        } else {
+          toast.success(
+            `✅ Investment certificate sent to ${selectedUser.firstName} ${selectedUser.lastName}. An email has also been sent.`
+          );
+        }
+        setShowSendCertificateModal(false);
+        setShowCertPreviewModal(false);
+        // Refresh user list to update any changes
+        loadUsers();
+      } else {
+        toast.error(response.message || "Failed to send certificate");
+      }
+    } catch (error) {
+      console.log("❌ ERROR CAUGHT:", error);
+      console.log("❌ Error response:", error.response);
+      console.log("❌ Error data:", error.response?.data);
+      toast.error(error.response?.data?.error || "Failed to send certificate");
+    } finally {
+      setSendingCertificate(false);
     }
   };
 
@@ -685,6 +811,13 @@ const Users = () => {
                         📄
                       </button>
                       <button
+                        className="action-btn send-certificate"
+                        onClick={() => handleSendCertificate(user)}
+                        title="Send Investment Certificate"
+                      >
+                        📜
+                      </button>
+                      <button
                         className="action-btn view"
                         onClick={() => handleViewDetails(user)}
                         title="View Details"
@@ -881,6 +1014,7 @@ const Users = () => {
 
             <div className="edit-user-modal-body">
               <div className="edit-user-form">
+                {/* Row 1: First Name + Last Name */}
                 <div className="edit-form-row">
                   <div className="edit-form-group">
                     <label className="edit-form-label">First Name</label>
@@ -912,50 +1046,158 @@ const Users = () => {
                   </div>
                 </div>
 
-                <div className="edit-form-group">
-                  <label className="edit-form-label">Email</label>
-                  <input
-                    type="email"
-                    value={editFormData.email}
-                    onChange={(e) =>
-                      setEditFormData({
-                        ...editFormData,
-                        email: e.target.value,
-                      })
-                    }
-                    className="edit-form-input"
-                  />
-                </div>
-
-                <div className="edit-form-group">
-                  <label className="edit-form-label">Phone</label>
-                  <input
-                    type="tel"
-                    value={editFormData.phone}
-                    onChange={(e) =>
-                      setEditFormData({
-                        ...editFormData,
-                        phone: e.target.value,
-                      })
-                    }
-                    className="edit-form-input"
-                  />
-                </div>
-
-                <div className="edit-form-group">
-                  <label className="edit-checkbox-label">
+                {/* Row 2: Email + Phone */}
+                <div className="edit-form-row">
+                  <div className="edit-form-group">
+                    <label className="edit-form-label">Email</label>
                     <input
-                      type="checkbox"
-                      checked={editFormData.isActive}
+                      type="email"
+                      value={editFormData.email}
                       onChange={(e) =>
                         setEditFormData({
                           ...editFormData,
-                          isActive: e.target.checked,
+                          email: e.target.value,
                         })
                       }
+                      className="edit-form-input"
                     />
-                    <span>Active Account</span>
-                  </label>
+                  </div>
+                  <div className="edit-form-group">
+                    <label className="edit-form-label">Phone</label>
+                    <input
+                      type="tel"
+                      value={editFormData.phone}
+                      onChange={(e) =>
+                        setEditFormData({
+                          ...editFormData,
+                          phone: e.target.value,
+                        })
+                      }
+                      className="edit-form-input"
+                    />
+                  </div>
+                </div>
+
+                {/* ✅ NEW: Location Section */}
+                <div className="edit-form-section">
+                  <h4 className="edit-form-section-title">📍 Location</h4>
+                  
+                  {/* Flat + Street */}
+                  <div className="edit-form-row">
+                    <div className="edit-form-group">
+                      <label className="edit-form-label">Flat/Apartment</label>
+                      <input
+                        type="text"
+                        placeholder="e.g., Apt 4B"
+                        value={editFormData.location.flat}
+                        onChange={(e) =>
+                          setEditFormData({
+                            ...editFormData,
+                            location: {
+                              ...editFormData.location,
+                              flat: e.target.value,
+                            },
+                          })
+                        }
+                        className="edit-form-input"
+                      />
+                    </div>
+                    <div className="edit-form-group">
+                      <label className="edit-form-label">Street</label>
+                      <input
+                        type="text"
+                        placeholder="e.g., 123 Main Street"
+                        value={editFormData.location.street}
+                        onChange={(e) =>
+                          setEditFormData({
+                            ...editFormData,
+                            location: {
+                              ...editFormData.location,
+                              street: e.target.value,
+                            },
+                          })
+                        }
+                        className="edit-form-input"
+                      />
+                    </div>
+                  </div>
+
+                  {/* City + State */}
+                  <div className="edit-form-row">
+                    <div className="edit-form-group">
+                      <label className="edit-form-label">City</label>
+                      <input
+                        type="text"
+                        placeholder="e.g., Lagos"
+                        value={editFormData.location.city}
+                        onChange={(e) =>
+                          setEditFormData({
+                            ...editFormData,
+                            location: {
+                              ...editFormData.location,
+                              city: e.target.value,
+                            },
+                          })
+                        }
+                        className="edit-form-input"
+                      />
+                    </div>
+                    <div className="edit-form-group">
+                      <label className="edit-form-label">State</label>
+                      <input
+                        type="text"
+                        placeholder="e.g., Lagos State"
+                        value={editFormData.location.state}
+                        onChange={(e) =>
+                          setEditFormData({
+                            ...editFormData,
+                            location: {
+                              ...editFormData.location,
+                              state: e.target.value,
+                            },
+                          })
+                        }
+                        className="edit-form-input"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Country */}
+                  <div className="edit-form-row">
+                    <div className="edit-form-group">
+                      <label className="edit-form-label">Country</label>
+                      <input
+                        type="text"
+                        placeholder="e.g., Nigeria"
+                        value={editFormData.location.country}
+                        onChange={(e) =>
+                          setEditFormData({
+                            ...editFormData,
+                            location: {
+                              ...editFormData.location,
+                              country: e.target.value,
+                            },
+                          })
+                        }
+                        className="edit-form-input"
+                      />
+                    </div>
+                    <div className="edit-form-group">
+                      <label className="edit-checkbox-label">
+                        <input
+                          type="checkbox"
+                          checked={editFormData.isActive}
+                          onChange={(e) =>
+                            setEditFormData({
+                              ...editFormData,
+                              isActive: e.target.checked,
+                            })
+                          }
+                        />
+                        <span>Active Account</span>
+                      </label>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1245,6 +1487,33 @@ const Users = () => {
           </div>
         </div>
       )}
+      {/* ============================================
+          ✅ SEND CERTIFICATE MODAL
+          ============================================ */}
+      <SendCertificateModal
+        show={showSendCertificateModal}
+        selectedUser={selectedUser}
+        certificateData={certificateData}
+        setCertificateData={setCertificateData}
+        sendingCertificate={sendingCertificate}
+        certPreviewLoading={certPreviewLoading}
+        onClose={() => !sendingCertificate && setShowSendCertificateModal(false)}
+        onPreview={handleCertPreview}
+        onSubmit={handleSendCertificateSubmit}
+        getInitials={getInitials}
+        getRandomColor={getRandomColor}
+      />
+
+      {/* ============================================
+          ✅ CERTIFICATE PREVIEW MODAL
+          ============================================ */}
+      <CertificatePreviewModal
+        show={showCertPreviewModal}
+        certPreviewHtml={certPreviewHtml}
+        sendingCertificate={sendingCertificate}
+        onClose={() => !sendingCertificate && setShowCertPreviewModal(false)}
+        onSubmit={handleSendCertificateSubmit}
+      />
     </AdminLayout>
   );
 };
