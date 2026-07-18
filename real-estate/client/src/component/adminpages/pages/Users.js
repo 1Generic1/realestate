@@ -5,7 +5,6 @@ import { userAPI, templateAPI, companyAPI } from "../../../services/adminApi";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import SendCertificateModal from "../components/SendCertificateModal";
-import CertificatePreviewModal from "../components/CertificatePreviewModal";
 
 
 const Users = () => {
@@ -46,13 +45,11 @@ const Users = () => {
   const [message, setMessage] = useState({ type: "", text: "" });
   const [sendingLetter, setSendingLetter] = useState(false);
   const [submittingPreview, setSubmittingPreview] = useState(false);
-  const [purposeError, setPurposeError] = useState(false); // Add this for visual feedback
+  const [purposeError, setPurposeError] = useState(false);
 
   const [showSendCertificateModal, setShowSendCertificateModal] = useState(false);
-  const [showCertPreviewModal, setShowCertPreviewModal] = useState(false);
   const [certPreviewLoading, setCertPreviewLoading] = useState(false);
   const [sendingCertificate, setSendingCertificate] = useState(false);
-  const [certPreviewHtml, setCertPreviewHtml] = useState("");
   const [certificateData, setCertificateData] = useState({
     principal: "",
     currency: "NGN",
@@ -260,7 +257,24 @@ const Users = () => {
     setSelectedUser(user);
     setShowSendLetterModal(true);
     setLetterData({ templateType: "visa", purpose: "", notes: "" });
-    setPurposeError(false); // Reset error when opening modal
+    setPurposeError(false);
+  };
+
+  const handleSendCertificate = (user) => {
+    setSelectedUser(user);
+    setShowSendCertificateModal(true);
+    setCertificateData({
+      principal: "",
+      currency: "NGN",
+      investmentDate: "",
+      investmentPlan: "",
+      annualReturn: "",
+      grossMonthlyReturn: "",
+      withholdingTax: "",
+      netMonthlyReturn: "",
+      paymentDate: "",
+      status: "ACTIVE",
+    });
   };
 
   const handlePreviewLetter = async () => {
@@ -273,7 +287,6 @@ const Users = () => {
     setPreviewLoading(true);
 
     try {
-      // ✅ FETCH REAL COMPANY DATA
       const companyResponse = await companyAPI.getCompanyInfo();
       const companyData = companyResponse.data;
 
@@ -291,7 +304,7 @@ const Users = () => {
           email: companyData.email || {},
           signatoryName: companyData.signatoryName || "Taye Adebayo",
           signatoryTitle: companyData.signatoryTitle || "Managing Director",
-          signature: companyData.signature || "",  // ← THIS IS THE KEY
+          signature: companyData.signature || "",
         },
         date: new Date().toLocaleDateString("en-US", {
           year: "numeric",
@@ -320,33 +333,23 @@ const Users = () => {
 
     try {
       setSendingLetter(true);
-      // ✅ Check if the selected template is custom
       const selectedTemplate = templates.find(t => t.key === letterData.templateType);
       const isCustom = selectedTemplate?.isCustom || false;
       
-      // ✅ Build request data
       const requestData = {
         purpose: letterData.purpose,
         notes: letterData.notes,
       };
       
       if (isCustom) {
-        // For custom templates
         requestData.templateType = "custom";
-        requestData.customTemplateName = letterData.templateType;  // ← ADD THIS
+        requestData.customTemplateName = letterData.templateType;
       } else {
-        // For predefined templates
         requestData.templateType = letterData.templateType;
       }
-      console.log("📤 Sending request:", requestData);
-      console.log("👤 User ID:", selectedUser._id);
       
       const response = await userAPI.sendReferenceLetter(selectedUser._id, requestData);
-      console.log("📥 Full response:", response);
-      console.log("📥 Response success:", response.success);
-      console.log("📥 Response emailSent:", response.emailSent);
 
-      // ✅ CHECK THE RESPONSE PROPERLY
       if (response.success) {
         if (response.emailSent === false) {
           toast.warning(
@@ -359,15 +362,10 @@ const Users = () => {
         }
         setShowSendLetterModal(false);
         setShowPreviewModal(false);
-        console.log("❌ Response success is false:", response);
       } else {
         toast.error(response.message || "Failed to send reference letter");
       }
     } catch (error) {
-      console.log("❌ ERROR CAUGHT:", error);
-      console.log("❌ Error response:", error.response);
-      console.log("❌ Error data:", error.response?.data);
-      console.log("❌ Error message:", error.message);
       toast.error(error.response?.data?.error || "Failed to send reference letter");
     } finally {
       setSendingLetter(false);
@@ -403,24 +401,7 @@ const Users = () => {
     }
   };
 
-  const handleSendCertificate = (user) => {
-    setSelectedUser(user);
-    setShowSendCertificateModal(true);
-    setCertificateData({
-      principal: "",
-      currency: "NGN",
-      investmentDate: "",
-      investmentPlan: "",
-      annualReturn: "",
-      grossMonthlyReturn: "",
-      withholdingTax: "",
-      netMonthlyReturn: "",
-      paymentDate: "",
-      status: "ACTIVE",
-    });
-  };
-
-  // Preview certificate
+  // ✅ UPDATED: Preview certificate in NEW TAB (not modal)
   const handleCertPreview = async () => {
     if (!certificateData.principal || !certificateData.investmentDate || !certificateData.investmentPlan) {
       toast.error("Please fill in all required fields");
@@ -430,11 +411,54 @@ const Users = () => {
     setCertPreviewLoading(true);
     try {
       const response = await userAPI.previewCertificate(selectedUser._id, certificateData);
-      console.log("📥 Preview response:", response);
       
       if (response.success) {
-        setCertPreviewHtml(response.data.html);
-        setShowCertPreviewModal(true);
+        // ✅ Open in new tab with watermark
+        const newWindow = window.open('', '_blank', 'width=1000,height=800');
+        if (newWindow) {
+          newWindow.document.write(`
+            <!DOCTYPE html>
+            <html>
+              <head>
+                <title>Certificate Preview - ${selectedUser.firstName} ${selectedUser.lastName}</title>
+                <style>
+                  body { margin: 0; padding: 20px; background: #f5f0eb; }
+                  .container { max-width: 900px; margin: 0 auto; }
+                  .preview-watermark {
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%) rotate(-30deg);
+                    font-size: 80px;
+                    font-weight: 900;
+                    color: rgba(184, 134, 11, 0.08);
+                    pointer-events: none;
+                    z-index: 999;
+                    letter-spacing: 20px;
+                    user-select: none;
+                  }
+                  @media (max-width: 768px) {
+                    body { padding: 10px; }
+                    .preview-watermark { font-size: 40px; letter-spacing: 10px; }
+                  }
+                  @media print {
+                    .preview-watermark { display: none; }
+                  }
+                </style>
+              </head>
+              <body>
+                <div class="preview-watermark">PREVIEW</div>
+                <div class="container">
+                  ${response.data.html}
+                </div>
+              </body>
+            </html>
+          `);
+          newWindow.document.close();
+          toast.success('Preview opened in new tab');
+        } else {
+          toast.error('Popup blocked. Please allow popups for this site.');
+        }
       } else {
         toast.error(response.message || "Failed to generate preview");
       }
@@ -456,12 +480,8 @@ const Users = () => {
     setSendingCertificate(true);
     try {
       const response = await userAPI.sendCertificate(selectedUser._id, certificateData);
-      console.log("📥 Certificate response:", response);
-      console.log("📥 Response success:", response.success);
-      console.log("📥 Response emailSent:", response.emailSent);
 
       if (response.success) {
-        // ✅ CHECK emailSent flag just like reference letter
         if (response.emailSent === false) {
           toast.warning(
             `⚠️ Certificate generated for ${selectedUser.firstName} ${selectedUser.lastName}, but email delivery failed. The PDF is saved in their records.`
@@ -472,16 +492,11 @@ const Users = () => {
           );
         }
         setShowSendCertificateModal(false);
-        setShowCertPreviewModal(false);
-        // Refresh user list to update any changes
         loadUsers();
       } else {
         toast.error(response.message || "Failed to send certificate");
       }
     } catch (error) {
-      console.log("❌ ERROR CAUGHT:", error);
-      console.log("❌ Error response:", error.response);
-      console.log("❌ Error data:", error.response?.data);
       toast.error(error.response?.data?.error || "Failed to send certificate");
     } finally {
       setSendingCertificate(false);
@@ -1078,11 +1093,10 @@ const Users = () => {
                   </div>
                 </div>
 
-                {/* ✅ NEW: Location Section */}
+                {/* Location Section */}
                 <div className="edit-form-section">
                   <h4 className="edit-form-section-title">📍 Location</h4>
                   
-                  {/* Flat + Street */}
                   <div className="edit-form-row">
                     <div className="edit-form-group">
                       <label className="edit-form-label">Flat/Apartment</label>
@@ -1122,7 +1136,6 @@ const Users = () => {
                     </div>
                   </div>
 
-                  {/* City + State */}
                   <div className="edit-form-row">
                     <div className="edit-form-group">
                       <label className="edit-form-label">City</label>
@@ -1162,7 +1175,6 @@ const Users = () => {
                     </div>
                   </div>
 
-                  {/* Country */}
                   <div className="edit-form-row">
                     <div className="edit-form-group">
                       <label className="edit-form-label">Country</label>
@@ -1456,15 +1468,12 @@ const Users = () => {
                   <div className="signature-title">
                     {previewData.company.signatoryTitle}
                   </div>
-                  {/* ✅ STAMP on the right side */}
-                  
                 </div>
                 <div className="letter-footer">
                   <p>
                     This is an official company document. Verification can be
                     made by contacting our office.
                   </p>
-                  
                 </div>
               </div>
             </div>
@@ -1487,6 +1496,7 @@ const Users = () => {
           </div>
         </div>
       )}
+      
       {/* ============================================
           ✅ SEND CERTIFICATE MODAL
           ============================================ */}
@@ -1504,16 +1514,7 @@ const Users = () => {
         getRandomColor={getRandomColor}
       />
 
-      {/* ============================================
-          ✅ CERTIFICATE PREVIEW MODAL
-          ============================================ */}
-      <CertificatePreviewModal
-        show={showCertPreviewModal}
-        certPreviewHtml={certPreviewHtml}
-        sendingCertificate={sendingCertificate}
-        onClose={() => !sendingCertificate && setShowCertPreviewModal(false)}
-        onSubmit={handleSendCertificateSubmit}
-      />
+      {/* ✅ REMOVED: CertificatePreviewModal - Now using new tab */}
     </AdminLayout>
   );
 };

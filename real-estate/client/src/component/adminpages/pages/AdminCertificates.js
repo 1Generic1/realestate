@@ -111,6 +111,7 @@ const AdminCertificates = () => {
       setPreviewLoading(true);
       setSelectedCert(cert);
       
+      // Generate HTML preview
       const previewData = {
         principal: cert.principal,
         currency: cert.currency || "NGN",
@@ -124,21 +125,78 @@ const AdminCertificates = () => {
         status: cert.status,
       };
 
-      console.log("📤 Sending preview data:", previewData);
-      
       const response = await userAPI.previewCertificate(cert.investorId, previewData);
       
-      console.log("📥 Preview response:", response);
-      
       if (response.success) {
-        setPreviewHtml(response.data.html);
-        setShowPreviewModal(true);
+        // Open in new tab
+        const newWindow = window.open('', '_blank', 'width=1000,height=800');
+        if (newWindow) {
+          newWindow.document.write(`
+            <!DOCTYPE html>
+            <html>
+              <head>
+                <title>Certificate Preview - ${cert.certificateId}</title>
+                <style>
+                  body { 
+                    margin: 0; 
+                    padding: 20px; 
+                    background: #f5f0eb; 
+                    font-family: 'Times New Roman', Times, serif;
+                  }
+                  .container { max-width: 900px; margin: 0 auto; }
+                  .preview-watermark {
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%) rotate(-30deg);
+                    font-size: 80px;
+                    font-weight: 900;
+                    color: rgba(184, 134, 11, 0.08);
+                    pointer-events: none;
+                    z-index: 999;
+                    letter-spacing: 20px;
+                    user-select: none;
+                  }
+                  @media print {
+                    .preview-watermark { display: none; }
+                  }
+                  @media (max-width: 768px) {
+                    body { padding: 10px; }
+                    .preview-watermark { font-size: 40px; letter-spacing: 10px; }
+                  }
+                </style>
+              </head>
+              <body>
+                <div class="preview-watermark">PREVIEW</div>
+                <div class="container">
+                  ${response.data.html}
+                </div>
+              </body>
+            </html>
+          `);
+          newWindow.document.close();
+          toast.success('Preview opened in new tab');
+        } else {
+          toast.error('Popup blocked. Please allow popups for this site.');
+        }
       } else {
-        toast.error("Failed to generate preview");
+        // Fallback to PDF if available
+        if (cert.pdfUrl) {
+          window.open(cert.pdfUrl, '_blank');
+          toast.info('Opening PDF preview');
+        } else {
+          toast.error('Failed to generate preview');
+        }
       }
     } catch (error) {
-      console.error("Preview error:", error);
-      toast.error(error.response?.data?.error || "Failed to preview certificate");
+      console.error('Preview error:', error);
+      // Fallback to PDF if available
+      if (cert.pdfUrl) {
+        window.open(cert.pdfUrl, '_blank');
+        toast.info('Opening PDF preview');
+      } else {
+        toast.error(error.response?.data?.error || 'Failed to preview certificate');
+      }
     } finally {
       setPreviewLoading(false);
     }
