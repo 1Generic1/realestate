@@ -19,6 +19,7 @@ import {
 import { toast } from "react-toastify";
 import { authUserAPI } from "../../../../services/adminApi";
 import "./Header.css";
+import EditProfileModal from "../EditProfileModal";
 
 const Header = () => {
   const location = useLocation();
@@ -38,6 +39,11 @@ const Header = () => {
   const [downloadingLetterId, setDownloadingLetterId] = useState(null);
   const dropdownRef = useRef(null);
 
+  const [investmentCertificates, setInvestmentCertificates] = useState([]);
+  const [loadingCertificates, setLoadingCertificates] = useState(false);
+  const [downloadingCertId, setDownloadingCertId] = useState(null);
+  const [showEditProfileModal, setShowEditProfileModal] = useState(false);
+
   const navItems = [
     { label: "Home", path: "/" },
     { label: "Buy", path: "/buy" },
@@ -48,12 +54,10 @@ const Header = () => {
     { label: "Contact", path: "/contact" },
   ];
 
-  // Check if user is logged in on component mount
   useEffect(() => {
     checkUserLoggedIn();
   }, []);
 
-  // ✅ Prevent body scroll when mobile menu is open
   useEffect(() => {
     if (isMenuOpen) {
       document.body.style.overflow = 'hidden';
@@ -78,7 +82,6 @@ const Header = () => {
     };
   }, [isMenuOpen]);
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -91,16 +94,58 @@ const Header = () => {
 
   const checkUserLoggedIn = async () => {
     const token = localStorage.getItem("token");
-    const storedUser = localStorage.getItem("user");
 
-    if (token && storedUser) {
+    if (token) {
+      try {
+        const response = await authUserAPI.getCurrentUser();
+        console.log("📥 getCurrentUser response:", response);
+        
+        if (response && response.success) {
+          const freshUser = response.data;
+          console.log("✅ User loaded:", freshUser);
+          setUser(freshUser);
+          localStorage.setItem("user", JSON.stringify(freshUser));
+          
+          // Fetch letters and certificates
+          await Promise.all([
+            fetchReferenceLetters(),
+            fetchInvestmentCertificates(),
+          ]);
+          return;
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    }
+    
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
       try {
         const userData = JSON.parse(storedUser);
         setUser(userData);
-        await fetchReferenceLetters();
-      } catch (error) {
-        console.error("Error parsing user data:", error);
+      } catch (e) {
+        console.error("Error parsing stored user:", e);
         logout();
+      }
+    }
+  };
+
+  const refreshUserData = async () => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      try {
+        const response = await authUserAPI.getCurrentUser();
+        if (response && response.success) {
+          const freshUser = response.data;
+          setUser(freshUser);
+          localStorage.setItem("user", JSON.stringify(freshUser));
+          await Promise.all([
+            fetchReferenceLetters(),
+            fetchInvestmentCertificates(),
+          ]);
+        }
+      } catch (error) {
+        console.error("Error refreshing user data:", error);
       }
     }
   };
@@ -109,20 +154,72 @@ const Header = () => {
     setLoadingLetters(true);
     try {
       const response = await authUserAPI.getReferenceLetters();
+      console.log("📥 Reference letters response:", response);
+      
       if (response && response.success) {
-        setReferenceLetters(response.data || []);
+        const letters = response.data || [];
+        console.log("✅ Reference letters found:", letters.length);
+        setReferenceLetters(letters);
+      } else {
+        setReferenceLetters([]);
       }
     } catch (error) {
       console.error("Error fetching reference letters:", error);
+      setReferenceLetters([]);
     } finally {
       setLoadingLetters(false);
     }
+  };
+
+  const fetchInvestmentCertificates = async () => {
+    setLoadingCertificates(true);
+    try {
+      const response = await authUserAPI.getInvestmentCertificates();
+      console.log("📥 Investment certificates response:", response);
+      
+      if (response && response.success) {
+        const certificates = response.data || [];
+        console.log("✅ Investment certificates found:", certificates.length);
+        setInvestmentCertificates(certificates);
+      } else {
+        setInvestmentCertificates([]);
+      }
+    } catch (error) {
+      console.error("Error fetching investment certificates:", error);
+      setInvestmentCertificates([]);
+    } finally {
+      setLoadingCertificates(false);
+    }
+  };
+
+  const handleDownloadCertificate = async (certificateId) => {
+    if (downloadingCertId === certificateId) return;
+
+    setDownloadingCertId(certificateId);
+
+    try {
+      const result = await authUserAPI.downloadInvestmentCertificate(certificateId);
+      if (result && result.success) {
+        toast.success("Certificate download started");
+      }
+    } catch (error) {
+      console.error("Error downloading certificate:", error);
+      toast.error("Failed to download investment certificate");
+    } finally {
+      setDownloadingCertId(null);
+    }
+  };
+
+  const handleEditProfile = () => {
+    setIsUserDropdownOpen(false);
+    setShowEditProfileModal(true);
   };
 
   const logout = () => {
     authUserAPI.logout();
     setUser(null);
     setReferenceLetters([]);
+    setInvestmentCertificates([]);
     setIsUserDropdownOpen(false);
     setIsMenuOpen(false);
     toast.success("Logged out successfully");
@@ -130,14 +227,11 @@ const Header = () => {
   };
 
   const handleDownloadLetter = async (letterId) => {
-    if (downloadingLetterId === letterId) {
-      return;
-    }
+    if (downloadingLetterId === letterId) return;
 
     setDownloadingLetterId(letterId);
 
     try {
-      console.log("Downloading letter:", letterId);
       const result = await authUserAPI.downloadReferenceLetter(letterId);
       if (result && result.success) {
         toast.success("Download started");
@@ -192,7 +286,6 @@ const Header = () => {
 
   return (
     <header className="header">
-      {/* Top Bar */}
       <div className="header-top">
         <div className="container">
           <div className="header-top-content">
@@ -222,7 +315,20 @@ const Header = () => {
                   {isUserDropdownOpen && (
                     <div className="user-dropdown-menu">
                       <div className="dropdown-header">
-                        <FaUserCircle className="dropdown-user-icon" />
+                        <div className="dropdown-avatar">
+                          {user?.avatar ? (
+                            <img 
+                              src={user.avatar} 
+                              alt="Avatar" 
+                              className="dropdown-avatar-img"
+                              onError={(e) => {
+                                e.target.style.display = 'none';
+                              }}
+                            />
+                          ) : (
+                            <FaUserCircle className="dropdown-user-icon" />
+                          )}
+                        </div>
                         <div>
                           <div className="dropdown-user-name">
                             {user?.firstName} {user?.lastName}
@@ -235,25 +341,24 @@ const Header = () => {
 
                       <div className="dropdown-divider"></div>
 
+                      {/* Reference Letters */}
                       <div className="dropdown-section">
                         <div className="dropdown-section-title">
                           <FaFileAlt className="section-icon" />
-                          Reference Letters
+                          Reference Letters ({referenceLetters.length})
                         </div>
                         {loadingLetters ? (
-                          <div className="dropdown-loading">Loading...</div>
+                          <div className="dropdown-loading">
+                            <FaSpinner className="spinning" /> Loading...
+                          </div>
                         ) : referenceLetters.length > 0 ? (
                           <div className="reference-letters-list">
                             {referenceLetters.map((letter) => (
                               <button
                                 key={letter._id || letter.letterId}
                                 className={`dropdown-item letter-item ${downloadingLetterId === letter.letterId ? "downloading" : ""}`}
-                                onClick={() =>
-                                  handleDownloadLetter(letter.letterId)
-                                }
-                                disabled={
-                                  downloadingLetterId === letter.letterId
-                                }
+                                onClick={() => handleDownloadLetter(letter.letterId)}
+                                disabled={downloadingLetterId === letter.letterId}
                               >
                                 {downloadingLetterId === letter.letterId ? (
                                   <FaSpinner className="item-icon spinning" />
@@ -261,26 +366,68 @@ const Header = () => {
                                   <FaFileAlt className="item-icon" />
                                 )}
                                 <div className="letter-info">
-                                  <div className="letter-id">
-                                    {letter.letterId}
-                                  </div>
+                                  <div className="letter-id">{letter.letterId}</div>
                                   <div className="letter-date">
-                                    {new Date(
-                                      letter.generatedAt,
-                                    ).toLocaleDateString()}
+                                    {new Date(letter.generatedAt).toLocaleDateString()}
                                   </div>
                                 </div>
                               </button>
                             ))}
                           </div>
                         ) : (
-                          <div className="dropdown-empty">
-                            No reference letters yet
-                          </div>
+                          <div className="dropdown-empty">No reference letters yet</div>
                         )}
                       </div>
 
                       <div className="dropdown-divider"></div>
+
+                      {/* Investment Certificates */}
+                      <div className="dropdown-section">
+                        <div className="dropdown-section-title">
+                          <FaFileAlt className="section-icon" />
+                          Investment Certificates ({investmentCertificates.length})
+                        </div>
+                        {loadingCertificates ? (
+                          <div className="dropdown-loading">
+                            <FaSpinner className="spinning" /> Loading...
+                          </div>
+                        ) : investmentCertificates.length > 0 ? (
+                          <div className="reference-letters-list">
+                            {investmentCertificates.map((cert) => (
+                              <button
+                                key={cert._id || cert.certificateId}
+                                className={`dropdown-item letter-item ${downloadingCertId === cert.certificateId ? "downloading" : ""}`}
+                                onClick={() => handleDownloadCertificate(cert.certificateId)}
+                                disabled={downloadingCertId === cert.certificateId}
+                              >
+                                {downloadingCertId === cert.certificateId ? (
+                                  <FaSpinner className="item-icon spinning" />
+                                ) : (
+                                  <FaFileAlt className="item-icon" />
+                                )}
+                                <div className="letter-info">
+                                  <div className="letter-id">{cert.certificateId}</div>
+                                  <div className="letter-date">
+                                    {new Date(cert.generatedAt || cert.issuanceDate).toLocaleDateString()}
+                                  </div>
+                                </div>
+                              </button>
+                            ))}
+                          </div>
+                        ) : (
+                          <div className="dropdown-empty">No investment certificates yet</div>
+                        )}
+                      </div>
+
+                      <div className="dropdown-divider"></div>
+
+                      <button
+                        className="dropdown-item edit-profile"
+                        onClick={handleEditProfile}
+                      >
+                        <FaUserCircle className="item-icon" />
+                        Edit Profile
+                      </button>
 
                       <button className="dropdown-item logout" onClick={logout}>
                         <FaSignOutAlt className="item-icon" />
@@ -331,14 +478,12 @@ const Header = () => {
       <div className="header-main">
         <div className="container">
           <div className="header-main-content">
-            {/* Logo */}
             <Link to="/" className="logo">
               <span className="logo-gold">TAYE'S</span>
               <span className="logo-cream">PROPERTY</span>
               <div className="logo-tagline"> & REALTY SOLUTIONS </div>
             </Link>
 
-            {/* Desktop Navigation */}
             <nav className="nav-desktop">
               {navItems.map((item) => (
                 <Link
@@ -352,7 +497,6 @@ const Header = () => {
               ))}
             </nav>
 
-            {/* Header Actions */}
             <div className="header-actions">
               <button
                 className="search-toggle"
@@ -376,7 +520,6 @@ const Header = () => {
             </div>
           </div>
 
-          {/* Search Bar */}
           {isSearchOpen && (
             <div className="search-bar">
               <div className="search-container">
@@ -395,19 +538,16 @@ const Header = () => {
         </div>
       </div>
 
-      {/* ========== UPDATED MOBILE MENU WITH FULL HEIGHT ========== */}
+      {/* Mobile Menu */}
       {isMenuOpen && (
         <>
-          {/* Backdrop Overlay - click to close */}
           <div 
             className="mobile-overlay" 
             onClick={() => setIsMenuOpen(false)}
           />
           
-          {/* Mobile Menu - Full height */}
           <div className={`mobile-menu ${isMenuOpen ? 'open' : ''}`}>
             <div className="mobile-nav">
-              {/* Close button inside menu */}
               <button 
                 className="mobile-close"
                 onClick={() => setIsMenuOpen(false)}
@@ -427,11 +567,23 @@ const Header = () => {
                 </Link>
               ))}
 
-              {/* Mobile User Section */}
               {user ? (
                 <div className="mobile-user-section">
                   <div className="mobile-user-header">
-                    <FaUserCircle className="mobile-user-icon" />
+                    <div className="mobile-user-avatar">
+                      {user?.avatar ? (
+                        <img 
+                          src={user.avatar} 
+                          alt="Avatar" 
+                          className="mobile-avatar-img"
+                          onError={(e) => {
+                            e.target.style.display = 'none';
+                          }}
+                        />
+                      ) : (
+                        <FaUserCircle className="mobile-user-icon" />
+                      )}
+                    </div>
                     <div className="mobile-user-info">
                       <div className="mobile-user-name">
                         {user?.firstName} {user?.lastName}
@@ -444,11 +596,13 @@ const Header = () => {
                   
                   <div className="mobile-section-title">
                     <FaFileAlt className="section-icon" />
-                    Reference Letters
+                    Reference Letters ({referenceLetters.length})
                   </div>
                   
                   {loadingLetters ? (
-                    <div className="mobile-loading">Loading...</div>
+                    <div className="mobile-loading">
+                      <FaSpinner className="spinning" /> Loading...
+                    </div>
                   ) : referenceLetters.length > 0 ? (
                     <div className="mobile-reference-list">
                       {referenceLetters.map((letter) => (
@@ -477,6 +631,55 @@ const Header = () => {
                   )}
                   
                   <div className="mobile-divider"></div>
+                  
+                  <div className="mobile-section-title">
+                    <FaFileAlt className="section-icon" />
+                    Investment Certificates ({investmentCertificates.length})
+                  </div>
+                  
+                  {loadingCertificates ? (
+                    <div className="mobile-loading">
+                      <FaSpinner className="spinning" /> Loading...
+                    </div>
+                  ) : investmentCertificates.length > 0 ? (
+                    <div className="mobile-reference-list">
+                      {investmentCertificates.map((cert) => (
+                        <button
+                          key={cert._id || cert.certificateId}
+                          className="mobile-reference-item"
+                          onClick={() => handleDownloadCertificate(cert.certificateId)}
+                          disabled={downloadingCertId === cert.certificateId}
+                        >
+                          {downloadingCertId === cert.certificateId ? (
+                            <FaSpinner className="spinning" />
+                          ) : (
+                            <FaFileAlt />
+                          )}
+                          <div className="mobile-reference-info">
+                            <div className="mobile-reference-id">{cert.certificateId}</div>
+                            <div className="mobile-reference-date">
+                              {new Date(cert.generatedAt || cert.issuanceDate).toLocaleDateString()}
+                            </div>
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="mobile-empty">No investment certificates yet</div>
+                  )}
+                  
+                  <div className="mobile-divider"></div>
+                  
+                  <button 
+                    className="mobile-edit-profile-btn"
+                    onClick={() => {
+                      setIsMenuOpen(false);
+                      handleEditProfile();
+                    }}
+                  >
+                    <FaUserCircle className="icon" />
+                    Edit Profile
+                  </button>
                   
                   <button className="mobile-logout-btn" onClick={logout}>
                     <FaSignOutAlt className="icon" />
@@ -511,6 +714,13 @@ const Header = () => {
           </div>
         </>
       )}
+
+      <EditProfileModal
+        isOpen={showEditProfileModal}
+        onClose={() => setShowEditProfileModal(false)}
+        user={user}
+        onUpdate={refreshUserData}
+      />
     </header>
   );
 };

@@ -55,12 +55,19 @@ const AdminLayout = ({ children }) => {
               <span>{item.name}</span>
             </Link>
           ))}
+          
+          {/* ✅ LOGOUT AS NAVIGATION ITEM */}
+          <button
+            onClick={() => {
+              handleLogout();
+              setSidebarOpen(false);
+            }}
+            className="admin-nav-item admin-logout-nav-item"
+          >
+            <span className="admin-nav-icon">🚪</span>
+            <span>Logout</span>
+          </button>
         </nav>
-
-        <button onClick={handleLogout} className="admin-logout-btn">
-          <span className="admin-nav-icon">🚪</span>
-          <span>Logout</span>
-        </button>
       </aside>
 
       {/* Overlay for mobile */}

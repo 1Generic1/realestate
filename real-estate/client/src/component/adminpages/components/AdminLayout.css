@@ -1,6 +1,10 @@
+/* ============================================================
+   ADMIN LAYOUT - IMPROVED SIDEBAR
+   ============================================================ */
+
 .admin-layout {
   min-height: 100vh;
-  background: #f5f5f5;
+  background: #f5f7fa;
 }
 
 .admin-mobile-menu-btn {
@@ -19,12 +23,23 @@
   display: none;
   align-items: center;
   justify-content: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(184, 134, 11, 0.3);
 }
+
+.admin-mobile-menu-btn:hover {
+  background: #9a7209;
+  transform: scale(1.05);
+}
+
+/* ============================================================
+   SIDEBAR - CLEAN DESIGN
+   ============================================================ */
 
 .admin-sidebar {
   width: 280px;
-  background: white;
-  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
+  background: #ffffff;
+  box-shadow: 2px 0 12px rgba(0, 0, 0, 0.06);
   display: flex;
   flex-direction: column;
   position: fixed;
@@ -32,124 +47,10 @@
   left: 0;
   top: 0;
   z-index: 90;
-  transition: transform 0.3s ease;
-  overflow-y: auto; /* ← ADD THIS */
-  overflow-x: hidden; /* ← ADD THIS */
-}
-
-.admin-sidebar-header {
-  padding: 24px;
-  border-bottom: 1px solid #eee;
-  text-align: center;
-  position: sticky;
-}
-
-.admin-sidebar-header h2 {
-  font-size: 20px;
-  color: #1a1a2e;
-  margin-bottom: 4px;
-}
-
-.admin-sidebar-header h2 span {
-  color: #b8860b;
-}
-
-.admin-sidebar-header p {
-  font-size: 12px;
-  color: #999;
-}
-
-.admin-sidebar-nav {
-  flex: 1;
-  padding: 20px 0;
-}
-
-.admin-nav-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 24px;
-  color: #666;
-  text-decoration: none;
-  transition: all 0.3s;
-  margin: 4px 0;
-}
-
-.admin-nav-item:hover {
-  background: #f9f9f9;
-  color: #b8860b;
-}
-
-.admin-nav-item.active {
-  background: linear-gradient(
-    90deg,
-    rgba(184, 134, 11, 0.1) 0%,
-    transparent 100%
-  );
-  color: #b8860b;
-  border-right: 3px solid #b8860b;
-}
-
-.admin-nav-icon {
-  font-size: 20px;
-  width: 28px;
-}
-
-.admin-logout-btn {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 24px;
-  margin: auto;
-  margin-bottom: 100px;
-  background: #fee;
-  border: none;
-  border-radius: 8px;
-  color: #c00;
-  cursor: pointer;
-  font-size: 14px;
-  transition: all 0.3s;
-}
-
-.admin-sidebar:hover {
-  background: #fdd;
-}
-
-.admin-main {
-  flex: 1;
-  margin-left: 280px;
-  padding: 20px;
-}
-
-.admin-main-header {
-  background: white;
-  padding: 20px 24px;
-  border-radius: 12px;
-  margin-bottom: 24px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-}
-
-.admin-main-header h1 {
-  font-size: 24px;
-  color: #1a1a2e;
-}
-
-.admin-main-content {
-  background: white;
-  border-radius: 12px;
-  padding: 24px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-}
-
-.admin-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 85;
-  display: none;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow-y: auto;
+  overflow-x: hidden;
+  border-right: 1px solid #f0f0f0;
 }
 
 /* Custom scrollbar for sidebar */
@@ -162,13 +63,236 @@
 }
 
 .admin-sidebar::-webkit-scrollbar-thumb {
-  background: #b8860b;
+  background: #d4a017;
   border-radius: 4px;
 }
 
 .admin-sidebar::-webkit-scrollbar-thumb:hover {
-  background: #9a7209;
+  background: #b8860b;
 }
+
+/* ============================================================
+   SIDEBAR HEADER
+   ============================================================ */
+
+.admin-sidebar-header {
+  padding: 28px 24px 20px;
+  border-bottom: 1px solid #f0f0f0;
+  text-align: center;
+  position: sticky;
+  top: 0;
+  background: #ffffff;
+  z-index: 5;
+}
+
+.admin-sidebar-header h2 {
+  font-size: 20px;
+  color: #1a1a2e;
+  margin-bottom: 4px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.admin-sidebar-header h2 span {
+  color: #b8860b;
+}
+
+.admin-sidebar-header p {
+  font-size: 12px;
+  color: #999;
+  letter-spacing: 0.5px;
+}
+
+/* ============================================================
+   SIDEBAR NAVIGATION - CLEAN HOVER
+   ============================================================ */
+
+.admin-sidebar-nav {
+  flex: 1;
+  padding: 12px 0 20px;
+}
+
+.admin-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 20px 11px 24px;
+  color: #5a5a7a;
+  text-decoration: none;
+  transition: all 0.25s ease;
+  margin: 2px 8px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  position: relative;
+  cursor: pointer;
+}
+
+/* ✅ IMPROVED HOVER - No pink, clean gold tint */
+.admin-nav-item:hover {
+  background: rgba(184, 134, 11, 0.07);
+  color: #b8860b;
+  transform: translateX(4px);
+}
+
+/* ✅ ACTIVE STATE - Clean gold accent */
+.admin-nav-item.active {
+  background: rgba(184, 134, 11, 0.10);
+  color: #b8860b;
+  font-weight: 600;
+}
+
+.admin-nav-item.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 28px;
+  background: #b8860b;
+  border-radius: 0 4px 4px 0;
+}
+
+.admin-nav-icon {
+  font-size: 18px;
+  width: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   LOGOUT BUTTON - IMPROVED
+   ============================================================ */
+
+.admin-logout-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 20px 11px 24px;
+  margin: 8px 16px 24px;
+  background: #f8f9fa;
+  border: 1px solid #f0f0f0;
+  border-radius: 10px;
+  color: #dc3545;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.25s ease;
+  font-family: inherit;
+}
+
+.admin-logout-btn:hover {
+  background: #fee;
+  border-color: #fcc;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(220, 53, 69, 0.12);
+}
+
+.admin-logout-btn .admin-nav-icon {
+  color: #dc3545;
+}
+
+/* ============================================================
+   MAIN CONTENT
+   ============================================================ */
+
+.admin-main {
+  flex: 1;
+  margin-left: 280px;
+  padding: 24px 32px 32px;
+  min-height: 100vh;
+}
+
+.admin-main-header {
+  background: white;
+  padding: 20px 28px;
+  border-radius: 14px;
+  margin-bottom: 24px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+  border: 1px solid #f0f0f0;
+}
+
+.admin-main-header h1 {
+  font-size: 22px;
+  color: #1a1a2e;
+  font-weight: 700;
+}
+
+.admin-main-content {
+  background: white;
+  border-radius: 14px;
+  padding: 24px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+  border: 1px solid #f0f0f0;
+}
+
+/* ============================================================
+   OVERLAY
+   ============================================================ */
+
+.admin-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 85;
+  display: none;
+  backdrop-filter: blur(2px);
+}
+
+/* ============================================================
+   LOGOUT NAV ITEM (If using in navigation)
+   ============================================================ */
+
+.admin-logout-nav-item {
+  margin-top: 8px;
+  border-top: 1px solid #f0f0f0;
+  padding-top: 12px;
+  color: #dc3545 !important;
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: inherit;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 20px 11px 24px;
+  margin: 2px 8px;
+  border-radius: 10px;
+  transition: all 0.25s ease;
+}
+
+.admin-logout-nav-item:hover {
+  background: #fee;
+  color: #c82333 !important;
+}
+
+.admin-logout-nav-item .admin-nav-icon {
+  color: #dc3545;
+}
+
+/* ============================================================
+   DIVIDER
+   ============================================================ */
+
+.admin-nav-divider {
+  height: 1px;
+  background: #f0f0f0;
+  margin: 12px 20px;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
 
 @media (max-width: 768px) {
   .admin-mobile-menu-btn {
@@ -177,6 +301,7 @@
 
   .admin-sidebar {
     transform: translateX(-100%);
+    width: 280px;
   }
 
   .admin-sidebar.open {
@@ -185,6 +310,7 @@
 
   .admin-main {
     margin-left: 0;
+    padding: 16px;
     padding-top: 70px;
   }
 
@@ -193,10 +319,48 @@
   }
 
   .admin-sidebar-header {
-  padding: 24px;
-  border-bottom: 1px solid #eee;
-  text-align: center;
-  padding-top: 60px;
+    padding: 24px 20px 16px;
+    padding-top: 60px;
+  }
+
+  .admin-main-header {
+    padding: 16px 20px;
+  }
+
+  .admin-main-header h1 {
+    font-size: 18px;
+  }
+
+  .admin-main-content {
+    padding: 16px;
+  }
 }
 
+@media (max-width: 480px) {
+  .admin-sidebar {
+    width: 260px;
+  }
+
+  .admin-main {
+    padding: 12px;
+    padding-top: 65px;
+  }
+
+  .admin-nav-item {
+    padding: 10px 16px 10px 18px;
+    font-size: 13px;
+  }
+
+  .admin-logout-btn {
+    padding: 10px 16px 10px 18px;
+    font-size: 13px;
+  }
+
+  .admin-main-header {
+    padding: 14px 16px;
+  }
+
+  .admin-main-header h1 {
+    font-size: 16px;
+  }
 }

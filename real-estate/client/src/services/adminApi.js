@@ -4,15 +4,63 @@ import "react-toastify/dist/ReactToastify.css";
 
 const BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:5000/api";
 
+// ============================================================
+// ADMIN API - WITH GLOBAL LOADER
+// ============================================================
+
 const API = axios.create({
   baseURL: BASE_URL,
   timeout: 30000,
 });
 
-//Add token to requests
+// ✅ Global loading counter for Admin API
+let adminActiveRequests = 0;
+let adminLoaderTimeout = null;
+
+// ✅ Function to show/hide global loader for Admin
+const updateAdminGlobalLoader = (show) => {
+  const loader = document.getElementById('global-loader');
+  
+  if (show) {
+    // Clear any pending hide timeout
+    if (adminLoaderTimeout) {
+      clearTimeout(adminLoaderTimeout);
+      adminLoaderTimeout = null;
+    }
+    if (loader) {
+      loader.classList.add('active');
+      console.log('🔄 Admin Loader activated');
+    }
+  } else {
+    // Wait 500ms before hiding (so user sees the loader)
+    if (adminLoaderTimeout) {
+      clearTimeout(adminLoaderTimeout);
+    }
+    adminLoaderTimeout = setTimeout(() => {
+      if (loader) {
+        loader.classList.remove('active');
+        console.log('🔄 Admin Loader deactivated');
+      }
+      adminLoaderTimeout = null;
+    }, 500);
+  }
+};
+
+// Request interceptor - Add token
 API.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("adminToken");
+    
+    // ✅ Skip loading for public auth endpoints
+    const isPublicAuth = config.url?.includes("/login");
+    
+    if (!isPublicAuth) {
+      adminActiveRequests++;
+      if (adminActiveRequests === 1) {
+        updateAdminGlobalLoader(true);
+      }
+    }
+    
     // Don't add token for login endpoint
     if (token && !config.url.includes("/login")) {
       config.headers.Authorization = `Bearer ${token}`;
@@ -20,40 +68,46 @@ API.interceptors.request.use(
     return config;
   },
   (error) => {
+    console.error("❌ Admin Request Error:", error);
     return Promise.reject(error);
   },
 );
 
-/**  Request interceptor - adds token to every request
-API.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem("token"); // For admin authentication
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  },
-); **/
-
-// Response interceptor - handles common errors
+// Response interceptor - handles common errors and loader
 API.interceptors.response.use(
   (response) => {
-    console.log("🔄 Interceptor - Response:", response);
-    console.log("🔄 Interceptor - Response.data:", response.data);
+    console.log("🔄 Admin Interceptor - Response:", response);
+    console.log("🔄 Admin Interceptor - Response.data:", response.data);
+    
+    // ✅ Decrement active requests
+    const isPublicAuth = response.config.url?.includes("/login");
+    if (!isPublicAuth) {
+      adminActiveRequests--;
+      if (adminActiveRequests === 0) {
+        updateAdminGlobalLoader(false);
+      }
+    }
     return response;
   },
   (error) => {
-    console.log("🔄 Interceptor - Error:", error);
+    console.log("🔄 Admin Interceptor - Error:", error);
+    
+    // ✅ Decrement active requests on error too
+    const isPublicAuth = error.config?.url?.includes("/login");
+    if (!isPublicAuth) {
+      adminActiveRequests--;
+      if (adminActiveRequests === 0) {
+        updateAdminGlobalLoader(false);
+      }
+    }
+    
     if (error.response) {
       const { status } = error.response;
       const errorMessage = error.response.data?.error || error.response.data?.message || '';
 
       switch (status) {
         case 401:
-          // ✅ Show session expired toast
+          // Show session expired toast
           if (errorMessage.toLowerCase().includes('expired') || 
               errorMessage.toLowerCase().includes('token expired')) {
             toast.warning('⏰ Session expired. Please login again.');
@@ -104,16 +158,52 @@ API.interceptors.response.use(
 // ==================== USER API (For regular users) ====================
 const usersAPI = axios.create({
   baseURL: BASE_URL,
-  timeout: 10000,
+  timeout: 30000,
   headers: {
     "Content-Type": "application/json",
   },
 });
 
-// Add token to user requests
+// ✅ Global loading counter
+let activeRequests = 0;
+
+let loaderTimeout = null;
+
+// ✅ Function to show/hide global loader with minimum display time
+const updateGlobalLoader = (show) => {
+  const loader = document.getElementById('global-loader');
+  
+  if (show) {
+    // Clear any pending hide timeout
+    if (loaderTimeout) {
+      clearTimeout(loaderTimeout);
+      loaderTimeout = null;
+    }
+    if (loader) {
+      loader.classList.add('active');
+      console.log('✅ Loader activated');
+    }
+  } else {
+    // ✅ Wait 500ms before hiding (so user sees the loader)
+    if (loaderTimeout) {
+      clearTimeout(loaderTimeout);
+    }
+    loaderTimeout = setTimeout(() => {
+      if (loader) {
+        loader.classList.remove('active');
+        console.log('✅ Loader deactivated after 500ms delay');
+      }
+      loaderTimeout = null;
+    }, 500);
+  }
+};
+
+// Request interceptor
 usersAPI.interceptors.request.use(
   (config) => {
-    // Don't add token for public auth endpoints
+    console.log('📤 Request:', config.url); // ✅ DEBUG LOG
+    
+    // Skip loading for public auth endpoints
     const isPublicAuth =
       config.url?.includes("/login") ||
       config.url?.includes("/register") ||
@@ -121,6 +211,20 @@ usersAPI.interceptors.request.use(
       config.url?.includes("/reset-password") ||
       config.url?.includes("/verify-email");
 
+    // ✅ Skip loading for initial page load (no token yet)
+    const isInitialLoad = !localStorage.getItem("token");
+
+    console.log('📤 isPublicAuth:', isPublicAuth, 'isInitialLoad:', isInitialLoad); // ✅ DEBUG LOG
+
+    if (!isPublicAuth && !isInitialLoad) {
+      activeRequests++;
+      console.log('📤 Active requests:', activeRequests); // ✅ DEBUG LOG
+      if (activeRequests === 1) {
+        updateGlobalLoader(true);
+      }
+    }
+
+    // Add token
     if (!isPublicAuth) {
       const token = localStorage.getItem("token");
       if (token) {
@@ -129,45 +233,54 @@ usersAPI.interceptors.request.use(
     }
     return config;
   },
-  (error) => Promise.reject(error),
+  (error) => {
+    console.error('❌ Request error:', error);
+    return Promise.reject(error);
+  }
 );
 
-// Response interceptor for user API
+// Response interceptor
 usersAPI.interceptors.response.use(
-  (response) => response.data,
-  (error) => {
-    if (error.response?.status === 401) {
-      const errorMessage = error.response?.data?.error || error.response?.data?.message || '';
+  (response) => {
+    console.log('📥 Response:', response.config.url); // ✅ DEBUG LOG
+    
+    const isPublicAuth =
+      response.config.url?.includes("/login") ||
+      response.config.url?.includes("/register") ||
+      response.config.url?.includes("/forgot-password") ||
+      response.config.url?.includes("/reset-password") ||
+      response.config.url?.includes("/verify-email");
 
-      // ✅ Show session expired toast
-      if (errorMessage.toLowerCase().includes('expired') || 
-          errorMessage.toLowerCase().includes('token expired')) {
-        toast.warning('⏰ Session expired. Please login again.');
-      } else {
-        toast.error(errorMessage || 'Session expired. Please login again.');
+    if (!isPublicAuth) {
+      activeRequests--;
+      console.log('📥 Active requests:', activeRequests); // ✅ DEBUG LOG
+      if (activeRequests === 0) {
+        updateGlobalLoader(false);
       }
+    }
+    return response.data;
+  },
+  (error) => {
+    console.error('❌ Response error:', error.config?.url); // ✅ DEBUG LOG
+    
+    const isPublicAuth =
+      error.config?.url?.includes("/login") ||
+      error.config?.url?.includes("/register") ||
+      error.config?.url?.includes("/forgot-password") ||
+      error.config?.url?.includes("/reset-password") ||
+      error.config?.url?.includes("/verify-email");
 
-      // Clear user data
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
-      localStorage.removeItem("rememberedEmail");
-      localStorage.removeItem("rememberMe");
-      localStorage.removeItem("tokenData");
-
-      // Redirect to login
-      if (
-        !window.location.pathname.includes("/login") &&
-        !window.location.pathname.includes("/signup") &&
-        !window.location.pathname.includes("/verify-email")
-      ) {
-        setTimeout(() => {
-          window.location.href = "/login";
-        }, 500);
+    if (!isPublicAuth) {
+      activeRequests--;
+      console.log('❌ Active requests:', activeRequests); // ✅ DEBUG LOG
+      if (activeRequests === 0) {
+        updateGlobalLoader(false);
       }
     }
     return Promise.reject(error);
-  },
+  }
 );
+
 
 // Template Management
 export const templateAPI = {
@@ -906,8 +1019,14 @@ export const authUserAPI = {
   },
 
   getCurrentUser: async () => {
-    const response = await usersAPI.get("/users/me");
-    return response.data;
+    try {
+      const response = await usersAPI.get("/users/me");
+      console.log("📥 getCurrentUser response:", response);
+      return response; // response is already { success: true, data: {...} }
+    } catch (error) {
+      console.error("❌ Error fetching current user:", error);
+      throw error;
+    }
   },
 
   forgotPassword: async (data) => {
@@ -990,6 +1109,79 @@ export const authUserAPI = {
       console.error("Error downloading reference letter:", error);
       throw error;
     }
+  },
+  updateProfile: async (userData) => {
+    const response = await usersAPI.put("/users/me", userData);
+    return response;
+  },
+
+  getInvestmentCertificates: async () => {
+    try {
+      const response = await usersAPI.get("/users/investments");
+      console.log("Get Investment Certificates - Response:", response);
+      return response;
+    } catch (error) {
+      console.error("Error fetching investment certificates:", error);
+      throw error;
+    }
+  },
+
+  downloadInvestmentCertificate: async (certificateId) => {
+    try {
+      const token = localStorage.getItem("token");
+      
+      const response = await fetch(
+        `${BASE_URL}/users/certificates/${encodeURIComponent(certificateId)}/download-proxy`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("Download failed:", response.status, errorText);
+        throw new Error(`Download failed: ${response.status}`);
+      }
+
+      const blob = await response.blob();
+      
+      if (blob.type !== "application/pdf") {
+        console.warn("Unexpected content type:", blob.type);
+      }
+
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      const safeFileName = `certificate-${certificateId.replace(/\//g, "-")}.pdf`;
+      link.download = safeFileName;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+
+      return { success: true };
+    } catch (error) {
+      console.error("Error downloading investment certificate:", error);
+      throw error;
+    }
+  },
+
+  updateAvatar: async (formData) => {
+    const response = await usersAPI.post("/users/me/avatar", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response.data;
+  },
+
+  // ✅ NEW: Delete avatar
+  deleteAvatar: async (data) => {
+    const response = await usersAPI.delete("/users/me/avatar", { data });
+    return response.data;
   },
 };
 

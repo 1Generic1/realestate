@@ -1,0 +1,121 @@
+/* ============================================================
+   CLEAN MINIMAL LOADER
+   ============================================================ */
+
+.global-loader-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  backdrop-filter: blur(4px);
+}
+
+.global-loader-overlay.active {
+  display: flex;
+}
+
+/* ============================================================
+   LOADER CONTAINER - NO BOX, JUST SPINNER + TEXT
+   ============================================================ */
+.global-loader-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  background: transparent;
+  padding: 0;
+  box-shadow: none;
+  border: none;
+  animation: loaderFadeIn 0.3s ease-out;
+}
+
+@keyframes loaderFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ============================================================
+   CLEAN SPINNER
+   ============================================================ */
+.global-loader-spinner {
+  width: 44px;
+  height: 44px;
+  border: 3px solid rgba(255, 255, 255, 0.2);
+  border-top-color: #b8860b;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ============================================================
+   TEXT - SMALL & CLEAN
+   ============================================================ */
+.global-loader-text {
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: 0.5px;
+  margin: 0;
+  opacity: 0.8;
+  animation: textPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes textPulse {
+  0%, 100% {
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 576px) {
+  .global-loader-spinner {
+    width: 36px;
+    height: 36px;
+    border-width: 2.5px;
+  }
+
+  .global-loader-text {
+    font-size: 13px;
+  }
+}
+
+/* ============================================================
+   DARK / LIGHT MODE SUPPORT
+   ============================================================ */
+@media (prefers-color-scheme: light) {
+  .global-loader-overlay {
+    background: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(3px);
+  }
+
+  .global-loader-spinner {
+    border-color: rgba(0, 0, 0, 0.15);
+    border-top-color: #b8860b;
+  }
+
+  .global-loader-text {
+    color: #1a1a2e;
+  }
+}

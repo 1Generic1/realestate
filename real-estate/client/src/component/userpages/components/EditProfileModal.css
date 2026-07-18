@@ -1,0 +1,511 @@
+/* ============================================================
+   EDIT PROFILE MODAL - UNIQUE CLASS NAMES
+   All classes prefixed with 'epm-' (Edit Profile Modal)
+   ============================================================ */
+
+/* ============================================================
+   OVERLAY
+   ============================================================ */
+.epm-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 20px;
+  backdrop-filter: blur(4px);
+  animation: epm-fade-in 0.3s ease;
+}
+
+@keyframes epm-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ============================================================
+   MODAL CONTAINER
+   ============================================================ */
+.epm-modal {
+  background: #ffffff;
+  border-radius: 20px;
+  max-width: 600px;
+  width: 100%;
+  max-height: 95vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
+  animation: epm-slide-in 0.3s ease-out;
+}
+
+@keyframes epm-slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(-30px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ============================================================
+   HEADER
+   ============================================================ */
+.epm-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid #e9ecef;
+  background: #faf9f6;
+  flex-shrink: 0;
+}
+
+.epm-header h3 {
+  margin: 0;
+  color: #1a1a2e;
+  font-size: 20px;
+  font-weight: 700;
+  font-family: "Playfair Display", serif;
+}
+
+.epm-header h3 span {
+  color: #b8860b;
+}
+
+.epm-close-btn {
+  background: none;
+  border: none;
+  font-size: 28px;
+  cursor: pointer;
+  color: #999;
+  transition: color 0.3s ease;
+  padding: 0 8px;
+  line-height: 1;
+}
+
+.epm-close-btn:hover {
+  color: #dc3545;
+}
+
+/* ============================================================
+   BODY
+   ============================================================ */
+.epm-body {
+  padding: 24px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.epm-body::-webkit-scrollbar {
+  width: 6px;
+}
+
+.epm-body::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.epm-body::-webkit-scrollbar-thumb {
+  background: #b8860b;
+  border-radius: 3px;
+}
+
+/* ============================================================
+   AVATAR SECTION
+   ============================================================ */
+.epm-avatar-section {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 24px;
+  padding: 16px;
+  background: #f8f9fa;
+  border-radius: 12px;
+}
+
+.epm-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #b8860b, #8b6914);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 32px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.epm-avatar img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.epm-avatar-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.epm-avatar-actions label {
+  display: inline-block;
+  padding: 8px 20px;
+  background: #b8860b;
+  color: white;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.epm-avatar-actions label:hover {
+  background: #9a7209;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(184, 134, 11, 0.3);
+}
+
+.epm-avatar-actions input {
+  display: none;
+}
+
+.epm-avatar-actions .epm-remove-avatar {
+  background: none;
+  border: none;
+  color: #dc3545;
+  font-size: 13px;
+  cursor: pointer;
+  padding: 4px;
+  transition: color 0.3s ease;
+}
+
+.epm-avatar-actions .epm-remove-avatar:hover {
+  color: #c82333;
+  text-decoration: underline;
+}
+
+/* ============================================================
+   FORM
+   ============================================================ */
+.epm-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.epm-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.epm-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.epm-form-group label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1a1a2e;
+}
+
+.epm-form-group .epm-required {
+  color: #dc3545;
+}
+
+.epm-form-group input,
+.epm-form-group select,
+.epm-form-group textarea {
+  padding: 10px 14px;
+  border: 1.5px solid #e0e0e0;
+  border-radius: 10px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  font-family: inherit;
+  background: white;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.epm-form-group input:focus,
+.epm-form-group select:focus,
+.epm-form-group textarea:focus {
+  outline: none;
+  border-color: #b8860b;
+  box-shadow: 0 0 0 3px rgba(184, 134, 11, 0.1);
+}
+
+.epm-form-group input:disabled,
+.epm-form-group select:disabled {
+  background: #f5f5f5;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.epm-form-group textarea {
+  resize: vertical;
+  min-height: 60px;
+}
+
+/* ============================================================
+   LOCATION SECTION
+   ============================================================ */
+.epm-location-section {
+  margin-top: 8px;
+  padding-top: 16px;
+  border-top: 1px solid #e9ecef;
+}
+
+.epm-location-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a1a2e;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.epm-location-title::before {
+  content: "📍";
+  font-size: 16px;
+}
+
+/* ============================================================
+   CHANGE PASSWORD SECTION
+   ============================================================ */
+.epm-password-section {
+  margin-top: 8px;
+  padding-top: 16px;
+  border-top: 1px solid #e9ecef;
+}
+
+.epm-password-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a1a2e;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.epm-password-title::before {
+  content: "🔒";
+  font-size: 16px;
+}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.epm-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 16px 24px;
+  border-top: 1px solid #e9ecef;
+  background: #faf9f6;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+
+.epm-footer button {
+  padding: 10px 28px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+}
+
+.epm-btn-cancel {
+  background: #f1f3f5;
+  color: #666;
+  border: 1px solid #e0e0e0;
+}
+
+.epm-btn-cancel:hover {
+  background: #e9ecef;
+  transform: translateY(-1px);
+}
+
+.epm-btn-save {
+  background: linear-gradient(135deg, #b8860b, #9a7209);
+  color: white;
+}
+
+.epm-btn-save:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(184, 134, 11, 0.3);
+}
+
+.epm-btn-save:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+.epm-footer .epm-spinner {
+  animation: epm-spin 1s linear infinite;
+  font-size: 16px;
+}
+
+@keyframes epm-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 768px) {
+  .epm-modal {
+    max-width: 98%;
+    max-height: 98vh;
+    border-radius: 16px;
+  }
+
+  .epm-header {
+    padding: 16px 20px;
+  }
+
+  .epm-header h3 {
+    font-size: 18px;
+  }
+
+  .epm-body {
+    padding: 16px;
+  }
+
+  .epm-form-row {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .epm-avatar-section {
+    flex-direction: column;
+    text-align: center;
+    padding: 12px;
+  }
+
+  .epm-footer {
+    flex-direction: column;
+  }
+
+  .epm-footer button {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .epm-modal {
+    border-radius: 12px;
+  }
+
+  .epm-header {
+    padding: 12px 16px;
+  }
+
+  .epm-header h3 {
+    font-size: 16px;
+  }
+
+  .epm-body {
+    padding: 12px;
+  }
+
+  .epm-avatar {
+    width: 60px;
+    height: 60px;
+    font-size: 24px;
+  }
+
+  .epm-form-group input,
+  .epm-form-group select,
+  .epm-form-group textarea {
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+
+  .epm-footer {
+    padding: 12px 16px;
+  }
+
+  .epm-footer button {
+    padding: 10px 20px;
+    font-size: 13px;
+  }
+}
+
+/* ============================================================
+   PASSWORD INPUT WITH TOGGLE
+   ============================================================ */
+.epm-password-input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.epm-password-input-wrapper input {
+  padding-right: 45px;
+}
+
+.epm-password-toggle {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #999;
+  font-size: 18px;
+  padding: 4px;
+  transition: color 0.3s ease;
+}
+
+.epm-password-toggle:hover {
+  color: #b8860b;
+}
+
+.epm-password-toggle:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ============================================================
+   AVATAR SPINNER
+   ============================================================ */
+.epm-avatar-spinner {
+  animation: epm-spin 1s linear infinite;
+  font-size: 32px;
+  color: #b8860b;
+}
+
+.epm-avatar-actions label.uploading {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

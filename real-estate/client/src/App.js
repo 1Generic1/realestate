@@ -43,6 +43,10 @@ import ForgotPassword from "./component/userpages/pages/Auth/ForgotPassword";
 import ResetPassword from "./component/userpages/pages/Auth/ResetPassword";
 import AdvancedVerifyEmail from "./component/userpages/pages/Auth/AdvancedVerifyEmail";
 
+// ✅ IMPORT GLOBAL LOADER
+import GlobalLoader from "./component/GlobalLoader";
+import { LoadingProvider, useLoading } from "./context/LoadingContext";
+
 import { CompanyProvider } from "./context/CompanyContext";
 
 // Component to conditionally show Header and Footer
@@ -68,21 +72,17 @@ const AdminRoute = ({ children }) => {
   return children;
 };
 
-function App() {
-  // Initialize AOS
-  useEffect(() => {
-    AOS.init({
-      duration: 1000,
-      once: true,
-      offset: 100,
-      delay: 0,
-      easing: "ease-in-out",
-    });
-  }, []);
+// ✅ APP CONTENT
+const AppContent = () => {
+  const { isLoading } = useLoading();
 
   return (
-    <BrowserRouter>
-      <CompanyProvider>
+    <>
+      {/* ✅ Always render loader, show/hide via CSS class */}
+      <GlobalLoader />
+      
+      {/* ✅ Use CSS class to show/hide instead of conditional rendering */}
+      <div id="app-content">
         <Layout>
           <Routes>
             {/* User Routes */}
@@ -175,24 +175,48 @@ function App() {
             />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/verify-email" element={<AdvancedVerifyEmail />} />        // NO token
-            <Route path="/verify-email/:token" element={<AdvancedVerifyEmail />} /> // HAS token
+            <Route path="/verify-email" element={<AdvancedVerifyEmail />} />
+            <Route path="/verify-email/:token" element={<AdvancedVerifyEmail />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/reset-password/:token" element={<ResetPassword />} />
           </Routes>
         </Layout>
-        <ToastContainer
-          position="top-right"
-          autoClose={5000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme="light"
-        />
+      </div>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
+    </>
+  );
+};
+
+function App() {
+  // Initialize AOS
+  useEffect(() => {
+    AOS.init({
+      duration: 1000,
+      once: true,
+      offset: 100,
+      delay: 0,
+      easing: "ease-in-out",
+    });
+  }, []);
+
+  return (
+    <BrowserRouter>
+      <CompanyProvider>
+        {/* ✅ WRAP APP WITH LOADING PROVIDER */}
+        <LoadingProvider>
+          <AppContent />
+        </LoadingProvider>
       </CompanyProvider>
     </BrowserRouter>
   );
