@@ -8,7 +8,7 @@ import {
 } from "react-router-dom";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -43,8 +43,9 @@ import ForgotPassword from "./component/userpages/pages/Auth/ForgotPassword";
 import ResetPassword from "./component/userpages/pages/Auth/ResetPassword";
 import AdvancedVerifyEmail from "./component/userpages/pages/Auth/AdvancedVerifyEmail";
 
-// ✅ IMPORT GLOBAL LOADER
+// ✅ IMPORT GLOBAL LOADER AND SKELETON
 import GlobalLoader from "./component/GlobalLoader";
+import GlobalSkeleton from "./component/GlobalSkeleton";
 import { LoadingProvider, useLoading } from "./context/LoadingContext";
 
 import { CompanyProvider } from "./context/CompanyContext";
@@ -75,13 +76,39 @@ const AdminRoute = ({ children }) => {
 // ✅ APP CONTENT
 const AppContent = () => {
   const { isLoading } = useLoading();
+  const [isPageLoading, setIsPageLoading] = useState(true);
+
+  // ✅ Show skeleton on initial load
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsPageLoading(false);
+    }, 800);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // ✅ Show skeleton on route changes
+  useEffect(() => {
+    const handleRouteChange = () => {
+      setIsPageLoading(true);
+      const timer = setTimeout(() => {
+        setIsPageLoading(false);
+      }, 600);
+      return () => clearTimeout(timer);
+    };
+
+    window.addEventListener('popstate', handleRouteChange);
+    return () => window.removeEventListener('popstate', handleRouteChange);
+  }, []);
 
   return (
     <>
-      {/* ✅ Always render loader, show/hide via CSS class */}
+      {/* ✅ Global Loader (for API calls) */}
       <GlobalLoader />
       
-      {/* ✅ Use CSS class to show/hide instead of conditional rendering */}
+      {/* ✅ Global Skeleton (for page transitions) */}
+      <GlobalSkeleton isVisible={isPageLoading} />
+      
+      {/* ✅ Main Content */}
       <div id="app-content">
         <Layout>
           <Routes>
@@ -213,7 +240,6 @@ function App() {
   return (
     <BrowserRouter>
       <CompanyProvider>
-        {/* ✅ WRAP APP WITH LOADING PROVIDER */}
         <LoadingProvider>
           <AppContent />
         </LoadingProvider>

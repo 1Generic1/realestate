@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import AdminLayout from "../components/AdminLayout";
 import { userAPI, templateAPI } from "../../../services/adminApi";
+import DashboardSkeleton from "../../Skeleton/DashboardSkeleton";
 import "./Dashboard.css";
 
 const Dashboard = () => {
@@ -148,10 +149,7 @@ const Dashboard = () => {
   if (loading) {
     return (
       <AdminLayout>
-        <div className="dashboard-loading">
-          <div className="loading-spinner"></div>
-          <p>Loading dashboard data...</p>
-        </div>
+        <DashboardSkeleton />
       </AdminLayout>
     );
   }

@@ -5,7 +5,7 @@ import { userAPI, templateAPI, companyAPI } from "../../../services/adminApi";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import SendCertificateModal from "../components/SendCertificateModal";
-
+import UsersSkeleton from "../../Skeleton/UsersSkeleton";
 
 const Users = () => {
   const [users, setUsers] = useState([]);
@@ -71,12 +71,16 @@ const Users = () => {
   const loadUsers = async () => {
     try {
       setLoading(true);
+      console.log("🔄 Loading users...");
+      
       const response = await userAPI.getAllUsers();
+      console.log("✅ Users loaded:", response.data?.length || 0);
       setUsers(response.data || []);
     } catch (error) {
       setError("Failed to load users");
       console.error(error);
     } finally {
+      console.log("✅ Loading complete");
       setLoading(false);
     }
   };
@@ -619,12 +623,10 @@ const Users = () => {
   };
 
   if (loading) {
+    console.log("🔵 Rendering skeleton...");
     return (
       <AdminLayout>
-        <div className="users-loading">
-          <div className="loading-spinner"></div>
-          <p>Loading users...</p>
-        </div>
+        <UsersSkeleton />
       </AdminLayout>
     );
   }
